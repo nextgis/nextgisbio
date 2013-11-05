@@ -21,7 +21,7 @@ from eco.utils.try_encode import try_encode
 
 
 
-@view_config(route_name='home', renderer='main.mak', permission='view')
+@view_config(route_name='home', renderer='main.mako', permission='view')
 def my_view(request):
     return dict()
 
