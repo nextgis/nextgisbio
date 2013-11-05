@@ -19,6 +19,70 @@ from eco.models import (
 
 from eco.models import MAMMALIA, AVES, PLANTAE, ARA, ARTHROPODA, MOSS, LICHENES
 
+@view_config(route_name='taxon_tree', renderer='json')
+def tree_root(request):
+    path_name = 'path' if 'path' in request.params else 'basePath'
+    base_path = request.params['basePath'].replace('"', '')
+    hierarchical_path = request.params[path_name].replace('"', '')
+
+    if hierarchical_path == '.':
+        parent_id = None
+    else:
+        parent_id = int(str.split(str(hierarchical_path), '/')[-1])
+
+    dbsession = DBSession()
+    parent_taxon = dbsession.query(Taxon).filter_by(id = parent_id).first()
+    children_taxons = dbsession.query(Taxon).filter_by(parent_id = parent_id)
+    dbsession.flush()
+
+    if hierarchical_path == '.':
+        block = {
+            'name': '.',
+            'path': hierarchical_path,
+            'directory': True,
+            'total': 1,
+            'status': 200,
+            'items': [{
+                'name': '.',
+                'path': hierarchical_path,
+                'directory': True
+            }]
+        }
+    else:
+        block = {
+            'name': parent_taxon.name,
+            'path': hierarchical_path,
+            'directory': True,
+            'total': 1,
+            'status': 200,
+            'items': []
+        }
+
+    children_taxons_json = []
+    for taxon in children_taxons:
+        children_taxons_json.append(_taxon_to_node(hierarchical_path, taxon))
+
+    if hierarchical_path == '.':
+        block['items'][0]['children'] = children_taxons_json
+    else:
+        block['items'] = children_taxons_json
+
+    return block if block else children_taxons_json
+
+
+def _taxon_to_node(path, taxon):
+    node = {'path': path + '/' + str(taxon.id)}
+    author = taxon.author if taxon.author else ''
+    is_last = taxon.is_last_taxon()
+    if is_last:
+            node['name'] = "<b>%s</b> %s" % (taxon.name, author)
+    else:
+        node['name'] = "%s %s" % (taxon.name, author)
+        node['directory'] = True
+        # node['_EX'] = True
+        # node['children'] = []
+    return node
+
 # Отдать прямые потомки таксона в виде, пригодном для использования в Ext.treepanel:
 @view_config(route_name='taxon_direct_child', renderer='json')
 def direct_child(request):
@@ -71,8 +135,10 @@ def direct_child(request):
 def taxon_filter(request):
     dbsession = DBSession()
     
-    query_str = request.params['taxon']
-    
+    query_str = request.params['name']
+    start = int(request.params['start'])
+    count = int(request.params['count'])
+
     # Нужно выдернуть номера id, названия таксонов и авторов (для синонимов) из таблиц таксонов и синонимов
     try:
         # ищем в таблице таксонов:
@@ -83,14 +149,15 @@ def taxon_filter(request):
         aFilter = "UPPER(%s) LIKE '%s%s%s'" % ('synonym', '%', query_str.upper(),'%')
         s_all = dbsession.query(Synonym.species_id, Synonym.synonym, Synonym.author).filter(aFilter).all()
         
-        all = tax_all + s_all
+        all = [tax_all + s_all][0]
+        itemsPage = all[start:start+count]
     except DBAPIError:
         return {'success': False, 'msg': 'Ошибка подключения к БД'}
     rows = []
     if all:
         rec_id = itertools.count()
-        rows =  [{'recId': rec_id.next(), 'id': id, 'name': name, 'author': author} for id, name, author in all]
-    return {'data': rows, 'success': True, 'totalCount': len(rows)}
+        rows = [{'recId': rec_id.next(), 'id': id, 'name': name, 'author': author} for id, name, author in itemsPage]
+    return {'items': rows, 'success': True, 'numRows': len(all), 'identity': 'id'}
 
 # Выдать данные из таблиц taxon,synonym в формате json согласно фильтру
 @view_config(route_name='species_filter', renderer='json')

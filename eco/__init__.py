@@ -49,7 +49,9 @@ def main(global_config, **settings):
     config.add_route('taxon_parent_path',   '/taxon/{id}/parent_path',  factory=RootFactory)
     # Тип таксона (растение, животное и т.п.) по его id
     config.add_route('taxon_type',    '/taxon/{id}/type',       factory=RootFactory)
-    
+
+    config.add_route('taxon_tree', '/tree/taxons', factory=RootFactory)
+
     # Фильтр видов по его типу, подстроки названия и (если указан) id
     config.add_route('species_filter',    '/species/{type}/{id:[0-9]*}',       factory=RootFactory)
     
