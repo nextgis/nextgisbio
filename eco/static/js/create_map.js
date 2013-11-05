@@ -53,27 +53,23 @@ selectedStyle = new OpenLayers.Style({
 function createMap(){
     // Создает карту и настраивает слои/отбражение
 
-    var epsg4326 = new OpenLayers.Projection("EPSG:4326");
-    var epsg3857 = new OpenLayers.Projection("EPSG:3857");
-    var extent = new OpenLayers.Bounds(6353768, 7927909, 9587360, 9811317);
-    var cent_coords = {"lat": 8869000, "lon": 7970000, "zoom": 5};
-    
-    
-    osm = new OpenLayers.Layer.OSM("OpenSteetMap");
-    
-    gsat = new OpenLayers.Layer.Google("Google-HYBRID", {type: google.maps.MapTypeId.HYBRID, numZoomLevels: 20});
-
-    oopt = new OpenLayers.Layer.Vector("ООПТ", {
-        projection: epsg3857,
-        strategies: [new OpenLayers.Strategy.Fixed()],
-        protocol: new OpenLayers.Protocol.HTTP({
-            url: application_root + '/static/geojson/oopt.geojson',
-            format: new OpenLayers.Format.GeoJSON()
+    var epsg4326 = new OpenLayers.Projection("EPSG:4326"),
+        epsg3857 = new OpenLayers.Projection("EPSG:3857"),
+        extent = new OpenLayers.Bounds(6353768, 7927909, 9587360, 9811317),
+        cent_coords = {"lat": 8869000, "lon": 7970000, "zoom": 5},
+        osm = new OpenLayers.Layer.OSM("OpenSteetMap"),
+        gsat = new OpenLayers.Layer.Google("Google-HYBRID", {type: google.maps.MapTypeId.HYBRID, numZoomLevels: 20}),
+        oopt = new OpenLayers.Layer.Vector("ООПТ", {
+            projection: epsg3857,
+            strategies: [new OpenLayers.Strategy.Fixed()],
+            protocol: new OpenLayers.Protocol.HTTP({
+                url: application_root + '/static/geojson/oopt.geojson',
+                format: new OpenLayers.Format.GeoJSON()
+            }),
+            styleMap: ooptStyle
         }),
-        styleMap: ooptStyle
-    });
-    
-    clusterStrategy = new OpenLayers.Strategy.Cluster({distance: 15});
+        clusterStrategy = new OpenLayers.Strategy.Cluster({distance: 15});
+
     var cardsLayer = new OpenLayers.Layer.Vector('Карточки наблюдений', {
         projection: epsg4326,
         strategies: [
@@ -101,7 +97,7 @@ function createMap(){
         visibility: false
     });
     
-    squareLayer = new OpenLayers.Layer.Vector("Квадраты", {
+    var squareLayer = new OpenLayers.Layer.Vector("Квадраты", {
         projection: epsg3857,
         strategies: [new OpenLayers.Strategy.Fixed()],
         protocol: new OpenLayers.Protocol.HTTP({
@@ -111,18 +107,21 @@ function createMap(){
         styleMap: new OpenLayers.StyleMap({'default': defaultPolyStyle, 'select': selectedStyle}),
         visibility: false
     });
-    
-    var map = new OpenLayers.Map({
+
+    var options = {
         projection: epsg3857,
-        //maxExtent: extent,
-        //restrictedExtent: extent,
+        maxExtent: extent,
+        restrictedExtent: extent,
         center: new OpenLayers.LonLat(cent_coords.lon, cent_coords.lat),
         startZoom: cent_coords.zoom,
         layers: [osm, gsat, oopt, squareLayer, arealLayer, cardsLayer]
-    });
+    };
+
+    var map = new OpenLayers.Map('map', options);
 
 
-    var current_card_popup, current_card_feature;
+    var current_card_popup, current_card_feature, show_card_popup;
+
     show_card_popup = function (f) {
         if (current_card_feature == f) {
             return; // не показывать заново подсказку для текущего элемента
@@ -154,20 +153,21 @@ function createMap(){
         f.popup = current_card_popup;
         current_card_popup.feature = f;
         map.addPopup(current_card_popup, true);
-    },
-    hide_card_popup = function (f) {
+    };
+
+    var hide_card_popup = function (f) {
         map.removePopup(current_card_popup);
         current_card_popup = null;
         current_card_feature = null;
     };
 
     var current_square_popup, current_square_feature;
-    show_square_popup = function (f) {
+    var show_square_popup = function (f) {
         if (current_square_feature == f) {
             return; // не показывать заново подсказку для текущего элемента
         };
 
-        request = OpenLayers.Request.GET({
+        var request = OpenLayers.Request.GET({
             url: application_root + '/square/' + f.data.id, 
             headers: {'Accept':'application/json'}, 
             success: function(e) {
@@ -199,8 +199,9 @@ function createMap(){
                 map.addPopup(current_square_popup, true);
             }
         });
-    },
-    hide_square_popup = function (f) {
+    };
+
+    var hide_square_popup = function (f) {
         if (current_square_popup) {
             map.removePopup(current_square_popup);
             current_square_popup = null;
@@ -209,12 +210,12 @@ function createMap(){
     };
 
     var current_ann_popup, current_ann_feature;
-    show_ann_popup = function (f) {
+    var show_ann_popup = function (f) {
         if (current_ann_feature == f) {
             return; // не показывать заново подсказку для текущего элемента
         };
 
-        request = OpenLayers.Request.GET({
+        var request = OpenLayers.Request.GET({
             url: application_root + '/anns_text/square/' + f.data.id+'?nodes='+taxon_nodes, 
             headers: {'Accept':'application/json'}, 
             success: function(e) {
@@ -259,8 +260,9 @@ function createMap(){
                 map.addPopup(current_ann_popup, true);
             }
         });
-    },
-    hide_ann_popup = function (f) {
+    };
+
+    var hide_ann_popup = function (f) {
         if (current_ann_popup) {
             map.removePopup(current_ann_popup);
             current_ann_popup = null;
@@ -268,7 +270,7 @@ function createMap(){
         };
     };
     
-    selecter = new OpenLayers.Control.SelectFeature(
+    var selecter = new OpenLayers.Control.SelectFeature(
         [cardsLayer, arealLayer, squareLayer], {multiple: false, toggle: true}
     );
     map.addControl(selecter);
