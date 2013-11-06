@@ -57,3 +57,7 @@ div.user-data {
 div.dijitTreeNode .dijitCheckBoxInput {
     opacity: 1;
 }
+
+div.olControlLayerSwitcher {
+    top: 35px;
+}

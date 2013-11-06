@@ -112,13 +112,14 @@ function createMap(){
         projection: epsg3857,
         maxExtent: extent,
         restrictedExtent: extent,
-        center: new OpenLayers.LonLat(cent_coords.lon, cent_coords.lat),
-        startZoom: cent_coords.zoom,
+//        center: new OpenLayers.LonLat(cent_coords.lon, cent_coords.lat),
+//        startZoom: cent_coords.zoom,
         layers: [osm, gsat, oopt, squareLayer, arealLayer, cardsLayer]
     };
 
     var map = new OpenLayers.Map('map', options);
 
+    map.setCenter(new OpenLayers.LonLat(cent_coords.lon, cent_coords.lat), cent_coords.zoom);
 
     var current_card_popup, current_card_feature, show_card_popup;
 
@@ -329,6 +330,13 @@ function createMap(){
             displayProjection: epsg4326
         })
     );
+
+    map.addControl(
+        new OpenLayers.Control.LayerSwitcher({
+            'ascending':false
+        })
+    );
+
     //~ map.events.register("mousemove", map, function(e) {
         //~ var position = this.events.getMousePosition(e);
         //~ OpenLayers.Util.getElement("coords").innerHTML = position;
