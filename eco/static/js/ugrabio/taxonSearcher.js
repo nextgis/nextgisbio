@@ -12,7 +12,7 @@ define(['dojo/ready', 'dijit/form/ComboBox'], function(ready, ComboBox) {
         }, "search");
 
         comboBox.on('change', function(newValue) {
-            alert(newValue);
+
         });
     });
 
