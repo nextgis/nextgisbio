@@ -80,7 +80,7 @@
         <div data-dojo-type="dojox.data.QueryReadStore"
              data-dojo-props="url:'/taxon/filter'"
              data-dojo-id="taxonStore"></div>
-        <input id="search"/>
+        Таксон: <input id="search"/>
         <div class="user-data">
             <button id="loginButton" data-dojo-type="dijit/form/Button" type="button" onClick="loginDialog.show();">
                 Вход
