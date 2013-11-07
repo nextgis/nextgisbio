@@ -429,7 +429,7 @@ define(["module",                  // module.id
 			this._setChecked(parent, newState);
 			this.getChildren(parent, function (children) {
 					children.forEach(function (child) {
-						model._updateCheckedChild(child, newState);
+//						model._updateCheckedChild(child, newState);
 					});
 				},
 				function (err) {
