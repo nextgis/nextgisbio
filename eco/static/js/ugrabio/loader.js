@@ -4,8 +4,8 @@ define(['dojo/ready', 'dojo/query', 'dojo/dom-class'], function(ready, query, do
     }
 
     ready(function(){
-        createMap();
         window.setTimeout(hideLoader, 1000);
     });
+
     return { }
 })

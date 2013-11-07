@@ -53,7 +53,6 @@
     ##    <%include file="forms.js.mako" />
 
     <script type="text/javascript" src="${request.static_url('eco:static/js/annlist.js')}"></script>
-    <script type="text/javascript" src="${request.static_url('eco:static/js/create_map.js')}"></script>
     ##    <%include file="app.js.mak" />
 
     <script>
@@ -61,7 +60,7 @@
             "dijit/layout/BorderContainer", "dijit/layout/ContentPane",
             "dijit/Dialog", "dijit/form/TextBox", "dijit/form/Button",
             "dijit/form/ValidationTextBox",
-            "dojo/domReady!", "ugrabio/loader", "ugrabio/taxonSearcher", "ugrabio/taxonTree"],
+            "dojo/domReady!", "ugrabio/loader", "ugrabio/taxonSearcher", "ugrabio/taxonTree", "ugrabio/map"],
                 function () { });
     </script>
 </head>
