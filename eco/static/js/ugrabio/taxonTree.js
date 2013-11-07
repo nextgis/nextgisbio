@@ -1,7 +1,7 @@
 define(['dojo/dom', 'dojo/on', 'dojo/topic', 'cbtree/Tree', 'cbtree/model/FileStoreModel',
     'cbtree/store/FileStore', 'cbtree/extensions/TreeStyling', 'cbtree/store/Hierarchy',
-    'cbtree/model/TreeStoreModel', 'dojo/_base/event', 'dojo/domReady!'],
-    function (dom, on, topic, cbTree, FileStoreModel, FileStore, TreeStyling, Hierarchy, TreeStoreModel, event) {
+    'cbtree/model/TreeStoreModel', 'dojo/_base/event', 'dojo/aspect', 'dojo/dom-attr', 'dojo/domReady!'],
+    function (dom, on, topic, cbTree, FileStoreModel, FileStore, TreeStyling, Hierarchy, TreeStoreModel, event, aspect, attr) {
         var store = new FileStore({
             url: "tree/taxons",
             basePath: '.',
@@ -55,6 +55,13 @@ define(['dojo/dom', 'dojo/on', 'dojo/topic', 'cbtree/Tree', 'cbtree/model/FileSt
                 taxonsTree._collapseNode(node);
             }
 
+        });
+
+        aspect.before(taxonsTree, '_expandNode', function (node) {
+            if (node.get('checked')) {
+                node.set('checked', false);
+                onTaxonSelectedChanged();
+            }
         });
 
         return taxonsTree;
