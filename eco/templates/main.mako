@@ -41,19 +41,8 @@
     <script type="text/javascript"
             src="${request.static_url('eco:static/js/lib/dojo-release-1.9.1/dojo/dojo.js')}"></script>
 
-    <script src="${request.static_url('eco:contrib/extjs/adapter/ext/ext-base.js')}" type="text/javascript"></script>
-    <script src="${request.static_url('eco:contrib/extjs/ext-all.js')}" type="text/javascript"></script>
     <script src="http://maps.google.com/maps/api/js?v=3.6&amp;sensor=false"></script>
     <script src="${request.static_url('eco:contrib/openlayers/OpenLayers.js')}" type="text/javascript"></script>
-    <script src="${request.static_url('eco:contrib/geoext/lib/GeoExt.js')}" type="text/javascript"></script>
-    <script type="text/javascript" src="${request.static_url('eco:static/js/general_obj.js')}"></script>
-    <script type="text/javascript" src="${request.static_url('eco:static/js/taxontree.js')}"></script>
-    <script type="text/javascript" src="${request.static_url('eco:static/js/formwindow.js')}"></script>
-    <script type="text/javascript" src="${request.static_url('eco:static/js/fields.js')}"></script>
-    ##    <%include file="forms.js.mako" />
-
-    <script type="text/javascript" src="${request.static_url('eco:static/js/annlist.js')}"></script>
-    ##    <%include file="app.js.mak" />
 
     <script>
         require(["dojox/data/QueryReadStore", "dojo/dom", "dojo/parser", "dojo/store/JsonRest",
@@ -76,9 +65,6 @@
         </div>
     </div>
     <div class="edgePanel" data-dojo-type="dijit.layout.ContentPane" data-dojo-props="region: 'top'">
-        <div data-dojo-type="dojox.data.QueryReadStore"
-             data-dojo-props="url:'/taxon/filter'"
-             data-dojo-id="taxonStore"></div>
         Таксон: <input id="search"/>
         <div class="user-data">
             <button id="loginButton" data-dojo-type="dijit/form/Button" type="button" onClick="loginDialog.show();">
@@ -88,6 +74,9 @@
     </div>
     <div id="leftCol" class="edgePanel" data-dojo-type="dijit.layout.ContentPane"
          data-dojo-props="region: 'left', splitter: true">
+        <div class="clearTree">
+            <a href="javascript:void(0)">Снять выделение</a>
+        </div>
     </div>
 </div>
 <div data-dojo-type="dijit/Dialog" data-dojo-id="loginDialog" title="Вход">
