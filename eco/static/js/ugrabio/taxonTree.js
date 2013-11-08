@@ -6,7 +6,7 @@ define(['dojo/dom', 'dojo/on', 'dojo/topic', 'cbtree/Tree', 'cbtree/model/FileSt
               event, aspect, attr, Tree, xhr, query) {
         Tree._TreeNode.prototype._setLabelAttr = {node: "labelNode", type: "innerHTML"};
         var store = new FileStore({
-            url: "tree/taxons",
+            url: application_root + "/tree/taxons",
             basePath: '.',
             autoLoad: true
         });
@@ -106,7 +106,7 @@ define(['dojo/dom', 'dojo/on', 'dojo/topic', 'cbtree/Tree', 'cbtree/model/FileSt
 
         taxonsTree.selectTaxon = function (taxonId) {
             var tree = this,
-                getPath = xhr('taxon/' + taxonId + '/parent_path', {
+                getPath = xhr(application_root + '/taxon/' + taxonId + '/parent_path', {
                     handleAs: 'json'
                 });
             getPath.then(function (data) {

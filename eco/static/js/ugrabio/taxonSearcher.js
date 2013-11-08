@@ -2,7 +2,7 @@ define(['dojo/ready', 'dijit/form/ComboBox', 'dojox/data/QueryReadStore', 'dojo/
     function (ready, ComboBox, QueryReadStore, on, xhr, taxonTree, DeferredList) {
         ready(function () {
             var taxonStore = new QueryReadStore({
-                url: '/taxon/filter'
+                url: application_root + '/taxon/filter'
             });
 
             var comboBox = new ComboBox({
