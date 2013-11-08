@@ -1,4 +1,6 @@
 define(['dojo/ready', 'dojo/topic', 'dojo/domReady!'], function (ready, topic) {
+    var taxon_nodes = [];
+
     // Стили
     var defaultPointStyle = new OpenLayers.Style(
         {
@@ -276,7 +278,7 @@ define(['dojo/ready', 'dojo/topic', 'dojo/domReady!'], function (ready, topic) {
         selecter.activate();
 
         topic.subscribe('taxon/selected/changed', function () {
-            var taxon_nodes = arguments[0];
+            taxon_nodes = arguments[0];
 
             clusterStrategy.clearCache();
             cardsLayer.destroyFeatures();
