@@ -22,7 +22,6 @@ from eco.models import MAMMALIA, AVES, PLANTAE, ARA, ARTHROPODA, MOSS, LICHENES
 @view_config(route_name='taxon_tree', renderer='json')
 def tree_root(request):
     path_name = 'path' if 'path' in request.params else 'basePath'
-    base_path = request.params['basePath'].replace('"', '')
     hierarchical_path = request.params[path_name].replace('"', '')
 
     if hierarchical_path == '.':
@@ -44,6 +43,7 @@ def tree_root(request):
             'status': 200,
             'items': [{
                 'name': '.',
+                'id': -1,
                 'path': hierarchical_path,
                 'directory': True
             }]
@@ -71,16 +71,18 @@ def tree_root(request):
 
 
 def _taxon_to_node(path, taxon):
-    node = {'path': path + '/' + str(taxon.id)}
-    author = taxon.author if taxon.author else ''
-    is_last = taxon.is_last_taxon()
-    if is_last:
-            node['name'] = "<b>%s</b> %s" % (taxon.name, author)
+    node = {
+        'id': taxon.id,
+        'path': path + '/' + str(taxon.id),
+        'name': taxon.name
+    }
+
+    if taxon.is_last_taxon():
+        node['is_specie'] = True
     else:
-        node['name'] = "%s %s" % (taxon.name, author)
         node['directory'] = True
-        # node['_EX'] = True
-        # node['children'] = []
+    if taxon.author:
+        node['author'] = taxon.author
     return node
 
 # Отдать прямые потомки таксона в виде, пригодном для использования в Ext.treepanel:
