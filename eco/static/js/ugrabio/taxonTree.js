@@ -100,6 +100,7 @@ define(['dojo/dom', 'dojo/on', 'dojo/topic', 'cbtree/Tree', 'cbtree/model/FileSt
             } else {
                 tree.focusNode(node);
                 node.set('checked', true);
+                nodesChecked[node.item.id] = node;
                 onTaxonSelectedChanged();
             }
         };
