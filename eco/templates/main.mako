@@ -20,10 +20,7 @@
 
     <script type="text/javascript">
         var application_root = ${request.application_url | json.dumps, n};
-    </script>
 
-
-    <script type="text/javascript">
         dojoConfig = {
             async: true,
             parseOnLoad: true,
