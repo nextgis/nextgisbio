@@ -42,12 +42,16 @@
     <script src="${request.static_url('eco:contrib/openlayers/OpenLayers.js')}" type="text/javascript"></script>
 
     <script>
-        require(["dojox/data/QueryReadStore", "dojo/dom", "dojo/parser", "dojo/store/JsonRest",
-            "dijit/layout/BorderContainer", "dijit/layout/ContentPane",
-            "dijit/Dialog", "dijit/form/TextBox", "dijit/form/Button",
-            "dijit/form/ValidationTextBox",
-            "dojo/domReady!", "ugrabio/loader", "ugrabio/taxonSearcher", "ugrabio/taxonTree", "ugrabio/map", "ugrabio/adminMenu"],
+        require(['dojox/data/QueryReadStore', 'dojo/dom', 'dojo/parser', 'dojo/store/JsonRest',
+            'dijit/layout/BorderContainer', 'dijit/layout/ContentPane',
+            'dijit/Dialog', 'dijit/form/TextBox', 'dijit/form/Button',
+            'dijit/form/ValidationTextBox',
+            'dojo/domReady!', 'ugrabio/loader', 'ugrabio/taxonSearcher', 'ugrabio/taxonTree', 'ugrabio/map'],
                 function () { });
+
+        %if is_auth:
+            require(['ugrabio/adminMenu']);
+        %endif
     </script>
 </head>
 <body class="claro loading">
