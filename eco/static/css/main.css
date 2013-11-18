@@ -72,3 +72,8 @@ div.olControlLayerSwitcher {
 #menu {
     float: left;
 }
+
+/* ugrabio/Dialog dijit class */
+.non-modal_underlay {
+    display: none;
+}
