@@ -5,6 +5,7 @@ import csv
 import tempfile
 import shutil
 
+from pyramid import security
 from pyramid.response import Response
 from pyramid.view import view_config
 
@@ -23,7 +24,9 @@ from eco.utils.try_encode import try_encode
 
 @view_config(route_name='home', renderer='main.mako', permission='view')
 def my_view(request):
-    return dict()
+    return {
+        'is_auth': security.authenticated_userid(request)
+    }
 
 
 # Выдать данные из таблицы в формате json

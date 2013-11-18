@@ -49,7 +49,7 @@
             "dijit/layout/BorderContainer", "dijit/layout/ContentPane",
             "dijit/Dialog", "dijit/form/TextBox", "dijit/form/Button",
             "dijit/form/ValidationTextBox",
-            "dojo/domReady!", "ugrabio/loader", "ugrabio/taxonSearcher", "ugrabio/taxonTree", "ugrabio/map"],
+            "dojo/domReady!", "ugrabio/loader", "ugrabio/taxonSearcher", "ugrabio/taxonTree", "ugrabio/map", "ugrabio/adminMenu"],
                 function () { });
     </script>
 </head>
@@ -65,12 +65,21 @@
         </div>
     </div>
     <div class="edgePanel" data-dojo-type="dijit.layout.ContentPane" data-dojo-props="region: 'top'">
-        Таксон: <input id="search"/>
+        <div id="menu"></div>
         <div class="user-data">
-            <button id="loginButton" data-dojo-type="dijit/form/Button" type="button" onClick="loginDialog.show();">
-                Вход
-            </button>
+            %if is_auth:
+                <button id="logoutButton" data-dojo-type="dijit/form/Button" type="button" onClick="location.href='${request.route_url('logout')}';">
+                Выйти
+                </button>
+            %else:
+                <button id="loginButton" data-dojo-type="dijit/form/Button" type="button" onClick="loginDialog.show();">
+                Войти
+                </button>
+            %endif
         </div>
+    </div>
+    <div class="edgePanel" data-dojo-type="dijit.layout.ContentPane" data-dojo-props="region: 'top'">
+        Таксон: <input id="search"/>
     </div>
     <div id="leftCol" class="edgePanel" data-dojo-type="dijit.layout.ContentPane"
          data-dojo-props="region: 'left', splitter: true">

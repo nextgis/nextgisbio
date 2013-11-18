@@ -33,6 +33,7 @@ div.loader {
 #appLayout {
     height: 100%;
 }
+
 #leftCol {
     width: 14em;
 }
@@ -66,4 +67,8 @@ div.olControlLayerSwitcher {
     width: 100%;
     text-align: right;
     font-size: 80%;
+}
+
+#menu {
+    float: left;
 }
