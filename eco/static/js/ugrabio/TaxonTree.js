@@ -2,9 +2,11 @@ define(['dojo/dom', 'dojo/on', 'dojo/topic', 'cbtree/Tree', 'cbtree/model/FileSt
     'cbtree/store/FileStore', 'cbtree/extensions/TreeStyling', 'cbtree/store/Hierarchy',
     'cbtree/model/TreeStoreModel', 'dojo/_base/event', 'dojo/aspect', 'dojo/dom-attr', 'dijit/Tree',
     'dojo/request/xhr', 'dojo/query', 'dojo/domReady!'],
-    function (dom, on, topic, cbTree, FileStoreModel, FileStore, TreeStyling, Hierarchy, TreeStoreModel,
-              event, aspect, attr, Tree, xhr, query) {
+    function (dom, on, topic, cbTree, FileStoreModel, FileStore, TreeStyling, Hierarchy, TreeStoreModel, event, aspect, attr, Tree, xhr, query) {
+
+        // for supporting html label of node
         Tree._TreeNode.prototype._setLabelAttr = {node: "labelNode", type: "innerHTML"};
+
         var store = new FileStore({
             url: application_root + "/tree/taxons",
             basePath: '.',
@@ -115,7 +117,7 @@ define(['dojo/dom', 'dojo/on', 'dojo/topic', 'cbtree/Tree', 'cbtree/model/FileSt
             });
         };
 
-        on(query('#leftCol div.clearTree a'), 'click', function() {
+        on(query('#leftCol div.clearTree a'), 'click', function () {
             for (var nodeId in nodesChecked) {
                 if (nodesChecked.hasOwnProperty(nodeId)) {
                     nodesChecked[nodeId].set('checked', false);
@@ -126,4 +128,4 @@ define(['dojo/dom', 'dojo/on', 'dojo/topic', 'cbtree/Tree', 'cbtree/model/FileSt
         });
 
         return taxonsTree;
-    })
+    });

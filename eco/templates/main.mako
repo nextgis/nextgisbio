@@ -45,12 +45,12 @@
         require(['dojox/data/QueryReadStore', 'dojo/dom', 'dojo/parser', 'dojo/store/JsonRest',
             'dijit/layout/BorderContainer', 'dijit/layout/ContentPane',
             'dijit/Dialog', 'dijit/form/TextBox', 'dijit/form/Button',
-            'dijit/form/ValidationTextBox',
-            'dojo/domReady!', 'ugrabio/loader', 'ugrabio/taxonSearcher', 'ugrabio/taxonTree', 'ugrabio/map'],
+            'dijit/form/ValidationTextBox', 'dojo/domReady!',
+            'ugrabio/Loader', 'ugrabio/TaxonSearcher', 'ugrabio/TaxonTree', 'ugrabio/Map'],
                 function () { });
 
         %if is_auth:
-            require(['ugrabio/adminMenu']);
+            require(['ugrabio/AdminMenu']);
         %endif
     </script>
 </head>

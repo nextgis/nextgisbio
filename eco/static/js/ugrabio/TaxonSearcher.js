@@ -1,5 +1,5 @@
-define(['dojo/ready', 'dijit/form/ComboBox', 'dojox/data/QueryReadStore', 'dojo/on', 'dojo/request/xhr', 'ugrabio/taxonTree', 'dojo/DeferredList'],
-    function (ready, ComboBox, QueryReadStore, on, xhr, taxonTree, DeferredList) {
+define(['dojo/ready', 'dijit/form/ComboBox', 'dojox/data/QueryReadStore', 'dojo/on', 'dojo/request/xhr', 'ugrabio/TaxonTree'],
+    function (ready, ComboBox, QueryReadStore, on, xhr, TaxonTree) {
         ready(function () {
             var taxonStore = new QueryReadStore({
                 url: application_root + '/taxon/filter'
@@ -18,7 +18,7 @@ define(['dojo/ready', 'dijit/form/ComboBox', 'dojox/data/QueryReadStore', 'dojo/
             }, "search");
 
             comboBox.watch('item', function (what, oldVal, newVal) {
-                taxonTree.selectTaxon(newVal.i.id);
+                TaxonTree.selectTaxon(newVal.i.id);
             });
 
             return comboBox;
