@@ -33,7 +33,7 @@ require([
         'Контурный ареал': [
             'Экспорт в shp'
         ],
-        'Экспорт': [
+        'Сырой экспорт': [
             'abundance',
             'annotation',
             'anthr_press',
