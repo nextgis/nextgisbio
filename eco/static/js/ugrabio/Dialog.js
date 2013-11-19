@@ -6,7 +6,7 @@ define([
     'dijit/_TemplatedMixin',
     'dijit/_WidgetsInTemplateMixin',
     'dijit/Dialog',
-    'digit/Form'
+    'dijit/form/Form'
 ], function (declare, array, lang, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, Dialog, Form) {
 
     return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
