@@ -50,7 +50,7 @@
                 function () { });
 
         %if is_auth:
-            require(['ugrabio/AdminMenu']);
+            require(['ugrabio/AdminMenu', 'ugrabio/Dialog']);
         %endif
     </script>
 </head>
