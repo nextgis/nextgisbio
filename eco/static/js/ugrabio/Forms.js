@@ -119,6 +119,42 @@ define([
             collecter: function () {
                 return getPersonJsonFilteringSelect('Собрал', 'collecter');
             },
+            abundance: function () {
+                return new JsonFilteringSelect({
+                    url: '/abundance_browse',
+                    name: 'abundance',
+                    searchAttr: 'abundance',
+                    title: 'Количество (баллы)'});
+            },
+            annotation: function () {
+                return new Textarea({name: 'annotation', title: 'Аннотация'});
+            },
+            anthr_press: function () {
+                return new JsonFilteringSelect({
+                    url: '/anthr_press_browse',
+                    name: 'anthr_press',
+                    searchAttr: 'anthr_press',
+                    title: 'Антропогенная нагрузка'});
+            },
+            area: function () {
+                return new TextBox({name: 'area', title: 'Площадь популяции'});
+            },
+            inforesources: function () {
+                return new JsonFilteringSelect({
+                    url: '/inforesources_name',
+                    name: 'biblioref',
+                    title: 'Библиографическая ссылка'});
+            },
+            infosourse: function () {
+                return new TextBox({name: 'infosourse', title: 'Источник информации'});
+            },
+            coord_type: function () {
+                return new JsonFilteringSelect({
+                    url: '/coord_type_browse',
+                    name: 'coord_type',
+                    searchAttr: 'coord_type',
+                    title: 'Тип координат'});
+            },
             museum: function () {
                 return new JsonFilteringSelect({
                     url: '/museum_browse',
@@ -133,6 +169,7 @@ define([
                 return new JsonFilteringSelect({
                     url: '/pheno_browse',
                     name: 'pheno',
+                    searchAttr: 'pheno',
                     title: 'Фаза жизненного цикла'});
             },
             photo: function () {
@@ -153,13 +190,48 @@ define([
             status: function () {
                 return new TextBox({name: 'status', title: 'Статус'});
             },
+            year: function () {
+                return new NumberTextBox({name: 'year', title: 'Год'});
+            },
+            month: function () {
+                return new NumberTextBox({name: 'month', title: 'Месяц'});
+            },
             time: function () {
                 return new NumberTextBox({name: 'time', title: 'Время'});
+            },
+            day: function () {
+                return new NumberTextBox({name: 'day', title: 'День'});
+            },
+            exposure: function () {
+                return new NumberTextBox({name: 'exposure', title: 'Длительность экспозиции'});
+            },
+            difference: function () {
+                return new TextBox({name: 'difference', title: 'Отличия'});
+            },
+            females: function () {
+                return new NumberTextBox({name: 'females', title: 'Самки'});
+            },
+            males: function () {
+                return new NumberTextBox({name: 'males', title: 'Самцы'});
+            },
+            footprint: function () {
+                return new JsonFilteringSelect({
+                    url: '/footprint_browse',
+                    name: 'footprint',
+                    searchAttr: 'footprint',
+                    title: 'Следы жизнедеятельности'});
+            },
+            frequency: function () {
+                return new TextBox({name: 'frequency', title: 'Частота встречаемости'});
+            },
+            habitat: function () {
+                return new Textarea({name: 'habitat', title: 'Местообитание'});
             },
             vitality: function () {
                 return new JsonFilteringSelect({
                     url: '/vitality_browse',
-                    name: 'museum',
+                    name: 'vitality',
+                    searchAttr: 'vitality',
                     title: 'Состояние популяции'});
             },
             unknown_age: function () {
@@ -167,9 +239,6 @@ define([
             },
             unknown_sex: function () {
                 return new NumberTextBox({name: 'unknown_sex', title: 'Пол неопределен'});
-            },
-            year: function () {
-                return new NumberTextBox({name: 'year', title: 'Год'});
             },
             ad: function () {
                 return new NumberTextBox({name: 'ad', title: 'Взрослые'});
@@ -185,7 +254,26 @@ define([
             },
             egs: function () {
                 return new NumberTextBox({name: 'egs', title: 'Яйца'});
-            }
+            },
+            key_area: function () {
+                return new JsonFilteringSelect({
+                    url: '/key_area_browse',
+                    name: 'key_area',
+                    searchAttr: 'key_area',
+                    title: 'Ключевой участок'});
+            },
+            lat: function () {
+                return new NumberTextBox({name: 'lat', title: 'Широта'});
+            },
+            lon: function () {
+                return new NumberTextBox({name: 'lon', title: 'Долгота'});
+            },
+            location: function () {
+                return new Textarea({name: 'location', title: 'Геопривязка'});
+            },
+            limit_fact: function () {
+                return new Textarea({name: 'limit_fact', title: 'Лимитирующие факторы'});
+            },
         }
     };
 });
