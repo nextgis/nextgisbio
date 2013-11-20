@@ -24,8 +24,8 @@ define([
             this._dialog = new Dialog({
                 title: this.title,
                 content: this._form,
-                style: 'max-height:300px; overflow-y:scroll;',
-                class: "non-modal"
+                style: 'max-height:300px; overflow-y:scroll;'
+//                class: "non-modal"
             });
         },
 
