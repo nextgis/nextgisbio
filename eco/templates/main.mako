@@ -46,7 +46,7 @@
             'dijit/layout/BorderContainer', 'dijit/layout/ContentPane',
             'dijit/Dialog', 'dijit/form/TextBox', 'dijit/form/Button',
             'dijit/form/ValidationTextBox', 'dojo/domReady!',
-            'ugrabio/Loader', 'ugrabio/TaxonSearcher', 'ugrabio/TaxonTree', 'ugrabio/Map'],
+            'ugrabio/Loader', 'ugrabio/TaxonSearcher', 'ugrabio/TaxonTree', 'ugrabio/Map', 'ugrabio/DialogManager'],
                 function () { });
 
         %if is_auth:
