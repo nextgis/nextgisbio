@@ -6,10 +6,11 @@ define([
     'dijit/_TemplatedMixin',
     'dijit/_WidgetsInTemplateMixin',
     'dijit/Dialog',
-    'dijit/form/Form'
-], function (declare, array, lang, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, Dialog, Form) {
+    'dijit/form/Form',
+    'dojox/layout/TableContainer'
+], function (declare, array, lang, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, Dialog, Form, TableContainer) {
 
-    return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
+    return declare([_WidgetBase], {
 
         constructor: function (options) {
             declare.safeMixin(this, options);
@@ -21,8 +22,9 @@ define([
             }
 
             this._dialog = new Dialog({
-                title: this._title,
+                title: this.title,
                 content: this._form,
+                style: 'max-height:300px; overflow-y:scroll;',
                 class: "non-modal"
             });
         },
@@ -30,14 +32,23 @@ define([
         _buildForm: function (elements) {
             this._form = new Form();
 
+            this._layout = new TableContainer({
+                showLabels: true,
+                orientation: 'horiz'
+            });
+
             array.forEach(elements, lang.hitch(this, function (element) {
-                element.placeAt(this._form.containerNode);
+                this._layout.addChild(element);
             }));
+
+            this._layout.placeAt(this._form.containerNode);
+            this._layout.startup();
         },
 
 
         show: function () {
             this.inherited(arguments);
+            this._form.startup();
             this._dialog.show();
         }
     });
