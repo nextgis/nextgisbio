@@ -56,7 +56,7 @@ def table_browse(request):
     rows = []
     for row in all:
         rows.append(row.as_json_dict())
-    return {'data': rows, 'success': True, 'totalCount': count}
+    return rows
 
 
 # Выдать данные по конкретной записи из таблицы в формате json

@@ -42,7 +42,8 @@ def person_name(request):
     rows = []
     for (id, name) in all:
         rows.append({'id': id, 'name': name})
-    return {'data': rows, 'success': True, 'totalCount': count}
+    #return {'data': rows, 'success': True, 'totalCount': count}
+    return rows
     
     
 # Названия инфоресурсов

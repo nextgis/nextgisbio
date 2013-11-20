@@ -217,7 +217,7 @@ def species_filter(request):
     if all:
         rec_id = itertools.count()
         rows =  [{'recId': rec_id.next(), 'id': id, 'name': name, 'author': author, 'source': source} for id, name, author, source in all]
-    return {'data': rows, 'success': True, 'totalCount': len(rows)}
+    return rows
 
 @view_config(route_name='taxon_parent_path', renderer='json')
 def parent_path(request):
