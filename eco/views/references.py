@@ -19,31 +19,45 @@ from eco.models import (
 )
 
 
-# ФИО всех научных сотрудников
 @view_config(route_name='person_name', renderer='json')
 def person_name(request):
     dbsession = DBSession()
-    
-    # обработка постраничных запросов
-    start, limit = None, None
-    if request.params.has_key('start') and request.params.has_key('limit'):
+
+    start, count = None, None
+    if request.params.has_key('start') and request.params.has_key('count'):
         start = int(request.params['start'])
-        limit = int(request.params['limit'])
-        
+        count = int(request.params['count'])
+
+    filter_conditions = []
+    if request.params.has_key('name') and request.params['name']:
+        name = request.params['name']
+        if '%' not in name:
+            name = ''.join([name, '%'])
+        filter_conditions.append(Person.name.like(name))
+
+    numRows = 0
+    persons = []
+    success = True
     try:
-        if start==None or limit==None:
-            all = dbsession.query(Person.id, Person.name).order_by(Person.name).all()
+        if start and count:
+            persons = dbsession.query(Person.id, Person.name)\
+                .filter(*filter_conditions)\
+                .order_by(Person.name)\
+                .slice(start, start+count)
+            numRows = dbsession.query(Person).count()
         else:
-            all = dbsession.query(Person.id, Person.name).order_by(Person.name).slice(start, start+limit).all()
-        count = dbsession.query(Person).count() # нужно получить количество всех записей, а не только выбранных
+            persons = dbsession.query(Person.id, Person.name)\
+                .filter(*filter_conditions)\
+                .order_by(Person.name)\
+                .all()
+            numRows = len(persons)
     except DBAPIError:
-        result = {'success': False, 'msg': 'Ошибка подключения к БД'}
-    
-    rows = []
-    for (id, name) in all:
-        rows.append({'id': id, 'name': name})
-    #return {'data': rows, 'success': True, 'totalCount': count}
-    return rows
+        success = False
+
+    persons_json = []
+    for (id, name) in persons:
+        persons_json.append({'id': id, 'name': name})
+    return {'items': persons_json, 'success': success, 'numRows': numRows, 'identity': 'id'}
     
     
 # Названия инфоресурсов
