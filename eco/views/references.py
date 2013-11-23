@@ -19,21 +19,30 @@ from eco.models import (
 )
 
 
+def get_paging_params(request_params):
+    start, count = None, None
+    if ('start' in request_params) and ('count' in request_params):
+        start = int(request_params['start'])
+        count = int(request_params['count'])
+    return start, count
+
+
+def get_filter_by_name(request_params):
+    filter_conditions = []
+    if ('name' in request_params) and request_params['name']:
+        name = request_params['name']
+        if '%' not in name:
+            name = ''.join([name, '%'])
+        filter_conditions.append(Person.name.ilike(name))
+    return filter_conditions
+
+
 @view_config(route_name='person_name', renderer='json')
 def person_name(request):
     dbsession = DBSession()
 
-    start, count = None, None
-    if request.params.has_key('start') and request.params.has_key('count'):
-        start = int(request.params['start'])
-        count = int(request.params['count'])
-
-    filter_conditions = []
-    if request.params.has_key('name') and request.params['name']:
-        name = request.params['name']
-        if '%' not in name:
-            name = ''.join([name, '%'])
-        filter_conditions.append(Person.name.like(name))
+    start, count = get_paging_params(request.params)
+    filter_conditions = get_filter_by_name(request.params)
 
     numRows = 0
     persons = []
