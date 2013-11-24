@@ -18,6 +18,7 @@ from eco.models import (
 )
 
 from eco.models import MAMMALIA, AVES, PLANTAE, ARA, ARTHROPODA, MOSS, LICHENES
+import helpers
 
 @view_config(route_name='taxon_tree', renderer='json')
 def tree_root(request):
@@ -171,7 +172,7 @@ def species_filter(request):
         query_str = ''
     taxon_id = request.matchdict['id']
     taxon_type = request.matchdict['type']
-    
+
     species_types = {'mammalia': MAMMALIA, 'aves': AVES, 'plantae': PLANTAE, 'ara': ARA, 
         'arthropoda': ARTHROPODA, 'moss': MOSS, 'lichenes': LICHENES}
     try:
@@ -179,7 +180,7 @@ def species_filter(request):
     except KeyError:
         return {'success': False, 'msg': 'Неверный вид организма'}
     
-    # Нужно выдернуть номера id, названия таксонов и авторов (для синонимов) из таблиц таксонов и синонимов
+    success = True
     try:
         # Если id известен, выберем запись:
         if taxon_id:
@@ -189,19 +190,19 @@ def species_filter(request):
         
         # Если пришла строка запроса, обработаем:
         all_t, all_s = [], []
-        if query_str:
+        if query_str or query_str == '':
             target = dbsession.query(Taxon).filter(Taxon.name.in_(sp)).all()
             target_ids = [t.id for t in target]
-            target_ids = ", ".join([ str(num) for num in target_ids])
+            target_ids = ", ".join([str(num) for num in target_ids])
             
             # Найдем таксоны заданного типа организмов с названием, удовл. шаблону:
             qs = TAXON_ALL_QUERY  % (target_ids, TAXON_TYPES[len(TAXON_TYPES)-1])
             subquery = " AND UPPER(%s) LIKE '%s%s%s'" % ('name', '%', query_str.upper(),'%')
             qs = qs + subquery + ';'
-            all_t = dbsession.query(Taxon.id, Taxon.name, Taxon.author,Taxon.source).from_statement(qs).all()
+            all_t = dbsession.query(Taxon.id, Taxon.name, Taxon.author, Taxon.source).from_statement(qs).all()
             
             # Синонимы
-            subquery = TAXON_ID_QUERY  % (target_ids, TAXON_TYPES[len(TAXON_TYPES)-1])
+            subquery = TAXON_ID_QUERY % (target_ids, TAXON_TYPES[len(TAXON_TYPES)-1])
             qsyn = '''
             SELECT * FROM synonym
             WHERE
@@ -210,14 +211,26 @@ def species_filter(request):
             all_s = dbsession.query(Synonym.species_id, Synonym.synonym, Synonym.author, Synonym.source).from_statement(qsyn).all()
         
     except DBAPIError:
-        return {'success': False, 'msg': 'Ошибка подключения к БД'}
+        success = False
     
-    all = known_tax + all_t + all_s
-    rows = []
-    if all:
-        rec_id = itertools.count()
-        rows =  [{'recId': rec_id.next(), 'id': id, 'name': name, 'author': author, 'source': source} for id, name, author, source in all]
-    return rows
+    taxons = known_tax + all_t + all_s
+    numRows = len(taxons)
+
+    start, count = helpers.get_paging_params(request.params)
+    if start and count:
+        taxons = taxons[start:start + count]
+
+    taxons_json = []
+    if taxons:
+        taxons_json = [{'id': id, 'name': name} for id, name, author, source in taxons]
+
+    return {
+        'items': taxons_json,
+        'success': success,
+        'numRows': numRows,
+        'identity': 'id'
+    }
+
 
 @view_config(route_name='taxon_parent_path', renderer='json')
 def parent_path(request):
