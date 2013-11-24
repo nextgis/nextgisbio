@@ -19,7 +19,7 @@ from eco.models import (
 from eco.models import MultipleResultsFound, NoResultFound
 
 from eco.utils.try_encode import try_encode
-
+import helpers
 
 
 @view_config(route_name='home', renderer='main.mako', permission='view')
@@ -33,30 +33,50 @@ def my_view(request):
 @view_config(route_name='table_browse', renderer='json')
 def table_browse(request):
     dbsession = DBSession()
-    modelname = request.matchdict['table']
+    tablename = request.matchdict['table']
     try:
-        model = table_by_name(modelname)
+        table = table_by_name(tablename)
     except KeyError:
         return {'success': False, 'msg': 'Ошибка: отсутствует таблица с указанным именем'}
 
-    # обработка постраничных запросов
-    start, limit = None, None
-    if request.params.has_key('start') and request.params.has_key('limit'):
-        start = int(request.params['start'])
-        limit = int(request.params['limit'])
-        
+    start, count = helpers.get_paging_params(request.params)
+
+    parsed_name = helpers.get_parsed_search_attr(request.params, tablename)
+    filter_conditions = []
+    if parsed_name:
+        filter_conditions.append(getattr(table, tablename).ilike(parsed_name))
+
+    numRows = 0
+    items = []
+    success = True
     try:
-        if start==None or limit==None:
-            all = dbsession.query(model).all()
+        if start and count:
+            items = dbsession.query(table)\
+                .filter(*filter_conditions) \
+                .order_by(tablename + ' asc') \
+                .slice(start, start+count)
+            numRows = dbsession.query(table) \
+                .filter(*filter_conditions) \
+                .count()
         else:
-            all = dbsession.query(model).slice(start, start+limit).all()
-        count = dbsession.query(model).count() # нужно получить количество всех записей, а не только выбранных
+            items = dbsession.query(table) \
+                .filter(*filter_conditions) \
+                .order_by(tablename + ' asc') \
+                .all()
+            numRows = len(items)
     except DBAPIError:
-        result = {'success': False, 'msg': 'Ошибка подключения к БД'}
-    rows = []
-    for row in all:
-        rows.append(row.as_json_dict())
-    return rows
+        success = False
+
+    items_json = []
+    for row in items:
+        items_json.append(row.as_json_dict())
+
+    return {
+        'items': items_json,
+        'success': success,
+        'numRows': numRows,
+        'identity': 'id'
+    }
 
 
 # Выдать данные по конкретной записи из таблицы в формате json
