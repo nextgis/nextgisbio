@@ -10,54 +10,43 @@ from pyramid.view import view_config
 from sqlalchemy.exc import DBAPIError
 from sqlalchemy.orm.exc import NoResultFound
 
-
 from eco.models import (
     DBSession,
     Cards, Person, Inforesources,
     Taxon,
     Key_area,
-)
+    )
 
-
-def get_paging_params(request_params):
-    start, count = None, None
-    if ('start' in request_params) and ('count' in request_params):
-        start = int(request_params['start'])
-        count = int(request_params['count'])
-    return start, count
-
-
-def get_filter_by_name(request_params):
-    filter_conditions = []
-    if ('name' in request_params) and request_params['name']:
-        name = request_params['name']
-        if '%' not in name:
-            name = ''.join([name, '%'])
-        filter_conditions.append(Person.name.ilike(name))
-    return filter_conditions
+import helpers
 
 
 @view_config(route_name='person_name', renderer='json')
 def person_name(request):
     dbsession = DBSession()
 
-    start, count = get_paging_params(request.params)
-    filter_conditions = get_filter_by_name(request.params)
+    start, count = helpers.get_paging_params(request.params)
+
+    parsed_name = helpers.get_parsed_search_attr(request.params)
+    filter_conditions = []
+    if parsed_name:
+        filter_conditions.append(Person.name.ilike(parsed_name))
 
     numRows = 0
     persons = []
     success = True
     try:
         if start and count:
-            persons = dbsession.query(Person.id, Person.name)\
-                .filter(*filter_conditions)\
-                .order_by(Person.name)\
-                .slice(start, start+count)
-            numRows = dbsession.query(Person).count()
+            persons = dbsession.query(Person.id, Person.name) \
+                .filter(*filter_conditions) \
+                .order_by(Person.name) \
+                .slice(start, start + count)
+            numRows = dbsession.query(Person) \
+                .filter(*filter_conditions) \
+                .count()
         else:
-            persons = dbsession.query(Person.id, Person.name)\
-                .filter(*filter_conditions)\
-                .order_by(Person.name)\
+            persons = dbsession.query(Person.id, Person.name) \
+                .filter(*filter_conditions) \
+                .order_by(Person.name) \
                 .all()
             numRows = len(persons)
     except DBAPIError:
@@ -67,44 +56,58 @@ def person_name(request):
     for (id, name) in persons:
         persons_json.append({'id': id, 'name': name})
     return {'items': persons_json, 'success': success, 'numRows': numRows, 'identity': 'id'}
-    
-    
+
+
 # Названия инфоресурсов
 @view_config(route_name='inforesources_name', renderer='json')
 def inforesources_name(request):
     dbsession = DBSession()
-    
-    # обработка постраничных запросов
-    start, limit = None, None
-    if request.params.has_key('start') and request.params.has_key('limit'):
-        start = int(request.params['start'])
-        limit = int(request.params['limit'])
-        
+
+    start, count = helpers.get_paging_params(request.params)
+
+    parsed_filename = helpers.get_parsed_search_attr(request.params, 'filename')
+    filter_conditions = []
+    if parsed_filename:
+        filter_conditions.append(Inforesources.filename.ilike(parsed_filename))
+
+
+    numRows = 0
+    inforesources = []
+    success = True
     try:
-        if start==None or limit==None:
-            all = dbsession.query(Inforesources.id, Inforesources.filename).order_by(Inforesources.filename).all()
+        if start and count:
+            inforesources = dbsession.query(Inforesources.id, Inforesources.filename) \
+                .filter(*filter_conditions) \
+                .order_by(Inforesources.filename) \
+                .slice(start, start + count)
+            numRows = dbsession.query(Inforesources) \
+                .filter(*filter_conditions) \
+                .count()
         else:
-            all = dbsession.query(Inforesources.id, Inforesources.filename).order_by(Inforesources.filename).slice(start, start+limit).all()
-        count = dbsession.query(Inforesources).count() # нужно получить количество всех записей, а не только выбранных
+            inforesources = dbsession.query(Inforesources.id, Inforesources.filename) \
+                .filter(*filter_conditions) \
+                .order_by(Inforesources.filename) \
+                .all()
+            numRows = len(inforesources)
     except DBAPIError:
-        result = {'success': False, 'msg': 'Ошибка подключения к БД'}
-    
-    rows = []
-    for (id, name) in all:
-        rows.append({'id': id, 'filename': name})
-    return {'data': rows, 'success': True, 'totalCount': count}
+        success = False
+
+    inforesources_json = []
+    for (id, name) in inforesources:
+        inforesources_json.append({'id': id, 'filename': name})
+    return {'items': inforesources_json, 'success': success, 'numRows': numRows, 'identity': 'id'}
 
 
 # Аннотированные списки по ключевому участку
 @view_config(route_name='karea_ann', renderer='json')
 def karea_ann(request):
     dbsession = DBSession()
-    
+
     id = request.matchdict['id']
-    karea =dbsession.query(Key_area).filter_by(id=id).one()
-    
+    karea = dbsession.query(Key_area).filter_by(id=id).one()
+
     annotations = []
     for ann in karea.annotations:
         annotations.append({'id': ann.id, 'name': ann.species_link.name, 'species': ann.species})
-    
+
     return {'data': annotations}
