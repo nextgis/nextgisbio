@@ -167,7 +167,7 @@ def taxon_filter(request):
 def species_filter(request):
     dbsession = DBSession()
     try: 
-        query_str = request.params['taxon']
+        query_str = request.params['name']
     except KeyError:
         query_str = ''
     taxon_id = request.matchdict['id']
@@ -217,7 +217,7 @@ def species_filter(request):
     numRows = len(taxons)
 
     start, count = helpers.get_paging_params(request.params)
-    if start and count:
+    if (start is not None) and (count is not None):
         taxons = taxons[start:start + count]
 
     taxons_json = []
@@ -228,7 +228,7 @@ def species_filter(request):
         'items': taxons_json,
         'success': success,
         'numRows': numRows,
-        'identity': 'id'
+        'identifier': 'id'
     }
 
 
