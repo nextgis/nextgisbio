@@ -77,3 +77,14 @@ div.olControlLayerSwitcher {
 .non-modal_underlay {
     display: none;
 }
+
+/* key area Dialog styles */
+div.dgrid div.dgrid-row-odd {
+    background-color: #eff3f7;
+}
+
+div.keyAreaDialog div.dgrid.dgrid-grid {
+    height: 96%;
+    margin: 4px;
+}
+

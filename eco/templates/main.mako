@@ -13,10 +13,16 @@
     <link rel="stylesheet"
           href="${request.static_url('eco:static/js/lib/dojo-release-1.9.1/dijit/themes/claro/claro.css')}"
           media="screen">
-    <link rel="stylesheet" href="${request.static_url('eco:static/js/lib/cbtree-v0.9.4-0/icons/indentIcons.css')}" />
+    <link rel="stylesheet" href="${request.static_url('eco:static/js/lib/cbtree-v0.9.4-0/icons/indentIcons.css')}"/>
 
-    <link rel="stylesheet" href="${request.static_url('eco:static/js/lib/dojo-release-1.9.1/dojox/layout/resources/FloatingPane.css')}" />
-    <link rel="stylesheet" href="${request.static_url('eco:static/js/lib/dojo-release-1.9.1/dojox/layout/resources/ResizeHandle.css')}" />
+    <link rel="stylesheet"
+          href="${request.static_url('eco:static/js/lib/dojo-release-1.9.1/dojox/layout/resources/FloatingPane.css')}"/>
+    <link rel="stylesheet"
+          href="${request.static_url('eco:static/js/lib/dojo-release-1.9.1/dojox/layout/resources/ResizeHandle.css')}"/>
+    <link rel="stylesheet"
+          href="${request.static_url('eco:static/js/lib/dgrid/css/dgrid.css')}"/>
+    <link rel="stylesheet"
+          href="${request.static_url('eco:static/js/lib/dgrid/css/skins/claro.css')}"/>
 
     <link rel="stylesheet" type="text/css" href="${request.static_url('eco:static/css/main.css')}" media="screen">
 
@@ -33,7 +39,10 @@
                 {name: 'dijit', location: 'lib/dojo-release-1.9.1/dijit'},
                 {name: 'dojox', location: 'lib/dojo-release-1.9.1/dojox'},
                 {name: 'ugrabio', location: 'ugrabio'},
-                {name: 'cbtree', location: 'lib/cbtree-v0.9.4-0'}
+                {name: 'cbtree', location: 'lib/cbtree-v0.9.4-0'},
+                {name: 'dgrid', location: 'lib/dgrid'},
+                {name: 'put-selector', location: 'lib/put-selector'},
+                {name: 'xstyle', location: 'lib/xstyle'}
             ]
         };
     </script>
@@ -49,11 +58,12 @@
             'dijit/Dialog', 'dijit/form/TextBox', 'dijit/form/Button',
             'dijit/form/ValidationTextBox', 'dojo/topic', 'dojo/domReady!',
             'ugrabio/Loader', 'ugrabio/TaxonSearcher', 'ugrabio/TaxonTree', 'ugrabio/Map', 'ugrabio/DialogManager'],
-                function () { });
+                function () {
+                });
 
-        %if is_auth:
-            require(['ugrabio/AdminMenu', 'ugrabio/Dialog']);
-        %endif
+            %if is_auth:
+                require(['ugrabio/AdminMenu', 'ugrabio/Dialog']);
+            %endif
     </script>
 </head>
 <body class="claro loading">
@@ -71,12 +81,13 @@
         <div id="menu"></div>
         <div class="user-data">
             %if is_auth:
-                <button id="logoutButton" data-dojo-type="dijit/form/Button" type="button" onClick="location.href='${request.route_url('logout')}';">
-                Выйти
+                <button id="logoutButton" data-dojo-type="dijit/form/Button" type="button"
+                        onClick="location.href='${request.route_url('logout')}';">
+                    Выйти
                 </button>
             %else:
                 <button id="loginButton" data-dojo-type="dijit/form/Button" type="button" onClick="loginDialog.show();">
-                Войти
+                    Войти
                 </button>
             %endif
         </div>
