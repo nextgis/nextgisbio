@@ -153,16 +153,22 @@ define([
                     return 0;
                 }
             );
-            var descr = [];
+            var refs = [];
             for (var i = 0; i < features.length; i++) {
-                descr.push(features[i].attributes.description);
+                var attributes = features[i].attributes,
+                    card_id = attributes.card_id,
+                    spec_id = attributes.spec_id,
+                    name = attributes.name;
+                var ref = '<a href="javascript:void(0)" data-card-id="' + card_id + '" data-spec-id="' + spec_id + '">' + name + '</a>';
+                refs.push(ref);
             }
-            descr = descr.join('<br/>');
+            refs = refs.join('<br/>');
+
             current_card_popup = new OpenLayers.Popup.FramedCloud(
                 "featurePopup",
                 f.geometry.getBounds().getCenterLonLat(),
                 new OpenLayers.Size(0, 0),
-                "<b>Наблюдения</b><br/>" + descr,
+                "<b>Наблюдения</b><br/>" + refs,
                 null, true, null);
             current_card_popup.maxSize = new OpenLayers.Size(500, 300);
 
