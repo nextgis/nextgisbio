@@ -32,7 +32,6 @@ define([
                     formElements.push(elementTemplate.action.apply(undefined, params));
                 }
             }
-
         });
 
         new Dialog({
