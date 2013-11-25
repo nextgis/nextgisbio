@@ -11,7 +11,7 @@ define([
     'ugrabio/Dialog',
     'dojo/domReady!'
 ], function (array, on, topic, MenuBar, PopupMenuBarItem, Menu, MenuItem, DropDownMenu, Forms, Dialog) {
-    topic.subscribe('open/form', function (formId) {
+    topic.subscribe('open/form', function (formId, values) {
         var formTemplate = Forms.forms[formId],
             listElementsId = formTemplate.elements,
             formElements = [];
@@ -20,16 +20,26 @@ define([
             if (!Forms.elements[elementName]) {
                 console.log(elementName + ' element not found');
             } else {
-                var elementTemplate = Forms.elements[elementName];
+                var elementTemplate = Forms.elements[elementName],
+                    element;
 
                 if (typeof elementTemplate === 'function') {
-                    formElements.push(elementTemplate());
+                    element = elementTemplate();
+                    if (values && values[elementName]) {
+                        element.set('value', values[elementName]);
+                    }
+                    formElements.push(element);
+
                 } else {
                     var params = [];
                     array.forEach(elementTemplate.params, function (paramName) {
                         params.push(formTemplate[paramName]);
                     });
-                    formElements.push(elementTemplate.action.apply(undefined, params));
+                    element = elementTemplate.action.apply(undefined, params);
+                    if (values && values[elementName]) {
+                        element.set('value', values[elementName]);
+                    }
+                    formElements.push(element);
                 }
             }
         });
