@@ -128,7 +128,7 @@ define([
                 type: 'plantae',
                 elements: ['id','species','original_name','collecter','identifier','key_area','lat','lon','location','annotation','biotop','difference', 'frequency','quantity','year','month','day','exposure','infosourse','biblioref']
             },
-            'cardLichenes': {
+            'anLichenes': {
                 form: {action: '/annotation/new', method: 'POST'},
                 type: 'lichenes',
                 elements: ['id','species','original_name','collecter','identifier','key_area','lat','lon','location','annotation','biotop','difference', 'substrat','frequency','quantity','year','month','day','exposure','infosourse','biblioref']
