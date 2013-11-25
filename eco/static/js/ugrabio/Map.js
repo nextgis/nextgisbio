@@ -225,7 +225,7 @@ define([
 
                                 var grid = new declare([OnDemandGrid, ColumnHider])({
                                     columns: {
-                                        name: {label: "Участок", unhidable: true},
+                                        name: {label: "Вид", unhidable: true},
                                         id: {label: 'id', hidden: true},
                                         species: {label: 'species', hidden: true}
                                     },
@@ -233,7 +233,7 @@ define([
                                 });
 
                                 new Dialog({
-                                    title: 'Ключевые участки квадрата "' + keyName + '"',
+                                    title: 'Списки ключевого участка "' + keyName + '"',
                                     content: grid,
                                     class: 'keyAreaDialog'
                                 }).show();
