@@ -37,7 +37,8 @@ define([
 
         new Dialog({
             title: 'Создать новую карточку',
-            elements: formElements
+            elements: formElements,
+            formSettings: formTemplate['form']
         }).show();
     });
 });
