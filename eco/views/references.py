@@ -35,7 +35,7 @@ def person_name(request):
     persons = []
     success = True
     try:
-        if start and count:
+        if (start is not None) and (count is not None):
             persons = dbsession.query(Person.id, Person.name) \
                 .filter(*filter_conditions) \
                 .order_by(Person.name) \
@@ -55,7 +55,7 @@ def person_name(request):
     persons_json = []
     for (id, name) in persons:
         persons_json.append({'id': id, 'name': name})
-    return {'items': persons_json, 'success': success, 'numRows': numRows, 'identity': 'id'}
+    return {'items': persons_json, 'success': success, 'numRows': numRows, 'identifier': 'id'}
 
 
 # Названия инфоресурсов
@@ -75,7 +75,7 @@ def inforesources_name(request):
     inforesources = []
     success = True
     try:
-        if start and count:
+        if (start is not None) and (count is not None):
             inforesources = dbsession.query(Inforesources.id, Inforesources.filename) \
                 .filter(*filter_conditions) \
                 .order_by(Inforesources.filename) \
@@ -95,7 +95,12 @@ def inforesources_name(request):
     inforesources_json = []
     for (id, name) in inforesources:
         inforesources_json.append({'id': id, 'filename': name})
-    return {'items': inforesources_json, 'success': success, 'numRows': numRows, 'identity': 'id'}
+    return {
+        'items': inforesources_json,
+        'success': success,
+        'numRows': numRows,
+        'identifier': 'id'
+    }
 
 
 # Аннотированные списки по ключевому участку

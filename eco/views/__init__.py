@@ -50,7 +50,7 @@ def table_browse(request):
     items = []
     success = True
     try:
-        if start and count:
+        if (start is not None) and (count is not None):
             items = dbsession.query(table)\
                 .filter(*filter_conditions) \
                 .order_by(tablename + ' asc') \
@@ -75,7 +75,7 @@ def table_browse(request):
         'items': items_json,
         'success': success,
         'numRows': numRows,
-        'identity': 'id'
+        'identifier': 'id'
     }
 
 
