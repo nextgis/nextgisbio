@@ -180,36 +180,34 @@ def species_filter(request):
     except KeyError:
         return {'success': False, 'msg': 'Неверный вид организма'}
     
+    known_tax, all_t, all_s = [], [], []
     success = True
     try:
         # Если id известен, выберем запись:
-        if taxon_id:
+        if ('id' in request.params) and request.params['id']:
+            taxon_id = int(request.params['id'])
             known_tax = dbsession.query(Taxon.id, Taxon.name, Taxon.author, Taxon.source).filter(Taxon.id == taxon_id).all()
         else:
-            known_tax = []
-        
-        # Если пришла строка запроса, обработаем:
-        all_t, all_s = [], []
-        if query_str or query_str == '':
-            target = dbsession.query(Taxon).filter(Taxon.name.in_(sp)).all()
-            target_ids = [t.id for t in target]
-            target_ids = ", ".join([str(num) for num in target_ids])
-            
-            # Найдем таксоны заданного типа организмов с названием, удовл. шаблону:
-            qs = TAXON_ALL_QUERY  % (target_ids, TAXON_TYPES[len(TAXON_TYPES)-1])
-            subquery = " AND UPPER(%s) LIKE '%s%s%s'" % ('name', '%', query_str.upper(),'%')
-            qs = qs + subquery + ';'
-            all_t = dbsession.query(Taxon.id, Taxon.name, Taxon.author, Taxon.source).from_statement(qs).all()
-            
-            # Синонимы
-            subquery = TAXON_ID_QUERY % (target_ids, TAXON_TYPES[len(TAXON_TYPES)-1])
-            qsyn = '''
-            SELECT * FROM synonym
-            WHERE
-              UPPER(%s) LIKE '%s%s%s' AND species_id IN ( %s);
-            '''  % ('synonym', '%', query_str.upper(),'%', subquery)
-            all_s = dbsession.query(Synonym.species_id, Synonym.synonym, Synonym.author, Synonym.source).from_statement(qsyn).all()
-        
+            # Если пришла строка запроса, обработаем:
+            if query_str or query_str == '':
+                target = dbsession.query(Taxon).filter(Taxon.name.in_(sp)).all()
+                target_ids = [t.id for t in target]
+                target_ids = ", ".join([str(num) for num in target_ids])
+
+                # Найдем таксоны заданного типа организмов с названием, удовл. шаблону:
+                qs = TAXON_ALL_QUERY  % (target_ids, TAXON_TYPES[len(TAXON_TYPES)-1])
+                subquery = " AND UPPER(%s) LIKE '%s%s%s'" % ('name', '%', query_str.upper(),'%')
+                qs = qs + subquery + ';'
+                all_t = dbsession.query(Taxon.id, Taxon.name, Taxon.author, Taxon.source).from_statement(qs).all()
+
+                # Синонимы
+                subquery = TAXON_ID_QUERY % (target_ids, TAXON_TYPES[len(TAXON_TYPES)-1])
+                qsyn = '''
+                SELECT * FROM synonym
+                WHERE
+                  UPPER(%s) LIKE '%s%s%s' AND species_id IN ( %s);
+                '''  % ('synonym', '%', query_str.upper(),'%', subquery)
+                all_s = dbsession.query(Synonym.species_id, Synonym.synonym, Synonym.author, Synonym.source).from_statement(qsyn).all()
     except DBAPIError:
         success = False
     

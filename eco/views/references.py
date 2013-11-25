@@ -24,33 +24,42 @@ import helpers
 def person_name(request):
     dbsession = DBSession()
 
-    start, count = helpers.get_paging_params(request.params)
-
-    parsed_name = helpers.get_parsed_search_attr(request.params)
-    filter_conditions = []
-    if parsed_name:
-        filter_conditions.append(Person.name.ilike(parsed_name))
-
     numRows = 0
     persons = []
     success = True
-    try:
-        if (start is not None) and (count is not None):
-            persons = dbsession.query(Person.id, Person.name) \
-                .filter(*filter_conditions) \
-                .order_by(Person.name) \
-                .slice(start, start + count)
-            numRows = dbsession.query(Person) \
-                .filter(*filter_conditions) \
-                .count()
-        else:
-            persons = dbsession.query(Person.id, Person.name) \
-                .filter(*filter_conditions) \
-                .order_by(Person.name) \
-                .all()
-            numRows = len(persons)
-    except DBAPIError:
-        success = False
+
+    if ('id' in request.params) and request.params['id'].isdigit():
+        id = int(request.params['id'])
+        try:
+            persons = dbsession.query(Person.id, Person.name)\
+                .filter(Person.id == id)
+            numRows = 1
+        except DBAPIError:
+            success = False
+    else:
+        start, count = helpers.get_paging_params(request.params)
+        parsed_name = helpers.get_parsed_search_attr(request.params)
+        filter_conditions = []
+        if parsed_name:
+            filter_conditions.append(Person.name.ilike(parsed_name))
+
+        try:
+            if (start is not None) and (count is not None):
+                persons = dbsession.query(Person.id, Person.name) \
+                    .filter(*filter_conditions) \
+                    .order_by(Person.name) \
+                    .slice(start, start + count)
+                numRows = dbsession.query(Person) \
+                    .filter(*filter_conditions) \
+                    .count()
+            else:
+                persons = dbsession.query(Person.id, Person.name) \
+                    .filter(*filter_conditions) \
+                    .order_by(Person.name) \
+                    .all()
+                numRows = len(persons)
+        except DBAPIError:
+            success = False
 
     persons_json = []
     for (id, name) in persons:
@@ -63,34 +72,43 @@ def person_name(request):
 def inforesources_name(request):
     dbsession = DBSession()
 
-    start, count = helpers.get_paging_params(request.params)
-
-    parsed_filename = helpers.get_parsed_search_attr(request.params, 'filename')
-    filter_conditions = []
-    if parsed_filename:
-        filter_conditions.append(Inforesources.filename.ilike(parsed_filename))
-
-
     numRows = 0
     inforesources = []
     success = True
-    try:
-        if (start is not None) and (count is not None):
-            inforesources = dbsession.query(Inforesources.id, Inforesources.filename) \
-                .filter(*filter_conditions) \
-                .order_by(Inforesources.filename) \
-                .slice(start, start + count)
-            numRows = dbsession.query(Inforesources) \
-                .filter(*filter_conditions) \
-                .count()
-        else:
-            inforesources = dbsession.query(Inforesources.id, Inforesources.filename) \
-                .filter(*filter_conditions) \
-                .order_by(Inforesources.filename) \
-                .all()
-            numRows = len(inforesources)
-    except DBAPIError:
-        success = False
+
+    if ('id' in request.params) and request.params['id'].isdigit():
+        id = int(request.params['id'])
+        try:
+            inforesources = dbsession.query(Inforesources.id, Inforesources.filename)\
+                .filter(Inforesources.id == id)
+            numRows = 1
+        except DBAPIError:
+            success = False
+    else:
+        start, count = helpers.get_paging_params(request.params)
+
+        parsed_filename = helpers.get_parsed_search_attr(request.params, 'filename')
+        filter_conditions = []
+        if parsed_filename:
+            filter_conditions.append(Inforesources.filename.ilike(parsed_filename))
+
+        try:
+            if (start is not None) and (count is not None):
+                inforesources = dbsession.query(Inforesources.id, Inforesources.filename) \
+                    .filter(*filter_conditions) \
+                    .order_by(Inforesources.filename) \
+                    .slice(start, start + count)
+                numRows = dbsession.query(Inforesources) \
+                    .filter(*filter_conditions) \
+                    .count()
+            else:
+                inforesources = dbsession.query(Inforesources.id, Inforesources.filename) \
+                    .filter(*filter_conditions) \
+                    .order_by(Inforesources.filename) \
+                    .all()
+                numRows = len(inforesources)
+        except DBAPIError:
+            success = False
 
     inforesources_json = []
     for (id, name) in inforesources:

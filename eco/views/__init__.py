@@ -39,33 +39,43 @@ def table_browse(request):
     except KeyError:
         return {'success': False, 'msg': 'Ошибка: отсутствует таблица с указанным именем'}
 
-    start, count = helpers.get_paging_params(request.params)
-
-    parsed_name = helpers.get_parsed_search_attr(request.params, tablename)
-    filter_conditions = []
-    if parsed_name:
-        filter_conditions.append(getattr(table, tablename).ilike(parsed_name))
-
     numRows = 0
     items = []
     success = True
-    try:
-        if (start is not None) and (count is not None):
+
+    if ('id' in request.params) and request.params['id'].isdigit():
+        id = int(request.params['id'])
+        try:
             items = dbsession.query(table)\
-                .filter(*filter_conditions) \
-                .order_by(tablename + ' asc') \
-                .slice(start, start+count)
-            numRows = dbsession.query(table) \
-                .filter(*filter_conditions) \
-                .count()
-        else:
-            items = dbsession.query(table) \
-                .filter(*filter_conditions) \
-                .order_by(tablename + ' asc') \
-                .all()
-            numRows = len(items)
-    except DBAPIError:
-        success = False
+                .filter(table.id == id)
+            numRows = 1
+        except DBAPIError:
+            success = False
+    else:
+        start, count = helpers.get_paging_params(request.params)
+        parsed_name = helpers.get_parsed_search_attr(request.params, tablename)
+        filter_conditions = []
+        if parsed_name:
+            filter_conditions.append(getattr(table, tablename).ilike(parsed_name))
+
+
+        try:
+            if (start is not None) and (count is not None):
+                items = dbsession.query(table)\
+                    .filter(*filter_conditions) \
+                    .order_by(tablename + ' asc') \
+                    .slice(start, start+count)
+                numRows = dbsession.query(table) \
+                    .filter(*filter_conditions) \
+                    .count()
+            else:
+                items = dbsession.query(table) \
+                    .filter(*filter_conditions) \
+                    .order_by(tablename + ' asc') \
+                    .all()
+                numRows = len(items)
+        except DBAPIError:
+            success = False
 
     items_json = []
     for row in items:
