@@ -4,6 +4,7 @@ define([
     'dojo/_base/lang',
     'dojo/_base/window',
     'dojo/dom',
+    'dojo/dom-class',
     'dojo/dom-construct',
     'dojo/dom-form',
     'dojo/request/xhr',
@@ -15,7 +16,7 @@ define([
     'dojox/layout/TableContainer',
     'dijit/form/Button'
 
-], function (declare, array, lang, win, dom, domConstruct, domForm, xhr, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, FloatingPane, Form, TableContainer, Button) {
+], function (declare, array, lang, win, dom, domClass, domConstruct, domForm, xhr, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, FloatingPane, Form, TableContainer, Button) {
 
     var id_counter = 0;
 
@@ -32,21 +33,24 @@ define([
                 this.style = 'position:absolute;top:55px;left:5px;height:300px;border:1px solid #759dc0;padding:5px;z-index:9999;overflow-x:hidden;';
             }
 
-            if (this.elements) {
+            if (this.elements && !this.content) {
                 this._buildForm(this.elements, this.formSettings);
-            } else {
-                throw ReferenceError;
+                this.content = this._form;
             }
 
             var floatingDiv = domConstruct.create('div', {id: 'dialogFloat_' + id_counter++}, win.body());
             this._dialog = new FloatingPane({
                 title: this.title,
-                content: this._form,
+                content: this.content,
                 resizable: true,
                 dockable: false,
                 maxable: true,
                 style: this.style
             }, floatingDiv);
+
+            if (this.class) {
+                domClass.add(this._dialog.domNode, this.class);
+            }
         },
 
         _buildForm: function (elements, formSettings) {
@@ -95,7 +99,9 @@ define([
 
         show: function () {
             this.inherited(arguments);
-            this._form.startup();
+            if (this._form) {
+                this._form.startup();
+            }
             this._dialog.startup();
         }
     });

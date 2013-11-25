@@ -1,4 +1,19 @@
-define(['dojo/ready', 'dojo/topic', 'dojo/domReady!'], function (ready, topic) {
+define([
+    'dojo/_base/window',
+    'dojo/dom-construct',
+    'dojo/ready',
+    'dojo/topic',
+    'dojo/query',
+    'dojo/dom-attr',
+    'dojo/on',
+    'dojo/request/xhr',
+    'ugrabio/Dialog',
+    'dojo/store/Memory',
+    'dgrid/OnDemandGrid',
+    'dojox/layout/FloatingPane',
+    'ugrabio/Dialog',
+    'dojo/domReady!'
+], function (win, domConstruct, ready, topic, query, domAttr, on, xhr, Dialog, Memory, Grid, FloatingPane, Dialog) {
     var taxon_nodes = [];
 
     // Стили
@@ -180,9 +195,9 @@ define(['dojo/ready', 'dojo/topic', 'dojo/domReady!'], function (ready, topic) {
                     doc = parser.read(doc);
                     var descr = []
                     for (var i = 0; i < doc.key_areas.length; i++) {
-                        var url = application_root + '/key_area/' + doc.key_areas[i].id + '/ann';
-                        var name = doc.key_areas[i].name;
-                        var ref = "<a href='#' onClick='showAnnList(\"" + url + "\", \"" + name + "\");'" + ">" + name + "</a>";
+                        var id = doc.key_areas[i].id,
+                            name = doc.key_areas[i].name;
+                        var ref = '<a href="#" data-id="' + id + '" >' + name + '</a>';
                         descr.push(ref);
                     }
                     descr = descr.join('<br/>');
@@ -198,6 +213,39 @@ define(['dojo/ready', 'dojo/topic', 'dojo/domReady!'], function (ready, topic) {
                     f.popup = current_square_popup;
                     current_square_popup.feature = f;
                     map.addPopup(current_square_popup, true);
+
+                    var links = query('a', current_square_popup.contentDiv);
+                    on(links, 'click', function () {
+                        var keyAreaId = domAttr.get(this, 'data-id'),
+                            keyName = this.innerText;
+                        xhr.get(application_root + '/key_area/' + keyAreaId + '/ann', {
+                            handleAs: 'json'
+                        }).then(function (data) {
+                                var store = new Memory({ data: data.data });
+
+                                var grid = new Grid({
+                                    columns: {
+                                        name: "Участок"
+                                    },
+                                    store: store
+                                });
+
+                                new Dialog({
+                                    title: 'Ключевые участки квадрата "' + keyName + '"',
+                                    content: grid,
+                                    class: 'keyAreaDialog'
+                                }).show();
+
+                                grid.startup();
+
+                                grid.on("div.dgrid-row:click", function(e) {
+                                    alert('Разрабатываю...');
+                                });
+
+                            }, function (error) {
+                                alert('Извините, произошла ошибка, попробуйте еще раз.');
+                            });
+                    });
                 }
             });
         };
