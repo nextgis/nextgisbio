@@ -197,7 +197,7 @@ define([
                     for (var i = 0; i < doc.key_areas.length; i++) {
                         var id = doc.key_areas[i].id,
                             name = doc.key_areas[i].name;
-                        var ref = '<a href="#" data-id="' + id + '" >' + name + '</a>';
+                        var ref = '<a href="javascript:void(0)" data-id="' + id + '" >' + name + '</a>';
                         descr.push(ref);
                     }
                     descr = descr.join('<br/>');
@@ -312,13 +312,9 @@ define([
 
                     var descr = [];
                     for (var i = 0; i < data.length; i++) {
-                        var title = 'Аннотация № ' + data[i].ann_id;
-                        var fields = "annFieldlistByTaxonId(" + data[i].spec_id + ")";
-                        var recordID = data[i].ann_id;
-                        var name = data[i].name;
-                        var baseURL = application_root + '/annotation/';
-                        var onclick = "new formWindow({form: new tableRowForm({baseURL: \"" + baseURL + "\", recordID: " + recordID + ", fields: " + fields + "}), title: \"" + title + "\"}).show();";
-                        var ref = "<a href='#' onClick='" + onclick + "'" + ">" + name + "</a>";
+                        var id = data[i].ann_id,
+                            name = data[i].name,
+                            ref = '<a href="javascript:void(0)" data-id="' + id + '" >' + name + '</a>';
                         descr.push(ref);
                     }
                     descr = descr.join('<br/>');
@@ -334,6 +330,11 @@ define([
                     f.popup = current_ann_popup;
                     current_ann_popup.feature = f;
                     map.addPopup(current_ann_popup, true);
+
+                    var links = query('a', current_ann_popup.contentDiv);
+                    on(links, 'click', function () {
+
+                    });
                 }
             });
         };
