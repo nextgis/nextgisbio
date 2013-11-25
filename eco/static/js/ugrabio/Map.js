@@ -240,7 +240,7 @@ define([
 
                                 grid.startup();
 
-                                grid.on("div.dgrid-row:click", function(e) {
+                                grid.on("div.dgrid-row:click", function (e) {
                                     var idAnnotationField = query('td.field-id', this)[0],
                                         idAnnotation = idAnnotationField.innerText | idAnnotationField.textContent,
                                         idSpecieField = query('td.field-species', this)[0],
@@ -312,9 +312,10 @@ define([
 
                     var descr = [];
                     for (var i = 0; i < data.length; i++) {
-                        var id = data[i].ann_id,
+                        var annotationId = data[i].ann_id,
+                            specieId = data[i].spec_id,
                             name = data[i].name,
-                            ref = '<a href="javascript:void(0)" data-id="' + id + '" >' + name + '</a>';
+                            ref = '<a href="javascript:void(0)" data-ann-id="' + annotationId + '" data-spec-id="' + specieId + '" >' + name + '</a>';
                         descr.push(ref);
                     }
                     descr = descr.join('<br/>');
@@ -333,7 +334,30 @@ define([
 
                     var links = query('a', current_ann_popup.contentDiv);
                     on(links, 'click', function () {
+                        var idAnnotation = domAttr.get(this, 'data-ann-id'),
+                            idSpecie = domAttr.get(this, 'data-spec-id');
+                        xhr.get(application_root + '/taxon/' + idSpecie + '/type', {handleAs: 'json'}).then(
+                            function (kingdoms) {
+                                var kingdom;
+                                for (kingdom in kingdoms) {
+                                    if (kingdoms.hasOwnProperty(kingdom)) {
+                                        if (kingdoms[kingdom] === true) {
+                                            break;
+                                        }
+                                    }
+                                }
+                                kingdom = kingdom.charAt(0).toUpperCase() + kingdom.slice(1);
 
+                                xhr.get(application_root + '/annotation/' + idAnnotation, {handleAs: 'json'}).then(
+                                    function (data) {
+                                        var annotation = data.data;
+                                        topic.publish('open/form', 'an' + kingdom, annotation);
+                                    });
+                            },
+                            function (error) {
+                                alert('Извините, произошла ошибка, попробуйте еще раз.');
+                            }
+                        );
                     });
                 }
             });
