@@ -156,10 +156,10 @@ define([
             var refs = [];
             for (var i = 0; i < features.length; i++) {
                 var attributes = features[i].attributes,
-                    card_id = attributes.card_id,
-                    spec_id = attributes.spec_id,
+                    cardId = attributes.card_id,
+                    specId = attributes.spec_id,
                     name = attributes.name;
-                var ref = '<a href="javascript:void(0)" data-card-id="' + card_id + '" data-spec-id="' + spec_id + '">' + name + '</a>';
+                var ref = '<a href="javascript:void(0)" data-card-id="' + cardId + '" data-spec-id="' + specId + '">' + name + '</a>';
                 refs.push(ref);
             }
             refs = refs.join('<br/>');
@@ -175,6 +175,36 @@ define([
             f.popup = current_card_popup;
             current_card_popup.feature = f;
             map.addPopup(current_card_popup, true);
+
+            var links = query('a', current_card_popup.contentDiv);
+            on(links, 'click', function () {
+                var cardId = domAttr.get(this, 'data-card-id'),
+                    specId = domAttr.get(this, 'data-spec-id'),
+                    name = this.innerText || this.textContent;
+
+                xhr.get(application_root + '/taxon/' + specId + '/type', {handleAs: 'json'}).then(
+                            function (kingdoms) {
+                                var kingdom;
+                                for (kingdom in kingdoms) {
+                                    if (kingdoms.hasOwnProperty(kingdom)) {
+                                        if (kingdoms[kingdom] === true) {
+                                            break;
+                                        }
+                                    }
+                                }
+                                kingdom = kingdom.charAt(0).toUpperCase() + kingdom.slice(1);
+
+                                xhr.get(application_root + '/cards/' + cardId, {handleAs: 'json'}).then(
+                                    function (data) {
+                                        var card = data.data;
+                                        topic.publish('open/form', 'card' + kingdom, card);
+                                    });
+                            },
+                            function (error) {
+                                alert('Извините, произошла ошибка, попробуйте еще раз.');
+                            }
+                        );
+            });
         };
 
         var hide_card_popup = function (f) {
@@ -223,7 +253,7 @@ define([
                     var links = query('a', current_square_popup.contentDiv);
                     on(links, 'click', function () {
                         var keyAreaId = domAttr.get(this, 'data-id'),
-                            keyName = this.innerText;
+                            keyName = this.innerText || this.textContent;
                         xhr.get(application_root + '/key_area/' + keyAreaId + '/ann', {
                             handleAs: 'json'
                         }).then(function (data) {
@@ -248,9 +278,9 @@ define([
 
                                 grid.on("div.dgrid-row:click", function (e) {
                                     var idAnnotationField = query('td.field-id', this)[0],
-                                        idAnnotation = idAnnotationField.innerText | idAnnotationField.textContent,
+                                        idAnnotation = idAnnotationField.innerText || idAnnotationField.textContent,
                                         idSpecieField = query('td.field-species', this)[0],
-                                        idSpecie = idSpecieField.innerText | idSpecieField.textContent;
+                                        idSpecie = idSpecieField.innerText || idSpecieField.textContent;
                                     xhr.get(application_root + '/taxon/' + idSpecie + '/type', {handleAs: 'json'}).then(
                                         function (kingdoms) {
                                             var kingdom;
