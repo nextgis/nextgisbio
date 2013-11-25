@@ -1,4 +1,5 @@
 define([
+    'dojo/_base/declare',
     'dojo/_base/window',
     'dojo/dom-construct',
     'dojo/ready',
@@ -10,10 +11,9 @@ define([
     'ugrabio/Dialog',
     'dojo/store/Memory',
     'dgrid/OnDemandGrid',
-    'dojox/layout/FloatingPane',
-    'ugrabio/Dialog',
+    'dgrid/extensions/ColumnHider',
     'dojo/domReady!'
-], function (win, domConstruct, ready, topic, query, domAttr, on, xhr, Dialog, Memory, Grid, FloatingPane, Dialog) {
+], function (declare, win, domConstruct, ready, topic, query, domAttr, on, xhr, Dialog, Memory, OnDemandGrid, ColumnHider) {
     var taxon_nodes = [];
 
     // Стили
@@ -223,9 +223,11 @@ define([
                         }).then(function (data) {
                                 var store = new Memory({ data: data.data });
 
-                                var grid = new Grid({
+                                var grid = new declare([OnDemandGrid, ColumnHider])({
                                     columns: {
-                                        name: "Участок"
+                                        name: {label: "Участок", unhidable: true},
+                                        id: {label: 'id', hidden: true},
+                                        species: {label: 'species', hidden: true}
                                     },
                                     store: store
                                 });
@@ -239,7 +241,32 @@ define([
                                 grid.startup();
 
                                 grid.on("div.dgrid-row:click", function(e) {
-                                    alert('Разрабатываю...');
+                                    var idAnnotationField = query('td.field-id', this)[0],
+                                        idAnnotation = idAnnotationField.innerText | idAnnotationField.textContent,
+                                        idSpecieField = query('td.field-species', this)[0],
+                                        idSpecie = idSpecieField.innerText | idSpecieField.textContent;
+                                    xhr.get(application_root + '/taxon/' + idSpecie + '/type', {handleAs: 'json'}).then(
+                                        function (kingdoms) {
+                                            var kingdom;
+                                            for (kingdom in kingdoms) {
+                                                if (kingdoms.hasOwnProperty(kingdom)) {
+                                                    if (kingdoms[kingdom] === true) {
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                            kingdom = kingdom.charAt(0).toUpperCase() + kingdom.slice(1);
+
+                                            xhr.get(application_root + '/annotation/' + idAnnotation, {handleAs: 'json'}).then(
+                                                function (data) {
+                                                    var annotation = data.data;
+                                                    topic.publish('open/form', 'an' + kingdom, annotation);
+                                                });
+                                        },
+                                        function (error) {
+                                            alert('Извините, произошла ошибка, попробуйте еще раз.');
+                                        }
+                                    );
                                 });
 
                             }, function (error) {
