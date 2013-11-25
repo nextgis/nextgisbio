@@ -10,12 +10,14 @@
     <meta charset="utf-8">
     <title>ГИС по объектам животного и растительного мира Ханты-Мансийского автономного округа</title>
 
-    <link rel="stylesheet" type="text/css"
-          href="${request.static_url('eco:contrib/geoext/resources/css/geoext-all-debug.css')}" media="screen">
     <link rel="stylesheet"
           href="${request.static_url('eco:static/js/lib/dojo-release-1.9.1/dijit/themes/claro/claro.css')}"
           media="screen">
     <link rel="stylesheet" href="${request.static_url('eco:static/js/lib/cbtree-v0.9.4-0/icons/indentIcons.css')}" />
+
+    <link rel="stylesheet" href="${request.static_url('eco:static/js/lib/dojo-release-1.9.1/dojox/layout/resources/FloatingPane.css')}" />
+    <link rel="stylesheet" href="${request.static_url('eco:static/js/lib/dojo-release-1.9.1/dojox/layout/resources/ResizeHandle.css')}" />
+
     <link rel="stylesheet" type="text/css" href="${request.static_url('eco:static/css/main.css')}" media="screen">
 
     <script type="text/javascript">
@@ -45,7 +47,7 @@
         require(['dojox/data/QueryReadStore', 'dojo/dom', 'dojo/parser', 'dojo/store/JsonRest',
             'dijit/layout/BorderContainer', 'dijit/layout/ContentPane',
             'dijit/Dialog', 'dijit/form/TextBox', 'dijit/form/Button',
-            'dijit/form/ValidationTextBox', 'dojo/domReady!',
+            'dijit/form/ValidationTextBox', 'dojo/topic', 'dojo/domReady!',
             'ugrabio/Loader', 'ugrabio/TaxonSearcher', 'ugrabio/TaxonTree', 'ugrabio/Map', 'ugrabio/DialogManager'],
                 function () { });
 
