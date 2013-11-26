@@ -63,7 +63,7 @@
 
             var ugrabio = {};
             %if is_auth:
-                require(['ugrabio/AdminMenu']);
+                require(['ugrabio/AdminMenu', 'ugrabio/Export']);
                 ugrabio.is_auth = true;
             %endif
     </script>
