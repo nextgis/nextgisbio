@@ -37,6 +37,7 @@ define(['dojo/dom', 'dojo/on', 'dojo/topic', 'cbtree/Tree', 'cbtree/model/FileSt
             icon: { iconClass: "indentIcon", indent: false },
             branchIcons: true,
             nodeIcons: true,
+            id: 'taxonsTree',
             getLabel: getTaxonLabel
         });
 
