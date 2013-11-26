@@ -11,7 +11,7 @@ define([
     'ugrabio/Dialog',
     'dojo/domReady!'
 ], function (array, on, topic, MenuBar, PopupMenuBarItem, Menu, MenuItem, DropDownMenu, Forms, Dialog) {
-    topic.subscribe('open/form', function (formId, values) {
+    topic.subscribe('open/form', function (formId, title, values) {
         var formTemplate = Forms.forms[formId],
             listElementsId = formTemplate.elements,
             formElements = [];
@@ -45,7 +45,7 @@ define([
         });
 
         new Dialog({
-            title: 'Создать новую карточку',
+            title: title,
             elements: formElements,
             formSettings: formTemplate['form']
         }).show();
