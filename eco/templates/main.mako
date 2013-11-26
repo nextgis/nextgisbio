@@ -57,12 +57,14 @@
             'dijit/layout/BorderContainer', 'dijit/layout/ContentPane',
             'dijit/Dialog', 'dijit/form/TextBox', 'dijit/form/Button',
             'dijit/form/ValidationTextBox', 'dojo/topic', 'dojo/domReady!',
-            'ugrabio/Loader', 'ugrabio/TaxonSearcher', 'ugrabio/TaxonTree', 'ugrabio/Map', 'ugrabio/DialogManager'],
+            'ugrabio/Loader', 'ugrabio/TaxonSearcher', 'ugrabio/TaxonTree', 'ugrabio/Map', 'ugrabio/Dialog', 'ugrabio/DialogManager'],
                 function () {
                 });
 
+            var ugrabio = {};
             %if is_auth:
-                require(['ugrabio/AdminMenu', 'ugrabio/Dialog']);
+                require(['ugrabio/AdminMenu']);
+                ugrabio.is_auth = true;
             %endif
     </script>
 </head>

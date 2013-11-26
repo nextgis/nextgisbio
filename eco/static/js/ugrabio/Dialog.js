@@ -59,7 +59,7 @@ define([
             this._layout = new TableContainer({
                 showLabels: true,
                 orientation: 'horiz',
-                style: 'width: 100%, margin: 5px;'
+                style: 'width: 96%, margin: 5px;'
 
             });
 
@@ -70,7 +70,8 @@ define([
             this._layout.placeAt(this._form.containerNode);
             this._layout.startup();
 
-            if (this.submit) {
+            // todo: create user determining system
+            if (this.submit && ugrabio.is_auth) {
                 var form = this._form,
                     dialog = this._dialog;
                 new Button({
