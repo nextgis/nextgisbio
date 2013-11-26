@@ -4,8 +4,9 @@ define([
     'dijit/form/NumberTextBox',
     'dijit/form/Textarea',
     'dijit/form/CheckBox',
+    'dijit/form/TimeTextBox',
     'ugrabio/JsonFilteringSelect'
-], function (Button, TextBox, NumberTextBox, Textarea, CheckBox, JsonFilteringSelect) {
+], function (Button, TextBox, NumberTextBox, Textarea, CheckBox, TimeTextBox, JsonFilteringSelect) {
 
     var getPersonJsonFilteringSelect = function (title, name, required) {
         return new JsonFilteringSelect({
@@ -14,7 +15,7 @@ define([
             title: title,
             required: required,
             autoComplete: false,
-            identifier:'id',
+            identifier: 'id',
             pageSize: 10,
             queryExpr: '${0}',
             style: 'width: 215px;'
@@ -104,34 +105,34 @@ define([
             'anMammalia': {
                 form: {action: '/annotation/new', method: 'POST'},
                 type: 'mammalia',
-                elements: ['id','species','original_name','collecter','identifier','key_area','lat','lon','location','annotation','biotop','difference', 'status','frequency','quantity','year','month','day','exposure','infosourse','biblioref']
+                elements: ['id', 'species', 'original_name', 'collecter', 'identifier', 'key_area', 'lat', 'lon', 'location', 'annotation', 'biotop', 'difference', 'status', 'frequency', 'quantity', 'year', 'month', 'day', 'exposure', 'infosourse', 'biblioref']
             },
             'anAves': {
                 form: {action: '/annotation/new', method: 'POST'},
                 type: 'aves',
-                elements: ['id','species','original_name','collecter','identifier','key_area','lat','lon','location','annotation','biotop','difference', 'substrat','status','frequency','quantity', 'year','month','day','exposure','infosourse','biblioref']
+                elements: ['id', 'species', 'original_name', 'collecter', 'identifier', 'key_area', 'lat', 'lon', 'location', 'annotation', 'biotop', 'difference', 'substrat', 'status', 'frequency', 'quantity', 'year', 'month', 'day', 'exposure', 'infosourse', 'biblioref']
             },
             'anAra': {
                 form: {action: '/annotation/new', method: 'POST'},
                 type: 'ara',
-                elements: ['id','species','original_name','collecter','identifier','key_area','lat','lon','location','annotation','biotop','difference', 'status','frequency','quantity','year','month','day','exposure','infosourse','biblioref']},
+                elements: ['id', 'species', 'original_name', 'collecter', 'identifier', 'key_area', 'lat', 'lon', 'location', 'annotation', 'biotop', 'difference', 'status', 'frequency', 'quantity', 'year', 'month', 'day', 'exposure', 'infosourse', 'biblioref']},
             'anArthropoda': {
                 form: {action: '/annotation/new', method: 'POST'},
                 type: 'arthropoda',
-                elements: ['id','species','original_name','collecter','identifier','key_area','lat','lon','location','annotation','biotop','difference', 'substrat','frequency','quantity','year','month','day','exposure','infosourse','biblioref']},
+                elements: ['id', 'species', 'original_name', 'collecter', 'identifier', 'key_area', 'lat', 'lon', 'location', 'annotation', 'biotop', 'difference', 'substrat', 'frequency', 'quantity', 'year', 'month', 'day', 'exposure', 'infosourse', 'biblioref']},
             'anMoss': {
                 form: {action: '/annotation/new', method: 'POST'},
                 type: 'moss',
-                elements: ['id','species','original_name','collecter','identifier','key_area','lat','lon','location','annotation','biotop','difference', 'frequency','quantity','year','month','day','exposure','infosourse','biblioref']},
+                elements: ['id', 'species', 'original_name', 'collecter', 'identifier', 'key_area', 'lat', 'lon', 'location', 'annotation', 'biotop', 'difference', 'frequency', 'quantity', 'year', 'month', 'day', 'exposure', 'infosourse', 'biblioref']},
             'anPlantae': {
                 form: {action: '/annotation/new', method: 'POST'},
                 type: 'plantae',
-                elements: ['id','species','original_name','collecter','identifier','key_area','lat','lon','location','annotation','biotop','difference', 'frequency','quantity','year','month','day','exposure','infosourse','biblioref']
+                elements: ['id', 'species', 'original_name', 'collecter', 'identifier', 'key_area', 'lat', 'lon', 'location', 'annotation', 'biotop', 'difference', 'frequency', 'quantity', 'year', 'month', 'day', 'exposure', 'infosourse', 'biblioref']
             },
             'anLichenes': {
                 form: {action: '/annotation/new', method: 'POST'},
                 type: 'lichenes',
-                elements: ['id','species','original_name','collecter','identifier','key_area','lat','lon','location','annotation','biotop','difference', 'substrat','frequency','quantity','year','month','day','exposure','infosourse','biblioref']
+                elements: ['id', 'species', 'original_name', 'collecter', 'identifier', 'key_area', 'lat', 'lon', 'location', 'annotation', 'biotop', 'difference', 'substrat', 'frequency', 'quantity', 'year', 'month', 'day', 'exposure', 'infosourse', 'biblioref']
             }
 
         },
@@ -306,7 +307,12 @@ define([
                     style: 'width: 215px;'});
             },
             time: function () {
-                return new NumberTextBox({name: 'time', title: 'Время',
+                return new TimeTextBox({
+                    name: 'time',
+                    title: 'Время',
+                    constraints: {
+                        timePattern: 'dd/mm/yy HH:mm:ss'
+                    },
                     style: 'width: 215px;'});
             },
             day: function () {
