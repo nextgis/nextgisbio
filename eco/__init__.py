@@ -64,7 +64,7 @@ def main(global_config, **settings):
     # Создание новой карточки наблюдения 
     config.add_route('new_card',            '/cards/new',               factory=RootFactory)
     # Сохранить карточку после редактирования
-    config.add_route('save_card',           '/cards/{id}/save',         factory=RootFactory)
+    config.add_route('save_card',           '/cards/save',         factory=RootFactory)
     # Карточка наблюдений в формате json
     config.add_route('cards_view',          '/cards/{id}',              factory=RootFactory)
     
@@ -75,7 +75,7 @@ def main(global_config, **settings):
     # Создание нового анн. списка
     config.add_route('new_anlist',          '/annotation/new',          factory=RootFactory)
     # Сохранить анн. список после редактирования
-    config.add_route('save_anlist',         '/annotation/{id}/save',    factory=RootFactory)
+    config.add_route('save_anlist',         '/annotation/save',    factory=RootFactory)
     
 
     # Квадраты и ключевые участки
