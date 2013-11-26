@@ -33,8 +33,8 @@ define([
                 {label: 'Сосудистые растения', action: 'open/form', params: ['cardPlantae']},
                 {label: 'Грибы, лишайники', action: 'open/form', params: ['cardLichenes']},
                 'separator',
-                {label: 'Экспорт в csv', action: ''},
-                {label: 'Экспорт в shp'}
+                {label: 'Экспорт в csv', action: 'open/window/taxon_list', params: ['/cards_download/csv/']},
+                {label: 'Экспорт в shp', action: 'open/window/taxon_list', params: ['/cards_download/shp/']}
             ],
             'Аннотированные списки': [
                 {label: 'Млекопитающие', action: 'open/form', params: ['anMammalia']},
@@ -45,31 +45,31 @@ define([
                 {label: 'Сосудистые растения', action: 'open/form', params: ['anPlantae']},
                 {label: 'Грибы, лишайники', action: 'open/form', params: ['anLichenes']},
                 'separator',
-                {label: 'Экспорт в csv'}
+                {label: 'Экспорт в csv', action: 'open/window/taxon_list', params: ['/anns_download/csv/']}
             ],
             'Контурный ареал': [
-                {label: 'Экспорт в shp'}
+                {label: 'Экспорт в shp', action: 'open/window/taxon_list', params: ['/areal/download/']}
             ],
             'Сырой экспорт': [
-                {label: 'abundance', action: ''},
-                {label: 'annotation', action: ''},
-                {label: 'anthr_press', action: ''},
-                {label: 'area_type', action: ''},
-                {label: 'cards', action: ''},
-                {label: 'coord_type', action: ''},
-                {label: 'footprint', action: ''},
-                {label: 'inforesources', action: ''},
-                {label: 'key_area', action: ''},
-                {label: 'legend', action: ''},
-                {label: 'museum', action: ''},
-                {label: 'person', action: ''},
-                {label: 'pheno', action: ''},
-                {label: 'square_karea_association', action: ''},
-                {label: 'synonym', action: ''},
-                {label: 'taxa_scheme', action: ''},
-                {label: 'taxon', action: ''},
-                {label: 'user', action: ''},
-                {label: 'vitality'}
+                {label: 'abundance', action: 'open/window', params: ['/abundance_download']},
+                {label: 'annotation', action: 'open/window', params: ['/annotation_download']},
+                {label: 'anthr_press', action: 'open/window', params: ['/anthr_press_download']},
+                {label: 'area_type', action: 'open/window', params: ['/area_type_download']},
+                {label: 'cards', action: 'open/window', params: ['/cards_download']},
+                {label: 'coord_type', action: 'open/window', params: ['/coord_type_download']},
+                {label: 'footprint', action: 'open/window', params: ['/footprint_download']},
+                {label: 'inforesources', action: 'open/window', params: ['/inforesources_download']},
+                {label: 'key_area', action: 'open/window', params: ['/key_area_download']},
+                {label: 'legend', action: 'open/window', params: ['/legend_download']},
+                {label: 'museum', action: 'open/window', params: ['/museum_download']},
+                {label: 'person', action: 'open/window', params: ['/person_download']},
+                {label: 'pheno', action: 'open/window', params: ['/pheno_download']},
+                {label: 'square_karea_association', action: 'open/window', params: ['/square_karea_association_download']},
+                {label: 'synonym', action: 'open/window', params: ['/synonym_download']},
+                {label: 'taxa_scheme', action: 'open/window', params: ['/taxa_scheme_download']},
+                {label: 'taxon', action: 'open/window', params: ['/taxon_download']},
+                {label: 'user', action: 'open/window', params: ['/user_download']},
+                {label: 'vitality', action: 'open/window', params: ['/vitality_download']}
             ]
         },
 
