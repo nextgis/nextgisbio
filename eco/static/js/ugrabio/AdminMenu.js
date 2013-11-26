@@ -29,7 +29,8 @@ define([
                 });
 
                 on(menuItem, 'click',  function () {
-                    topic.publish(menuItemTemplate.action, menuItemTemplate.params);
+                    // todo: change to topic, check work topic with array of parameters
+                    dojo.publish(menuItemTemplate.action, menuItemTemplate.params);
                 });
 
                 subMenu.addChild(menuItem);
