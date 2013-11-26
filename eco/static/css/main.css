@@ -73,9 +73,9 @@ div.olControlLayerSwitcher {
     float: left;
 }
 
-/* ugrabio/Dialog dijit class */
-.non-modal_underlay {
-    display: none;
+/* Dojo floating panel style */
+div.dojoxFloatingPaneContent.dijitContentPaneSingleChild {
+    overflow-x: hidden !important;
 }
 
 /* key area Dialog styles */
@@ -87,4 +87,3 @@ div.keyAreaDialog div.dgrid.dgrid-grid {
     height: 96%;
     margin: 4px;
 }
-
