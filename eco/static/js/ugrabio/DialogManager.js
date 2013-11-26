@@ -1,4 +1,5 @@
 define([
+    'dojo/_base/declare',
     'dojo/_base/array',
     'dojo/on',
     'dojo/topic',
@@ -10,8 +11,8 @@ define([
     'ugrabio/Forms',
     'ugrabio/Dialog',
     'dojo/domReady!'
-], function (array, on, topic, MenuBar, PopupMenuBarItem, Menu, MenuItem, DropDownMenu, Forms, Dialog) {
-    topic.subscribe('open/form', function (formId, title, values) {
+], function (declare, array, on, topic, MenuBar, PopupMenuBarItem, Menu, MenuItem, DropDownMenu, Forms, Dialog) {
+    topic.subscribe('open/form', function (formId, title, action, values) {
         var formTemplate = Forms.forms[formId],
             listElementsId = formTemplate.elements,
             formElements = [];
@@ -44,10 +45,15 @@ define([
             }
         });
 
+        var formSettings = formTemplate['form'];
+        if (action) {
+            declare.safeMixin(formSettings, {action: action});
+        }
+
         new Dialog({
             title: title,
             elements: formElements,
-            formSettings: formTemplate['form']
+            formSettings: formSettings
         }).show();
     });
 });
