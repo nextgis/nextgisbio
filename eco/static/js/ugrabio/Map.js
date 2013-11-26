@@ -197,7 +197,7 @@ define([
                                 xhr.get(application_root + '/cards/' + cardId, {handleAs: 'json'}).then(
                                     function (data) {
                                         var card = data.data;
-                                        topic.publish('open/form', 'card' + kingdom, card);
+                                        topic.publish('open/form', 'card' + kingdom, 'Карточка № ' + card.id, '/cards/save', card);
                                     });
                             },
                             function (error) {
@@ -269,7 +269,7 @@ define([
                                 });
 
                                 new Dialog({
-                                    title: 'Списки ключевого участка "' + keyName + '"',
+                                    title: 'Списки ключевого участка &laquo;' + keyName + '&raquo;',
                                     content: grid,
                                     class: 'keyAreaDialog'
                                 }).show();
@@ -296,7 +296,7 @@ define([
                                             xhr.get(application_root + '/annotation/' + idAnnotation, {handleAs: 'json'}).then(
                                                 function (data) {
                                                     var annotation = data.data;
-                                                    topic.publish('open/form', 'an' + kingdom, annotation);
+                                                    topic.publish('open/form', 'an' + kingdom, 'Аннотированный список № ' + annotation.id, '/annotation/save', annotation);
                                                 });
                                         },
                                         function (error) {
@@ -387,7 +387,7 @@ define([
                                 xhr.get(application_root + '/annotation/' + idAnnotation, {handleAs: 'json'}).then(
                                     function (data) {
                                         var annotation = data.data;
-                                        topic.publish('open/form', 'an' + kingdom, annotation);
+                                        topic.publish('open/form', 'an' + kingdom, 'Аннотированный список № ' + annotation.id, '/annotation/save', annotation);
                                     });
                             },
                             function (error) {
