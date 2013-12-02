@@ -61,11 +61,16 @@
                 function () {
                 });
 
-            var ugrabio = {};
-            %if is_auth:
-                require(['ugrabio/AdminMenu', 'ugrabio/Export']);
-                ugrabio.is_auth = true;
-            %endif
+        var ugrabio = {};
+
+        %if is_auth:
+            require(['ugrabio/AdminMenu', 'ugrabio/Export']);
+            ugrabio.is_auth = true;
+        %endif
+
+        %if is_admin:
+            require(['ugrabio/TaxonTreeMenu']);
+        %endif
     </script>
 </head>
 <body class="claro loading">
