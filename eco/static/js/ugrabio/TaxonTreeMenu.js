@@ -3,11 +3,11 @@ define(['dojo/dom', 'dojo/_base/array', 'dojo/on', 'dojo/topic',
     'cbtree/model/TreeStoreModel', 'dojo/_base/event', 'dojo/aspect', 'dojo/dom-attr', 'dijit/Tree',
     'dijit', 'dijit/Menu', 'dijit/MenuItem',
     'dojo/request/xhr', 'dojo/query',
-    'ugrabio/TaxonTree',
+    'ugrabio/TaxonCbTree',
     'dojo/domReady!'],
-    function (dom, array, on, topic, cbTree, FileStoreModel, FileStore, TreeStyling, Hierarchy, TreeStoreModel, event, aspect, attr, Tree, dijit, Menu, MenuItem, xhr, query, TaxonTree) {
+    function (dom, array, on, topic, cbTree, FileStoreModel, FileStore, TreeStyling, Hierarchy, TreeStoreModel, event, aspect, attr, Tree, dijit, Menu, MenuItem, xhr, query, TaxonCbTree) {
         var menu = new Menu();
-        menu.bindDomNode(TaxonTree.domNode);
+        menu.bindDomNode(TaxonCbTree.domNode);
 
         aspect.before(menu, '_openMyself', function (e) {
             var treeNode = dijit.getEnclosingWidget(e.target).focusedChild,

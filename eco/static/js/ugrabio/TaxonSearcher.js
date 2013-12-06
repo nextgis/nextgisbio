@@ -4,8 +4,8 @@ define([
     'dojox/data/QueryReadStore',
     'dojo/on',
     'dojo/request/xhr',
-    'ugrabio/TaxonTree'
-], function (ready, ComboBox, QueryReadStore, on, xhr, TaxonTree) {
+    'ugrabio/TaxonCbTree'
+], function (ready, ComboBox, QueryReadStore, on, xhr, TaxonCbTree) {
     ready(function () {
         var taxonStore = new QueryReadStore({
             url: application_root + '/taxon/filter'
@@ -24,7 +24,7 @@ define([
         }, "search");
 
         comboBox.watch('item', function (what, oldVal, newVal) {
-            TaxonTree.selectTaxon(newVal.i.id);
+            TaxonCbTree.selectTaxon(newVal.i.id);
         });
 
         return comboBox;

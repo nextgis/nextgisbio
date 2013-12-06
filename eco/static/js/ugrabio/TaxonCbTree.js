@@ -1,8 +1,8 @@
-define(['dojo/dom', 'dojo/on', 'dojo/topic', 'cbtree/Tree', 'cbtree/model/FileStoreModel',
-    'cbtree/store/FileStore', 'cbtree/extensions/TreeStyling', 'cbtree/store/Hierarchy',
+define(['dojo/dom', 'dojo/on', 'dojo/topic', 'dojo/store/JsonRest', 'cbtree/Tree', 'cbtree/model/FileStoreModel',
+    'cbtree/store/FileStore', 'cbtree/store/Eventable', 'dojo/store/Observable', 'cbtree/extensions/TreeStyling', 'cbtree/store/Hierarchy',
     'cbtree/model/TreeStoreModel', 'dojo/_base/event', 'dojo/aspect', 'dojo/dom-attr', 'dijit/Tree',
     'dojo/request/xhr', 'dojo/query', 'dojo/domReady!'],
-    function (dom, on, topic, cbTree, FileStoreModel, FileStore, TreeStyling, Hierarchy, TreeStoreModel, event, aspect, attr, Tree, xhr, query) {
+    function (dom, on, topic, JsonRest, cbTree, FileStoreModel, FileStore, Eventable, Observable, TreeStyling, Hierarchy, TreeStoreModel, event, aspect, attr, Tree, xhr, query) {
 
         // for supporting html label of node
         Tree._TreeNode.prototype._setLabelAttr = {node: "labelNode", type: "innerHTML"};
