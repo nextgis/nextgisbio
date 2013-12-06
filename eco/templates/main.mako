@@ -27,10 +27,21 @@
     <link rel="stylesheet" type="text/css" href="${request.static_url('eco:static/css/main.css')}" media="screen">
 
     <script type="text/javascript">
+        var ugrabio = {};
+        %if is_auth:
+            ugrabio.is_auth = true;
+        %endif
+        %if is_admin:
+            ugrabio.mode = 'admin';
+        %endif
+    </script>
+
+    <script type="text/javascript">
         var application_root = ${request.application_url | json.dumps, n};
 
         dojoConfig = {
             async: true,
+            debug: true,
             parseOnLoad: true,
             baseUrl: "${request.static_url('eco:static/js/')}",
             locale: "ru-ru",
@@ -47,30 +58,19 @@
         };
     </script>
     <script type="text/javascript"
-            src="${request.static_url('eco:static/js/lib/dojo-release-1.9.1/dojo/dojo.js')}"></script>
-
+            src="${request.static_url('eco:static/js/lib/dojo-release-1.9.1/dojo/dojo.js.uncompressed.js')}"></script>
+    <script src="http://localhost:6544/static/js/lib/dojo-release-1.9.1/dijit/Tree.js.uncompressed.js"></script>
     <script src="http://maps.google.com/maps/api/js?v=3.6&amp;sensor=false"></script>
-    <script src="${request.static_url('eco:contrib/openlayers/OpenLayers.js')}" type="text/javascript"></script>
+    <script src="${request.static_url('eco:static/js/lib/openlayers/OpenLayers.js')}" type="text/javascript"></script>
 
     <script>
         require(['dojox/data/QueryReadStore', 'dojo/dom', 'dojo/parser', 'dojo/store/JsonRest',
             'dijit/layout/BorderContainer', 'dijit/layout/ContentPane',
             'dijit/Dialog', 'dijit/form/TextBox', 'dijit/form/Button',
             'dijit/form/ValidationTextBox', 'dojo/topic', 'dojo/domReady!',
-            'ugrabio/Loader', 'ugrabio/TaxonSearcher', 'ugrabio/TaxonTree', 'ugrabio/Map', 'ugrabio/Dialog', 'ugrabio/DialogManager'],
+            'ugrabio/Loader', 'ugrabio/TaxonSearcher', 'ugrabio/TaxonCbTree', 'ugrabio/Map', 'ugrabio/Dialog', 'ugrabio/DialogManager'],
                 function () {
                 });
-
-        var ugrabio = {};
-
-        %if is_auth:
-            require(['ugrabio/AdminMenu', 'ugrabio/Export']);
-            ugrabio.is_auth = true;
-        %endif
-
-        %if is_admin:
-            require(['ugrabio/TaxonTreeMenu']);
-        %endif
     </script>
 </head>
 <body class="claro loading">

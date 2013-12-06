@@ -13,6 +13,10 @@ define([
     'dojo/domReady!'
 ], function (array, on, topic, MenuBar, PopupMenuBarItem, Menu, MenuItem, MenuSeparator, DropDownMenu, Forms, Dialog) {
 
+    if (!ugrabio.is_auth) {
+        return false;
+    }
+
     var menuList = Forms.menuList,
         menuBar = new MenuBar({});
 
