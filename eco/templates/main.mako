@@ -28,12 +28,12 @@
 
     <script type="text/javascript">
         var ugrabio = {};
-        %if is_auth:
-            ugrabio.is_auth = true;
-        %endif
-        %if is_admin:
-            ugrabio.mode = 'admin';
-        %endif
+            %if is_auth:
+                ugrabio.is_auth = true;
+            %endif
+            %if is_admin:
+                ugrabio.mode = 'admin';
+            %endif
     </script>
 
     <script type="text/javascript">
@@ -64,13 +64,19 @@
     <script src="${request.static_url('eco:static/js/lib/openlayers/OpenLayers.js')}" type="text/javascript"></script>
 
     <script>
-        require(['dojox/data/QueryReadStore', 'dojo/dom', 'dojo/parser', 'dojo/store/JsonRest',
-            'dijit/layout/BorderContainer', 'dijit/layout/ContentPane',
-            'dijit/Dialog', 'dijit/form/TextBox', 'dijit/form/Button',
-            'dijit/form/ValidationTextBox', 'dojo/topic', 'dojo/domReady!',
-            'ugrabio/Loader', 'ugrabio/TaxonSearcher', 'ugrabio/TaxonCbTree', 'ugrabio/Map', 'ugrabio/Dialog', 'ugrabio/DialogManager'],
-                function () {
-                });
+            <%block name='inlineRequireAmd'>
+                require(['ugrabio/Forms', 'ugrabio/Menu', 'ugrabio/TaxonSearcher', 'ugrabio/TaxonCbTree',
+                    'dojox/data/QueryReadStore', 'dojo/dom', 'dojo/parser', 'dojo/store/JsonRest',
+                    'dijit/layout/BorderContainer', 'dijit/layout/ContentPane',
+                    'dijit/Dialog', 'dijit/form/TextBox', 'dijit/form/Button',
+                    'dijit/form/ValidationTextBox', 'dojo/topic', 'dojo/domReady!',
+                    'ugrabio/Loader',  'ugrabio/Map', 'ugrabio/Dialog', 'ugrabio/DialogManager',
+                    'ugrabio/WindowManager', 'dojo/domReady!'],
+                        function (Forms, Menu, TaxonSearcher, TaxonCbTree) {
+                            new Menu(Forms.menuMap, 'menu');
+                            new TaxonSearcher(TaxonCbTree);
+                        });
+            </%block>
     </script>
 </head>
 <body class="claro loading">
@@ -81,8 +87,9 @@
      data-dojo-props="design: 'headline'">
     <div class="centerPanel" data-dojo-type="dijit.layout.ContentPane"
          data-dojo-props="region: 'center', title: 'Group 1'">
-        <div id="map">
-        </div>
+        <%block name='rightPanel'>
+            <div id="map"></div>
+        </%block>
     </div>
     <div class="edgePanel" data-dojo-type="dijit.layout.ContentPane" data-dojo-props="region: 'top'">
         <div id="menu"></div>
@@ -104,9 +111,11 @@
     </div>
     <div id="leftCol" class="edgePanel" data-dojo-type="dijit.layout.ContentPane"
          data-dojo-props="region: 'left', splitter: true">
-        <div class="clearTree">
-            <a href="javascript:void(0)">Снять выделение</a>
-        </div>
+        <%block name='leftPanel'>
+            <div class="clearTree">
+                <a href="javascript:void(0)">Снять выделение</a>
+            </div>
+        </%block>
     </div>
 </div>
 <div data-dojo-type="dijit/Dialog" data-dojo-id="loginDialog" title="Вход">
