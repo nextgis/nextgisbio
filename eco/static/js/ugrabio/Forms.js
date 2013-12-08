@@ -22,119 +22,181 @@ define([
         });
     };
 
-    return {
-        menuList: {
-            'Карточки наблюдений': [
-                {label: 'Млекопитающие', action: 'open/form', params: ['cardMammalia', 'Млекопитающие: создать карточку', '/cards/new']},
-                {label: 'Птицы', action: 'open/form', params: ['cardAves', 'Птицы: создать карточку', '/cards/new']},
-                {label: 'Рептилии, амфибии, рыбы', action: 'open/form', params: ['cardAra', 'Рептилии, амфибии, рыбы: создать карточку', '/cards/new']},
-                {label: 'Членистоногие', action: 'open/form', params: ['cardArthropoda', 'Членистоногие: создать карточку', '/cards/new']},
-                {label: 'Мхи', action: 'open/form', params: ['cardMoss', 'Мхи: создать карточку', '/cards/new']},
-                {label: 'Сосудистые растения', action: 'open/form', params: ['cardPlantae', 'Сосудистые растения: создать карточку', '/cards/new']},
-                {label: 'Грибы, лишайники', action: 'open/form', params: ['cardLichenes', 'Грибы, лишайники: создать карточку', '/cards/new']},
-                'separator',
-                {label: 'Экспорт в csv', action: 'open/window/taxon_list', params: ['/cards_download/csv/']},
-                {label: 'Экспорт в shp', action: 'open/window/taxon_list', params: ['/cards_download/shp/']}
-            ],
-            'Аннотированные списки': [
-                {label: 'Млекопитающие', action: 'open/form', params: ['anMammalia', 'Млекопитающие: создать список', '/annotation/new']},
-                {label: 'Птицы', action: 'open/form', params: ['anAves', 'Птицы: создать список', '/annotation/new']},
-                {label: 'Рептилии, амфибии, рыбы', action: 'open/form', params: ['anAra', 'Рептилии, амфибии, рыбы: создать список', '/annotation/new']},
-                {label: 'Членистоногие', action: 'open/form', params: ['anArthropoda', 'Членистоногие: создать список', '/annotation/new']},
-                {label: 'Мхи', action: 'open/form', params: ['anMoss', 'Мхи: создать список', '/annotation/new']},
-                {label: 'Сосудистые растения', action: 'open/form', params: ['anPlantae', 'Сосудистые растения: создать список', '/annotation/new']},
-                {label: 'Грибы, лишайники', action: 'open/form', params: ['anLichenes', 'Грибы, лишайники: создать список', '/annotation/new']},
-                'separator',
-                {label: 'Экспорт в csv', action: 'open/window/taxon_list', params: ['/anns_download/csv/']}
-            ],
-            'Контурный ареал': [
-                {label: 'Экспорт в shp', action: 'open/window/taxon_list', params: ['/areal/download/']}
-            ],
-            'Сырой экспорт': [
-                {label: 'abundance', action: 'open/window', params: ['/abundance_download']},
-                {label: 'annotation', action: 'open/window', params: ['/annotation_download']},
-                {label: 'anthr_press', action: 'open/window', params: ['/anthr_press_download']},
-                {label: 'area_type', action: 'open/window', params: ['/area_type_download']},
-                {label: 'cards', action: 'open/window', params: ['/cards_download']},
-                {label: 'coord_type', action: 'open/window', params: ['/coord_type_download']},
-                {label: 'footprint', action: 'open/window', params: ['/footprint_download']},
-                {label: 'inforesources', action: 'open/window', params: ['/inforesources_download']},
-                {label: 'key_area', action: 'open/window', params: ['/key_area_download']},
-                {label: 'legend', action: 'open/window', params: ['/legend_download']},
-                {label: 'museum', action: 'open/window', params: ['/museum_download']},
-                {label: 'person', action: 'open/window', params: ['/person_download']},
-                {label: 'pheno', action: 'open/window', params: ['/pheno_download']},
-                {label: 'square_karea_association', action: 'open/window', params: ['/square_karea_association_download']},
-                {label: 'synonym', action: 'open/window', params: ['/synonym_download']},
-                {label: 'taxa_scheme', action: 'open/window', params: ['/taxa_scheme_download']},
-                {label: 'taxon', action: 'open/window', params: ['/taxon_download']},
-                {label: 'user', action: 'open/window', params: ['/user_download']},
-                {label: 'vitality', action: 'open/window', params: ['/vitality_download']}
-            ]
+    var model = {
+        menuMap: {
+            validate: function () {
+                return ugrabio.is_auth;
+            },
+            'Карточки наблюдений': {
+                items: [
+                    {label: 'Млекопитающие', action: 'open/form', params: ['cardMammalia', 'Млекопитающие: создать карточку', '/cards/new']},
+                    {label: 'Птицы', action: 'open/form', params: ['cardAves', 'Птицы: создать карточку', '/cards/new']},
+                    {label: 'Рептилии, амфибии, рыбы', action: 'open/form', params: ['cardAra', 'Рептилии, амфибии, рыбы: создать карточку', '/cards/new']},
+                    {label: 'Членистоногие', action: 'open/form', params: ['cardArthropoda', 'Членистоногие: создать карточку', '/cards/new']},
+                    {label: 'Мхи', action: 'open/form', params: ['cardMoss', 'Мхи: создать карточку', '/cards/new']},
+                    {label: 'Сосудистые растения', action: 'open/form', params: ['cardPlantae', 'Сосудистые растения: создать карточку', '/cards/new']},
+                    {label: 'Грибы, лишайники', action: 'open/form', params: ['cardLichenes', 'Грибы, лишайники: создать карточку', '/cards/new']},
+                    'separator',
+                    {label: 'Экспорт в csv', action: 'open/window/taxon_list', params: ['/cards_download/csv/']},
+                    {label: 'Экспорт в shp', action: 'open/window/taxon_list', params: ['/cards_download/shp/']}
+                ]
+            },
+            'Аннотированные списки': {
+                items: [
+                    {label: 'Млекопитающие', action: 'open/form', params: ['anMammalia', 'Млекопитающие: создать список', '/annotation/new']},
+                    {label: 'Птицы', action: 'open/form', params: ['anAves', 'Птицы: создать список', '/annotation/new']},
+                    {label: 'Рептилии, амфибии, рыбы', action: 'open/form', params: ['anAra', 'Рептилии, амфибии, рыбы: создать список', '/annotation/new']},
+                    {label: 'Членистоногие', action: 'open/form', params: ['anArthropoda', 'Членистоногие: создать список', '/annotation/new']},
+                    {label: 'Мхи', action: 'open/form', params: ['anMoss', 'Мхи: создать список', '/annotation/new']},
+                    {label: 'Сосудистые растения', action: 'open/form', params: ['anPlantae', 'Сосудистые растения: создать список', '/annotation/new']},
+                    {label: 'Грибы, лишайники', action: 'open/form', params: ['anLichenes', 'Грибы, лишайники: создать список', '/annotation/new']},
+                    'separator',
+                    {label: 'Экспорт в csv', action: 'open/window/taxon_list', params: ['/anns_download/csv/']}
+                ]
+            },
+            'Контурный ареал': {
+                items: [
+                    {label: 'Экспорт в shp', action: 'open/window/taxon_list', params: ['/areal/download/']}
+                ]
+            },
+            'Сырой экспорт': {
+                items: [
+                    {label: 'abundance', action: 'open/window', params: ['/abundance_download']},
+                    {label: 'annotation', action: 'open/window', params: ['/annotation_download']},
+                    {label: 'anthr_press', action: 'open/window', params: ['/anthr_press_download']},
+                    {label: 'area_type', action: 'open/window', params: ['/area_type_download']},
+                    {label: 'cards', action: 'open/window', params: ['/cards_download']},
+                    {label: 'coord_type', action: 'open/window', params: ['/coord_type_download']},
+                    {label: 'footprint', action: 'open/window', params: ['/footprint_download']},
+                    {label: 'inforesources', action: 'open/window', params: ['/inforesources_download']},
+                    {label: 'key_area', action: 'open/window', params: ['/key_area_download']},
+                    {label: 'legend', action: 'open/window', params: ['/legend_download']},
+                    {label: 'museum', action: 'open/window', params: ['/museum_download']},
+                    {label: 'person', action: 'open/window', params: ['/person_download']},
+                    {label: 'pheno', action: 'open/window', params: ['/pheno_download']},
+                    {label: 'square_karea_association', action: 'open/window', params: ['/square_karea_association_download']},
+                    {label: 'synonym', action: 'open/window', params: ['/synonym_download']},
+                    {label: 'taxa_scheme', action: 'open/window', params: ['/taxa_scheme_download']},
+                    {label: 'taxon', action: 'open/window', params: ['/taxon_download']},
+                    {label: 'user', action: 'open/window', params: ['/user_download']},
+                    {label: 'vitality', action: 'open/window', params: ['/vitality_download']}
+                ]
+            },
+            'Администратор': {
+                validate: function () {
+                    return ugrabio.mode && ugrabio.mode === 'admin'
+                },
+                items: [
+                    {label: 'Редактор таксонов', action: 'open/window', params: ['/taxons/editor']}
+                ]
+            }
         },
 
         forms: {
             'cardMammalia': {
-                form: {method: 'POST'},
+                form: {
+                    method: 'POST'
+                },
                 type: 'mammalia',
-                elements: ['id', 'species', 'original_name', 'inserter', 'observer', 'identifier', 'museum', 'location', 'lat', 'lon', 'coord_type', 'year', 'month', 'day', 'time', 'photo', 'anthr_press', 'vitality', 'habitat', 'footprint', 'limit_fact', 'protection', 'notes', 'inforesources', 'publications', 'pheno', 'quantity', 'unknown_sex', 'males', 'females', 'unknown_age', 'ad', 'sad', 'juv', 'pull']},
+                elements: ['id', 'species', 'original_name', 'inserter', 'observer', 'identifier', 'museum', 'location', 'lat', 'lon', 'coord_type', 'year', 'month', 'day', 'time', 'photo', 'anthr_press', 'vitality', 'habitat', 'footprint', 'limit_fact', 'protection', 'notes', 'inforesources', 'publications', 'pheno', 'quantity', 'unknown_sex', 'males', 'females', 'unknown_age', 'ad', 'sad', 'juv', 'pull']
+            },
             'cardAves': {
-                form: {method: 'POST'},
+                form: {
+                    method: 'POST'
+                },
                 type: 'aves',
-                elements: ['id', 'species', 'original_name', 'inserter', 'observer', 'identifier', 'museum', 'location', 'lat', 'lon', 'coord_type', 'year', 'month', 'day', 'time', 'photo', 'anthr_press', 'vitality', 'footprint', 'habitat', 'limit_fact', 'protection', 'notes', 'inforesources', 'publications', 'pheno', 'quantity', 'unknown_sex', 'males', 'females', 'unknown_age', 'ad', 'sad', 'juv', 'pull', 'egs']},
+                elements: ['id', 'species', 'original_name', 'inserter', 'observer', 'identifier', 'museum', 'location', 'lat', 'lon', 'coord_type', 'year', 'month', 'day', 'time', 'photo', 'anthr_press', 'vitality', 'footprint', 'habitat', 'limit_fact', 'protection', 'notes', 'inforesources', 'publications', 'pheno', 'quantity', 'unknown_sex', 'males', 'females', 'unknown_age', 'ad', 'sad', 'juv', 'pull', 'egs']
+            },
             'cardAra': {
-                form: {method: 'POST'},
+                form: {
+                    method: 'POST'
+                },
                 type: 'ara',
-                elements: ['id', 'species', 'original_name', 'inserter', 'observer', 'identifier', 'museum', 'location', 'lat', 'lon', 'coord_type', 'year', 'month', 'day', 'time', 'photo', 'anthr_press', 'vitality', 'habitat', 'footprint', 'limit_fact', 'protection', 'notes', 'inforesources', 'publications', 'pheno', 'quantity', 'unknown_sex', 'males', 'females', 'unknown_age', 'ad', 'sad', 'juv', 'pull', 'egs']},
+                elements: ['id', 'species', 'original_name', 'inserter', 'observer', 'identifier', 'museum', 'location', 'lat', 'lon', 'coord_type', 'year', 'month', 'day', 'time', 'photo', 'anthr_press', 'vitality', 'habitat', 'footprint', 'limit_fact', 'protection', 'notes', 'inforesources', 'publications', 'pheno', 'quantity', 'unknown_sex', 'males', 'females', 'unknown_age', 'ad', 'sad', 'juv', 'pull', 'egs']
+            },
             'cardArthropoda': {
-                form: {method: 'POST'},
+                form: {
+                    method: 'POST'
+                },
                 type: 'arthropoda',
-                elements: ['id', 'species', 'original_name', 'inserter', 'observer', 'identifier', 'museum', 'location', 'lat', 'lon', 'coord_type', 'year', 'month', 'day', 'time', 'photo', 'substrat', 'anthr_press', 'vitality', 'habitat', 'footprint', 'limit_fact', 'protection', 'notes', 'inforesources', 'publications', 'pheno', 'quantity', 'unknown_sex', 'males', 'females', 'unknown_age', 'ad', 'sad', 'juv', 'pull', 'egs']},
+                elements: ['id', 'species', 'original_name', 'inserter', 'observer', 'identifier', 'museum', 'location', 'lat', 'lon', 'coord_type', 'year', 'month', 'day', 'time', 'photo', 'substrat', 'anthr_press', 'vitality', 'habitat', 'footprint', 'limit_fact', 'protection', 'notes', 'inforesources', 'publications', 'pheno', 'quantity', 'unknown_sex', 'males', 'females', 'unknown_age', 'ad', 'sad', 'juv', 'pull', 'egs']
+            },
             'cardMoss': {
-                form: {method: 'POST'},
+                form: {
+                    method: 'POST'
+                },
                 type: 'moss',
-                elements: ['id', 'species', 'original_name', 'inserter', 'observer', 'identifier', 'museum', 'location', 'lat', 'lon', 'coord_type', 'year', 'month', 'day', 'time', 'photo', 'anthr_press', 'vitality', 'habitat', 'substrat', 'limit_fact', 'protection', 'notes', 'inforesources', 'publications', 'pheno', 'abundance', 'area']},
+                elements: ['id', 'species', 'original_name', 'inserter', 'observer', 'identifier', 'museum', 'location', 'lat', 'lon', 'coord_type', 'year', 'month', 'day', 'time', 'photo', 'anthr_press', 'vitality', 'habitat', 'substrat', 'limit_fact', 'protection', 'notes', 'inforesources', 'publications', 'pheno', 'abundance', 'area']
+            },
             'cardPlantae': {
-                form: {method: 'POST'},
+                form: {
+                    method: 'POST'
+                },
                 type: 'plantae',
-                elements: ['id', 'species', 'original_name', 'inserter', 'observer', 'identifier', 'museum', 'location', 'lat', 'lon', 'coord_type', 'year', 'month', 'day', 'time', 'photo', 'substrat', 'anthr_press', 'vitality', 'habitat', 'limit_fact', 'protection', 'notes', 'inforesources', 'publications', 'pheno', 'quantity', 'abundance', 'area']},
+                elements: ['id', 'species', 'original_name', 'inserter', 'observer', 'identifier', 'museum', 'location', 'lat', 'lon', 'coord_type', 'year', 'month', 'day', 'time', 'photo', 'substrat', 'anthr_press', 'vitality', 'habitat', 'limit_fact', 'protection', 'notes', 'inforesources', 'publications', 'pheno', 'quantity', 'abundance', 'area']
+            },
             'cardLichenes': {
-                form: {method: 'POST'},
+                form: {
+                    method: 'POST'
+                },
                 type: 'lichenes',
-                elements: ['id', 'species', 'original_name', 'inserter', 'observer', 'identifier', 'museum', 'location', 'lat', 'lon', 'coord_type', 'year', 'month', 'day', 'time', 'photo', 'anthr_press', 'vitality', 'habitat', 'substrat', 'limit_fact', 'protection', 'notes', 'inforesources', 'publications', 'pheno', 'quantity', 'abundance', 'area']},
+                elements: ['id', 'species', 'original_name', 'inserter', 'observer', 'identifier', 'museum', 'location', 'lat', 'lon', 'coord_type', 'year', 'month', 'day', 'time', 'photo', 'anthr_press', 'vitality', 'habitat', 'substrat', 'limit_fact', 'protection', 'notes', 'inforesources', 'publications', 'pheno', 'quantity', 'abundance', 'area']
+            },
             'anMammalia': {
-                form: {method: 'POST'},
+                form: {
+                    method: 'POST'
+                },
                 type: 'mammalia',
                 elements: ['id', 'species', 'original_name', 'collecter', 'identifier', 'key_area', 'lat', 'lon', 'location', 'annotation', 'biotop', 'difference', 'status', 'frequency', 'quantity', 'year', 'month', 'day', 'exposure', 'infosourse', 'biblioref']
             },
             'anAves': {
-                form: {method: 'POST'},
+                form: {
+                    method: 'POST'
+                },
                 type: 'aves',
                 elements: ['id', 'species', 'original_name', 'collecter', 'identifier', 'key_area', 'lat', 'lon', 'location', 'annotation', 'biotop', 'difference', 'substrat', 'status', 'frequency', 'quantity', 'year', 'month', 'day', 'exposure', 'infosourse', 'biblioref']
             },
             'anAra': {
-                form: {method: 'POST'},
+                form: {
+                    method: 'POST'
+                },
                 type: 'ara',
-                elements: ['id', 'species', 'original_name', 'collecter', 'identifier', 'key_area', 'lat', 'lon', 'location', 'annotation', 'biotop', 'difference', 'status', 'frequency', 'quantity', 'year', 'month', 'day', 'exposure', 'infosourse', 'biblioref']},
+                elements: ['id', 'species', 'original_name', 'collecter', 'identifier', 'key_area', 'lat', 'lon', 'location', 'annotation', 'biotop', 'difference', 'status', 'frequency', 'quantity', 'year', 'month', 'day', 'exposure', 'infosourse', 'biblioref']
+            },
             'anArthropoda': {
-                form: {method: 'POST'},
+                form: {
+                    method: 'POST'
+                },
                 type: 'arthropoda',
-                elements: ['id', 'species', 'original_name', 'collecter', 'identifier', 'key_area', 'lat', 'lon', 'location', 'annotation', 'biotop', 'difference', 'substrat', 'frequency', 'quantity', 'year', 'month', 'day', 'exposure', 'infosourse', 'biblioref']},
+                elements: ['id', 'species', 'original_name', 'collecter', 'identifier', 'key_area', 'lat', 'lon', 'location', 'annotation', 'biotop', 'difference', 'substrat', 'frequency', 'quantity', 'year', 'month', 'day', 'exposure', 'infosourse', 'biblioref']
+            },
             'anMoss': {
-                form: {method: 'POST'},
+                form: {
+                    method: 'POST'
+                },
                 type: 'moss',
-                elements: ['id', 'species', 'original_name', 'collecter', 'identifier', 'key_area', 'lat', 'lon', 'location', 'annotation', 'biotop', 'difference', 'frequency', 'quantity', 'year', 'month', 'day', 'exposure', 'infosourse', 'biblioref']},
+                elements: ['id', 'species', 'original_name', 'collecter', 'identifier', 'key_area', 'lat', 'lon', 'location', 'annotation', 'biotop', 'difference', 'frequency', 'quantity', 'year', 'month', 'day', 'exposure', 'infosourse', 'biblioref']
+            },
             'anPlantae': {
-                form: {method: 'POST'},
+                form: {
+                    method: 'POST'
+                },
                 type: 'plantae',
                 elements: ['id', 'species', 'original_name', 'collecter', 'identifier', 'key_area', 'lat', 'lon', 'location', 'annotation', 'biotop', 'difference', 'frequency', 'quantity', 'year', 'month', 'day', 'exposure', 'infosourse', 'biblioref']
             },
             'anLichenes': {
-                form: {method: 'POST'},
+                form: {
+                    method: 'POST'
+                },
                 type: 'lichenes',
                 elements: ['id', 'species', 'original_name', 'collecter', 'identifier', 'key_area', 'lat', 'lon', 'location', 'annotation', 'biotop', 'difference', 'substrat', 'frequency', 'quantity', 'year', 'month', 'day', 'exposure', 'infosourse', 'biblioref']
+            },
+            'createTaxon': {
+                form: {
+                    method: 'POST'
+                },
+                elements: []
             }
-
         },
 
         elements: {
@@ -435,4 +497,7 @@ define([
             }
         }
     };
-});
+
+    return model;
+})
+;
