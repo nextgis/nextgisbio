@@ -53,13 +53,15 @@
                 {name: 'cbtree', location: 'lib/cbtree-v0.9.4-0'},
                 {name: 'dgrid', location: 'lib/dgrid'},
                 {name: 'put-selector', location: 'lib/put-selector'},
-                {name: 'xstyle', location: 'lib/xstyle'}
+                {name: 'xstyle', location: 'lib/xstyle'},
+                {name: 'mustache', location: 'lib/mustache'}
             ]
         };
     </script>
     <script type="text/javascript"
             src="${request.static_url('eco:static/js/lib/dojo-release-1.9.1/dojo/dojo.js.uncompressed.js')}"></script>
     <script src="http://localhost:6544/static/js/lib/dojo-release-1.9.1/dijit/Tree.js.uncompressed.js"></script>
+    <script src="http://localhost:6544/static/js/lib/dojo-release-1.9.1/dijit/_TemplatedMixin.js.uncompressed.js"></script>
     <script src="http://maps.google.com/maps/api/js?v=3.6&amp;sensor=false"></script>
     <script src="${request.static_url('eco:static/js/lib/openlayers/OpenLayers.js')}" type="text/javascript"></script>
 
