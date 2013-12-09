@@ -75,7 +75,7 @@ define([
             extent = new OpenLayers.Bounds(6353768, 7927909, 9587360, 9811317),
             cent_coords = {"lat": 8869000, "lon": 7970000, "zoom": 5},
             osm = new OpenLayers.Layer.OSM("OpenSteetMap"),
-            gsat = new OpenLayers.Layer.Google("Google-HYBRID", {type: google.maps.MapTypeId.HYBRID, numZoomLevels: 20}),
+//            gsat = new OpenLayers.Layer.Google("Google-HYBRID", {type: google.maps.MapTypeId.HYBRID, numZoomLevels: 20}),
             oopt = new OpenLayers.Layer.Vector("ООПТ", {
                 projection: epsg3857,
                 strategies: [new OpenLayers.Strategy.Fixed()],
@@ -129,7 +129,8 @@ define([
             projection: epsg3857,
             maxExtent: extent,
             restrictedExtent: extent,
-            layers: [osm, gsat, oopt, squareLayer, arealLayer, cardsLayer]
+//            layers: [osm, gsat, oopt, squareLayer, arealLayer, cardsLayer]
+            layers: [osm, oopt, squareLayer, arealLayer, cardsLayer]
         };
 
         var map = new OpenLayers.Map('map', options);
