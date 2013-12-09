@@ -16,7 +16,7 @@ requires = [
     'waitress',
     'psycopg2',
     'GeoAlchemy',
-    #'GDAL',
+    'GDAL',
     'shapely',
     ]
 
