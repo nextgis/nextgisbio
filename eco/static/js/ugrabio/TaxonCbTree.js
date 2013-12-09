@@ -8,7 +8,7 @@ define(['dojo/dom', 'dojo/on', 'dojo/topic', 'dojo/store/JsonRest', 'cbtree/Tree
         Tree._TreeNode.prototype._setLabelAttr = {node: "labelNode", type: "innerHTML"};
 
         var store = new FileStore({
-            url: application_root + "/tree/taxons",
+            url: application_root + "/cbtree/taxons",
             basePath: '.',
             autoLoad: true
         });
@@ -88,7 +88,7 @@ define(['dojo/dom', 'dojo/on', 'dojo/topic', 'dojo/store/JsonRest', 'cbtree/Tree
             }
         });
 
-        taxonsTree._expandBranchByHeirarchy = function (hierarchy, hierarchyDepth, levelIndex) {
+        taxonsTree._expandBranchByHierarchy = function (hierarchy, hierarchyDepth, levelIndex) {
             var tree = this,
                 pathToNode,
                 node;
@@ -98,7 +98,7 @@ define(['dojo/dom', 'dojo/on', 'dojo/topic', 'dojo/store/JsonRest', 'cbtree/Tree
 
             if (levelIndex != hierarchyDepth) {
                 tree._expandNode(node).then(function () {
-                    tree._expandBranchByHeirarchy(hierarchy, hierarchyDepth, levelIndex + 1);
+                    tree._expandBranchByHierarchy(hierarchy, hierarchyDepth, levelIndex + 1);
                 });
             } else {
                 tree.focusNode(node);
@@ -114,7 +114,7 @@ define(['dojo/dom', 'dojo/on', 'dojo/topic', 'dojo/store/JsonRest', 'cbtree/Tree
                     handleAs: 'json'
                 });
             getPath.then(function (data) {
-                tree._expandBranchByHeirarchy(data.path, data.path.length, 1);
+                tree._expandBranchByHierarchy(data.path, data.path.length, 1);
             });
         };
 
