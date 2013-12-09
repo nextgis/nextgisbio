@@ -17,7 +17,7 @@ define('ugrabio/TaxonTree', [
 
         constructor: function () {
             this._store = new JsonRest({
-                target: '/tree/taxons/',
+                target: application_root + '/tree/taxons/',
                 getChildren: function (object) {
                     return this.get(object.id).then(function (fullObject) {
                         return fullObject.children;
