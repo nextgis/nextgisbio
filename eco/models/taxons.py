@@ -52,6 +52,7 @@ LICHENES = ('Ascomycota', 'Basidiomycota', 'Mycetozoa')
 
 ORG_TYPES = ('mammalia', 'aves', 'plantae', 'ara', 'arthropoda', 'moss', 'lichenes')
 
+
 class Taxon(Base, JsonifyMixin):
     __tablename__ = 'taxon'
     __table_args__ = (
