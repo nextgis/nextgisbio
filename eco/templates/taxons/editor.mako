@@ -16,10 +16,16 @@
     });
 </%block>
 
-<%block name='leftPanel'>
-
+<%block name="topPanel">
+    <button data-dojo-type="dijit/form/Button" type="button">&larr; Вернуться на карту
+        <script type="dojo/on" data-dojo-event="click" data-dojo-args="evt">
+            window.open(application_root, '_self');
+        </script>
+    </button>
 </%block>
 
+<%block name='leftPanel'></%block>
+
 <%block name='rightPanel'>
-    <div id="TaxonViewer"></div>
+    <div id="TaxonViewer"><p>Выберите таксон для редактирования слева в дереве таксонов</p></div>
 </%block>

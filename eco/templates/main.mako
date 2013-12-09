@@ -70,7 +70,7 @@
                     'dijit/layout/BorderContainer', 'dijit/layout/ContentPane',
                     'dijit/Dialog', 'dijit/form/TextBox', 'dijit/form/Button',
                     'dijit/form/ValidationTextBox', 'dojo/topic', 'dojo/domReady!',
-                    'ugrabio/Loader',  'ugrabio/Map', 'ugrabio/Dialog', 'ugrabio/DialogManager',
+                    'ugrabio/Loader', 'ugrabio/Map', 'ugrabio/Dialog', 'ugrabio/DialogManager',
                     'ugrabio/WindowManager', 'dojo/domReady!'],
                         function (Forms, Menu, TaxonSearcher, TaxonCbTree) {
                             new Menu(Forms.menuMap, 'menu');
@@ -92,7 +92,9 @@
         </%block>
     </div>
     <div class="edgePanel" data-dojo-type="dijit.layout.ContentPane" data-dojo-props="region: 'top'">
-        <div id="menu"></div>
+        <%block name="topPanel">
+            <div id="menu"></div>
+        </%block>
         <div class="user-data">
             %if is_auth:
                 <button id="logoutButton" data-dojo-type="dijit/form/Button" type="button"

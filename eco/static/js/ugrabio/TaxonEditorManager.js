@@ -29,9 +29,9 @@ define('ugrabio/TaxonEditorManager', [
         _buildTaxonViewer: function (taxon) {
 
 //            xhr.get(application_root + )
+            domConstruct.empty(this._taxonViewerId);
             if (this._taxonViewer) {
                 this._taxonViewer.destroy();
-                domConstruct.empty(this._taxonViewerId);
             }
             this._taxonViewer = new TaxonViewer(taxon);
             this._taxonViewer.placeAt(dom.byId(this._taxonViewerId));
