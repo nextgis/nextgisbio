@@ -33,24 +33,20 @@ def main(global_config, **settings):
     config.add_static_view('static', 'eco:static', cache_max_age=3600)
     config.add_static_view('contrib', 'eco:contrib', cache_max_age=3600)
     
-    config.add_route('home',                '/',                        factory=RootFactory)
+    config.add_route('home', '/', factory=RootFactory)
+    config.add_route('taxons_editor', '/taxons/editor', factory=RootFactory)
     
-    config.add_route('login',               '/login',                   factory=RootFactory)
-    config.add_route('logout',              '/logout',                  factory=RootFactory)
-    
-    # Иерархия таксонов
-    
-    config.add_route('taxon_filter',        '/taxon/filter',            factory=RootFactory)
-    # Виды (species)
-    config.add_route('species_name',        '/species',                 factory=RootFactory)
-    # Прямые потомки таксона:
-    config.add_route('taxon_direct_child',  '/taxon/direct_child',      factory=RootFactory)
-    # Список идентификаторов таксона и его предков
-    config.add_route('taxon_parent_path',   '/taxon/{id}/parent_path',  factory=RootFactory)
-    # Тип таксона (растение, животное и т.п.) по его id
-    config.add_route('taxon_type',    '/taxon/{id}/type',       factory=RootFactory)
+    config.add_route('login', '/login', factory=RootFactory)
+    config.add_route('logout', '/logout', factory=RootFactory)
 
-    config.add_route('taxon_tree', '/tree/taxons', factory=RootFactory)
+    config.add_route('get_taxon', '/taxon/{id}', factory=RootFactory)
+    config.add_route('taxon_filter', '/taxon/filter', factory=RootFactory)
+    config.add_route('species_name', '/species', factory=RootFactory)
+    config.add_route('taxon_direct_child', '/taxon/direct_child',      factory=RootFactory)
+    config.add_route('taxon_parent_path', '/taxon/{id}/parent_path',  factory=RootFactory)
+    config.add_route('taxon_type', '/taxon/{id}/type',       factory=RootFactory)
+    config.add_route('taxon_cbtree', '/cbtree/taxons', factory=RootFactory)
+    config.add_route('taxon_tree', '/tree/taxons/{taxon_parent_id}', factory=RootFactory)
 
     # Фильтр видов по его типу, подстроки названия и (если указан) id
     config.add_route('species_filter',    '/species/{type}/{id:[0-9]*}',       factory=RootFactory)

@@ -6,6 +6,7 @@ import itertools
 
 from pyramid.response import Response
 from pyramid.view import view_config
+from pyramid import security
 
 from sqlalchemy.exc import DBAPIError
 from sqlalchemy.orm.exc import NoResultFound
@@ -20,8 +21,8 @@ from eco.models import (
 from eco.models import MAMMALIA, AVES, PLANTAE, ARA, ARTHROPODA, MOSS, LICHENES
 import helpers
 
-@view_config(route_name='taxon_tree', renderer='json')
-def tree_root(request):
+@view_config(route_name='taxon_cbtree', renderer='json')
+def taxon_cbtree(request):
     path_name = 'path' if 'path' in request.params else 'basePath'
     hierarchical_path = request.params[path_name].replace('"', '')
 
@@ -291,6 +292,57 @@ def taxon_type(request):
     
     return types
 
-    
+
+@view_config(route_name='taxons_editor', renderer='taxons/editor.mako', permission='admin')
+def taxons_editor(request):
+    return {
+        'is_auth': security.authenticated_userid(request),
+        'is_admin': security.has_permission('admin', request.context, request)
+    }
 
 
+@view_config(route_name='taxon_tree', renderer='json')
+def taxon_tree(request):
+    taxon_parent_id = request.matchdict['taxon_parent_id']
+
+    parent_id = None
+    if taxon_parent_id != 'root':
+        parent_id = int(taxon_parent_id)
+
+    dbsession = DBSession()
+    parent_taxon = dbsession.query(Taxon).filter_by(id = parent_id).first()
+    children_taxons = dbsession.query(Taxon).filter_by(parent_id = parent_id)
+    dbsession.flush()
+
+    if taxon_parent_id == 'root':
+        parent_taxon_json = {
+            'id': 'root',
+            'name': 'Все таксоны'
+        }
+    else:
+        parent_taxon_json = parent_taxon.as_json_dict()
+
+    if taxon_parent_id == 'root':
+        parent_taxon_json['id'] = 'root'
+
+    children_taxons_json = []
+    for taxon in children_taxons:
+        children_taxons_json.append(_taxon_to_json(taxon))
+    parent_taxon_json['children'] = children_taxons_json
+
+    return parent_taxon_json
+
+
+def _taxon_to_json(taxon):
+    taxon_json = taxon.as_json_dict()
+
+    if not taxon.is_last_taxon():
+        taxon_json['children'] = True
+
+    return taxon_json
+
+
+@view_config(route_name='get_taxon', renderer='json')
+def get_taxon(request):
+    id = int(request.matchdict['id'])
+    parent_taxons = Taxon.parent_taxons(id)
