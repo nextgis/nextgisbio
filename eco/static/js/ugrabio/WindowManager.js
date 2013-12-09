@@ -17,6 +17,10 @@ define([
         openWindow(application_root + url);
     });
 
+    topic.subscribe('open/link/self', function (url) {
+        window.open(url, '_self');
+    });
+
     topic.subscribe('open/window/taxon_list', function (url) {
         var tree = dijit.byId('taxonsTree'),
             itemsSelected = tree.model.store.query({checked: true}),

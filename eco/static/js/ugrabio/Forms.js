@@ -87,7 +87,7 @@ define([
                     return ugrabio.mode && ugrabio.mode === 'admin'
                 },
                 items: [
-                    {label: 'Редактор таксонов', action: 'open/window', params: ['/taxons/editor']}
+                    {label: 'Редактор таксонов', action: 'open/link/self', params: ['/taxons/editor']}
                 ]
             }
         },
