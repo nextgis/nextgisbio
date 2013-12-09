@@ -18,7 +18,7 @@ define([
     });
 
     topic.subscribe('open/link/self', function (url) {
-        window.open(url, '_self');
+        window.open(application_root + url, '_self');
     });
 
     topic.subscribe('open/window/taxon_list', function (url) {
