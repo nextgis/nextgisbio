@@ -1,7 +1,11 @@
 <div class="taxon-view">
 
-    {{taxonType}} <h3>{{name}}</h3>
+    <h4>{{name}}</h4>
 
+    <p>
+        <span>Ранг:</span>
+        <span>{{taxon_type_description.rus_name}}</span>
+    </p>
     {{#russian_name}}
     <p>
         <span>Русское название:</span>
@@ -14,4 +18,12 @@
         <span>{{author}}</span>
     </p>
     {{/author}}
+    {{#source}}
+    <p>
+        <span>Источник:</span>
+        <span>{{source}}</span>
+    </p>
+    {{/source}}
+
+    <div class="buttons"></div>
 </div>
