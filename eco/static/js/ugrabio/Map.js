@@ -183,7 +183,7 @@ define([
                     specId = domAttr.get(this, 'data-spec-id'),
                     name = this.innerText || this.textContent;
 
-                xhr.get(application_root + '/taxon/' + specId + '/type', {handleAs: 'json'}).then(
+                xhr.get(application_root + '/taxon/type/' + specId, {handleAs: 'json'}).then(
                             function (kingdoms) {
                                 var kingdom;
                                 for (kingdom in kingdoms) {
@@ -282,7 +282,7 @@ define([
                                         idAnnotation = idAnnotationField.innerText || idAnnotationField.textContent,
                                         idSpecieField = query('td.field-species', this)[0],
                                         idSpecie = idSpecieField.innerText || idSpecieField.textContent;
-                                    xhr.get(application_root + '/taxon/' + idSpecie + '/type', {handleAs: 'json'}).then(
+                                    xhr.get(application_root + '/taxon/type/' + idSpecie, {handleAs: 'json'}).then(
                                         function (kingdoms) {
                                             var kingdom;
                                             for (kingdom in kingdoms) {
@@ -373,7 +373,7 @@ define([
                     on(links, 'click', function () {
                         var idAnnotation = domAttr.get(this, 'data-ann-id'),
                             idSpecie = domAttr.get(this, 'data-spec-id');
-                        xhr.get(application_root + '/taxon/' + idSpecie + '/type', {handleAs: 'json'}).then(
+                        xhr.get(application_root + '/taxon/type/' + idSpecie, {handleAs: 'json'}).then(
                             function (kingdoms) {
                                 var kingdom;
                                 for (kingdom in kingdoms) {
