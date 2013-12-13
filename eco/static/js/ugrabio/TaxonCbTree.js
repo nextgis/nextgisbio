@@ -110,7 +110,7 @@ define(['dojo/dom', 'dojo/on', 'dojo/topic', 'dojo/store/JsonRest', 'cbtree/Tree
 
         taxonsTree.selectTaxon = function (taxonId) {
             var tree = this,
-                getPath = xhr(application_root + '/taxon/' + taxonId + '/parent_path', {
+                getPath = xhr(application_root + '/taxon/parent_path/' + taxonId, {
                     handleAs: 'json'
                 });
             getPath.then(function (data) {
