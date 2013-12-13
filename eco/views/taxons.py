@@ -8,7 +8,7 @@ from pyramid.response import Response
 from pyramid.view import view_config
 from pyramid import security
 
-from sqlalchemy.exc import DBAPIError
+from sqlalchemy.exc import DBAPIError, IntegrityError
 from sqlalchemy.orm.exc import NoResultFound
 
 from eco.models import (
@@ -388,7 +388,11 @@ def delete_taxon(request):
     dbsession = DBSession
     taxon = dbsession.query(Taxon).filter_by(id=id).one()
     parent_id = taxon.parent_id
-    dbsession.query(Taxon).filter_by(id=id).delete()
+    try:
+        dbsession.query(Taxon).filter_by(id=id).delete()
+    except IntegrityError:
+        request.response.status = 500
+        return {'success': False, 'error': 'IntegrityError'}
 
     return {'id': parent_id}
 

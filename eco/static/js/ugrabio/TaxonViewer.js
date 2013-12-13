@@ -213,7 +213,10 @@ define('ugrabio/TaxonViewer', [
 
             this._dialog = new Dialog({
                 title: isUpdating ? 'Редактирование ' + this.name : this.taxon_type_description.create_buton_label,
-                content: this._form
+                content: this._form,
+                onHide: function () {
+                    this.destroyRecursive();
+                }
             });
 
             this._dialog.show();
@@ -243,7 +246,7 @@ define('ugrabio/TaxonViewer', [
             });
         },
 
-        _deleteTaxon: function(id) {
+        _deleteTaxon: function (id) {
             var action = application_root + '/tree/taxons/',
                 options = {
                     data: {id: id},
@@ -252,23 +255,37 @@ define('ugrabio/TaxonViewer', [
 
             xhr.del(action, options).then(lang.hitch(this, function (data) {
                 this._updatePage(data.id);
-            }), lang.hitch(this, function (error) {
-                this._errorHandler();
+            }), lang.hitch(this, function (data) {
+                var errorData = data.response.data;
+                if (errorData.error && errorData.error === 'IntegrityError') {
+                    this._errorHandler('Таксон не может быть удален, так как содержит вложенные таксоны.');
+                } else {
+                    this._errorHandler();
+                }
             }));
         },
 
-        _updatePage: function(taxon_id) {
+        _updatePage: function (taxon_id) {
             new Dialog({
-                    title: 'Статус',
-                    content: 'Данные успешно обновлены, страница перезагружается...'
-                }).show();
-                setTimeout(function () {
-                    window.open(application_root + '/taxons/editor?taxon_id=' + taxon_id, '_self', false);
-                }, 2000);
+                title: 'Статус',
+                content: 'Данные успешно обновлены, страница перезагружается...',
+                closable: false
+            }).show();
+            setTimeout(function () {
+                window.open(application_root + '/taxons/editor?taxon_id=' + taxon_id, '_self', false);
+            }, 2000);
         },
 
-        _errorHandler: function() {
-            alert('Извините, произошла ошибка, попробуйте еще раз.');
+        _errorHandler: function (content, title) {
+            content = content ? content : 'Извините, произошла ошибка, попробуйте еще раз.';
+            title = title ? title : 'Ошибка';
+            var errorDialog = new Dialog({
+                title: title,
+                content: content,
+                onHide: function () {
+                    this.destroyRecursive();
+                }
+            }).show();
         }
     });
 });
