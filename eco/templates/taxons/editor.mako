@@ -11,8 +11,9 @@
         'ugrabio/WindowManager', 'dojo/domReady!'],
         function (Forms, Menu, TaxonSearcher, TaxonTree, TaxonEditorManager) {
         ##                new Menu(Forms.menuMap, 'menu');
-            new TaxonSearcher(new TaxonTree());
-            new TaxonEditorManager();
+            var tree = new TaxonTree();
+            new TaxonSearcher(tree);
+            new TaxonEditorManager(tree);
     });
 </%block>
 

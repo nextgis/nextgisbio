@@ -35,7 +35,7 @@ def main(global_config, **settings):
     
     config.add_route('home', '/', factory=RootFactory)
     config.add_route('taxons_editor', '/taxons/editor', factory=RootFactory)
-    
+
     config.add_route('login', '/login', factory=RootFactory)
     config.add_route('logout', '/logout', factory=RootFactory)
 
@@ -43,11 +43,14 @@ def main(global_config, **settings):
     config.add_route('taxon_filter', '/taxon/filter', factory=RootFactory)
     config.add_route('species_name', '/species', factory=RootFactory)
     config.add_route('taxon_direct_child', '/taxon/direct_child',      factory=RootFactory)
-    config.add_route('taxon_parent_path', '/taxon/{id}/parent_path',  factory=RootFactory)
-    config.add_route('taxon_type', '/taxon/{id}/type',       factory=RootFactory)
+    config.add_route('taxon_parent_path', '/taxon/parent_path/{id}',  factory=RootFactory)
+    config.add_route('taxon_type', '/taxon/type/{id}',       factory=RootFactory)
     config.add_route('taxon_cbtree', '/cbtree/taxons', factory=RootFactory)
-    config.add_route('taxon_tree', '/tree/taxons/{taxon_parent_id}', factory=RootFactory)
+    config.add_route('get_taxon_tree_childrens', '/tree/taxons/{taxon_parent_id}', factory=RootFactory)
+    config.add_route('taxon_tree', '/tree/taxons/', factory=RootFactory)
     config.add_route('get_taxon', '/taxon/{id}', factory=RootFactory)
+
+
 
     # Фильтр видов по его типу, подстроки названия и (если указан) id
     config.add_route('species_filter',    '/species/{type}/{id:[0-9]*}',       factory=RootFactory)
