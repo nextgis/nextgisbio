@@ -137,21 +137,25 @@ def direct_child(request):
 def taxon_filter(request):
     dbsession = DBSession()
 
-    query_str = request.params['name']
+    query_str = request.params['name'].encode('utf-8').decode('utf-8')
     start = int(request.params['start'])
     count = int(request.params['count'])
-
+    print(query_str.upper())
     # Нужно выдернуть номера id, названия таксонов и авторов (для синонимов) из таблиц таксонов и синонимов
     try:
+        query_str_upper = query_str.upper()
         # ищем в таблице таксонов:
-        aFilter = "UPPER(%s) LIKE '%s%s%s'" % ('name', '%', query_str.upper(), '%')
+        aFilter = u"UPPER({0}) LIKE '%{1}%'".format('name', query_str_upper)
         tax_all = dbsession.query(Taxon.id, Taxon.name, Taxon.author).filter(aFilter).all()
 
+        aFilter = u"UPPER({0}) LIKE '%{1}%'".format('russian_name', query_str_upper)
+        rus_all = dbsession.query(Taxon.id, Taxon.russian_name, Taxon.author).filter(aFilter).all()
+
         # ищем в таблице синонимов:
-        aFilter = "UPPER(%s) LIKE '%s%s%s'" % ('synonym', '%', query_str.upper(), '%')
+        aFilter = u"UPPER({0}) LIKE '%{1}%'".format('synonym', query_str_upper)
         s_all = dbsession.query(Synonym.species_id, Synonym.synonym, Synonym.author).filter(aFilter).all()
 
-        all = [tax_all + s_all][0]
+        all = [tax_all + s_all + rus_all][0]
         itemsPage = all[start:start + count]
     except DBAPIError:
         return {'success': False, 'msg': 'Ошибка подключения к БД'}
