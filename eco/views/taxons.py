@@ -140,7 +140,7 @@ def taxon_filter(request):
     query_str = request.params['name'].encode('utf-8').decode('utf-8')
     start = int(request.params['start'])
     count = int(request.params['count'])
-    print(query_str.upper())
+
     # Нужно выдернуть номера id, названия таксонов и авторов (для синонимов) из таблиц таксонов и синонимов
     try:
         query_str_upper = query_str.upper()
