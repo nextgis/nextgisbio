@@ -1,4 +1,4 @@
-lat	lon	name	description
+lat	lon	name	card_id	spec_id
 % for p in points:
-	${p['lat']}	${p['lon']}	${p['name']}	<a href="#" onClick="new formWindow({form: new tableRowForm({baseURL: application_root + '/cards/', recordID: ${p['card_id']}, fields: cardFieldlistByTaxonId(${p['spec_id']})}), title: 'Карточка № ${p['card_id']}'}).show();">(${p['card_id']}) ${p['name']}</a>
+        ${p['lat']}	${p['lon']}	${p['name']}	${p['card_id']}	${p['spec_id']}
 % endfor

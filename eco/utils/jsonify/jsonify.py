@@ -2,8 +2,8 @@
 
 import datetime
 
-class JsonifyMixin:
 
+class JsonifyMixin:
     def as_json_dict(self, **init):
         d = dict()
         for c in self.__table__.columns:
