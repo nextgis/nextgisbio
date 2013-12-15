@@ -1,0 +1,29 @@
+<div class="taxon-view">
+
+    <h4>{{name}}</h4>
+
+    <p>
+        <span>Ранг:</span>
+        <span>{{taxon_type_description.rus_name}}</span>
+    </p>
+    {{#russian_name}}
+    <p>
+        <span>Русское название:</span>
+        <span>{{russian_name}}</span>
+    </p>
+    {{/russian_name}}
+    {{#author}}
+    <p>
+        <span>Автор:</span>
+        <span>{{author}}</span>
+    </p>
+    {{/author}}
+    {{#source}}
+    <p>
+        <span>Источник:</span>
+        <span>{{source}}</span>
+    </p>
+    {{/source}}
+
+    <div class="buttons"></div>
+</div>

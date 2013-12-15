@@ -12,15 +12,15 @@ from pyramid.security import forget
 from sqlalchemy.orm.exc import NoResultFound
 
 from eco.models import User, DBSession
-    
+
 @view_config(route_name='login', renderer='login.mak')
 @view_config(context=HTTPForbidden, renderer='login.mak')
 def login(request):
     message = None
-    
+
     if hasattr(request, 'exception') and isinstance(request.exception, HTTPForbidden):
         message = u"Недостаточно прав доступа для выполнения указанной операции!"
-    
+
     login_url = route_url('login', request)
     referrer = request.url
     if referrer == login_url:
@@ -31,13 +31,13 @@ def login(request):
     if 'form.submitted' in request.params:
         login = request.params['login']
         password = request.params['password']
-        
+
         try:
             user = DBSession.query(User).filter_by(login=login, password=User.password_hash(password)).one()
             headers = remember(request, user.id)
             return HTTPFound(location = next_url, headers = headers)
         except NoResultFound: pass
-        
+
         message = u"Неверный логин или пароль!"
     return dict(
         message = message,

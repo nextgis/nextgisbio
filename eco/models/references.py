@@ -143,6 +143,7 @@ class Coord_type(Base, JsonifyMixin):
     def __repr__(self):
         return "<Coord_type('%s') >" % (self.coord_type, )
 
+
 class Anthr_press(Base, JsonifyMixin):
     '''
     Антропогенная нагрузка
@@ -172,6 +173,7 @@ class Anthr_press(Base, JsonifyMixin):
 
     def __repr__(self):
         return "<Anthr_press('%s') >" % (self.anthr_press, )
+
 
 class Vitality(Base, JsonifyMixin):
     '''
@@ -296,6 +298,7 @@ class Pheno(Base, JsonifyMixin):
     def __repr__(self):
         return "<Pheno('%s') >" % (self.pheno, )
 
+
 class Doc_type(Base, JsonifyMixin):
     '''
     Тип документа
@@ -324,6 +327,7 @@ class Doc_type(Base, JsonifyMixin):
 
     def __repr__(self):
         return "<Doc_type('%s') >" % (self.doc_type, )
+
 
 class Inforesources(Base, JsonifyMixin):
     '''
@@ -409,14 +413,15 @@ class Inforesources(Base, JsonifyMixin):
     def __repr__(self, filename):
         return "<Inforesources('%s') >" % (self.filename, )
 
+
 class Legend(Base, JsonifyMixin):
     '''
     Пояснение поля Precision в таблице ключевых участков
     '''    
     __tablename__ = 'legend'
     id = Column(Integer, Sequence('legend_id_seq', start=50001), primary_key=True)
-    precision =   Column(Integer, nullable=False, unique=True) # код точности
-    count =       Column(String, nullable=False, unique=True)  # Количество квадратиков
+    precision = Column(Integer, nullable=False, unique=True) # код точности
+    count = Column(String, nullable=False, unique=True)  # Количество квадратиков
     description = Column(String, nullable=False, unique=True)  # Пояснения
     
     @staticmethod
@@ -439,13 +444,14 @@ class Legend(Base, JsonifyMixin):
     
     def __repr__(self):
         return "<Legend('%s') >" % (self.count, )
-        
+
+
 class Area_type(Base, JsonifyMixin):
     '''
     Пояснение поля Precision в таблице ключевых участков
     '''    
     __tablename__ = 'area_type'
-    id =        Column(Integer, Sequence('area_type_id_seq', start=50001), primary_key=True)
+    id = Column(Integer, Sequence('area_type_id_seq', start=50001), primary_key=True)
     area_type = Column(String, nullable=False, unique=True)  # Пояснения
     
     @staticmethod
@@ -476,10 +482,10 @@ class Key_area(Base, JsonifyMixin):
     Ключевые участки
     '''    
     __tablename__ = 'key_area'
-    id =        Column(Integer, Sequence('key_area_id_seq', start=50001), primary_key=True)
+    id = Column(Integer, Sequence('key_area_id_seq', start=50001), primary_key=True)
     area_type = Column(Integer, ForeignKey('area_type.id'))
-    legend =    Column(Integer, ForeignKey('legend.id'))
-    name =      Column(String, nullable=False, unique=True)
+    legend = Column(Integer, ForeignKey('legend.id'))
+    name = Column(String, nullable=False, unique=True)
 
     
     @staticmethod
