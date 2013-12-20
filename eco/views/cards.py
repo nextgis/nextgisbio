@@ -16,7 +16,7 @@ import osgeo.osr as osr
 
 from pyramid.response import Response
 from pyramid.view import view_config
-from pyramid.security import has_permission, ACLAllowed
+from pyramid.security import has_permission, ACLAllowed, authenticated_userid
 
 from sqlalchemy.exc import DBAPIError
 from sqlalchemy.orm.exc import NoResultFound
@@ -24,7 +24,7 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from eco.models import (
     DBSession,
-    Cards, Person, Inforesources,
+    Cards, User, Person, Inforesources,
     Taxon, TAXON_ID_QUERY, TAXON_TYPES
 )
 
@@ -189,21 +189,32 @@ def cards_download(request):
 
 # Выдать данные по конкретной карточке в формате json
 @view_config(route_name='cards_view', renderer='json', permission='view')
-def table_view(request):    
+def table_view(request):
+    can_i_edit = has_permission('edit', request.context, request)
+    can_i_edit = isinstance(can_i_edit, ACLAllowed)
+    user_id = authenticated_userid(request)
+
     dbsession = DBSession()
+    card, user = None, None
     try:
-        p = dbsession.query(Cards).filter_by(id=request.matchdict['id']).one()
-        result = p.as_json_dict()
+        card = dbsession.query(Cards).filter_by(id=request.matchdict['id']).one()
+        user = dbsession.query(User).filter_by(id=user_id).one() if can_i_edit else None
+        result = card.as_json_dict()
     except NoResultFound:
         result = {'success': False, 'msg': 'Результатов, соответствующих запросу, не найдено'}
     
-    can_i_edit = has_permission('edit', request.context, request)
-    can_i_edit = isinstance(can_i_edit, ACLAllowed)
+
     if not can_i_edit:
         # обнулим координаты перед показом
         result['lat'] = 0
         result['lon'] = 0
-    return {'data': result, 'success': True} 
+
+    if isinstance(has_permission('admin', request.context, request), ACLAllowed):
+        is_editable = True
+    else:
+        is_editable = card.inserter == user.person_id if user else False
+
+    return {'data': result, 'editable': is_editable, 'success': True}
 
 
 @view_config(route_name='save_card', renderer='json', permission='edit')

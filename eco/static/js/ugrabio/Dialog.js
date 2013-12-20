@@ -71,7 +71,7 @@ define([
             this._layout.startup();
 
             // todo: create user determining system
-            if (this.submit && ugrabio.is_auth) {
+            if (this.dialogSettings && this.dialogSettings['submit']) {
                 var form = this._form,
                     dialog = this._dialog;
                 new Button({

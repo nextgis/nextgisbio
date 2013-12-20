@@ -184,27 +184,28 @@ define([
                     name = this.innerText || this.textContent;
 
                 xhr.get(application_root + '/taxon/type/' + specId, {handleAs: 'json'}).then(
-                            function (kingdoms) {
-                                var kingdom;
-                                for (kingdom in kingdoms) {
-                                    if (kingdoms.hasOwnProperty(kingdom)) {
-                                        if (kingdoms[kingdom] === true) {
-                                            break;
-                                        }
-                                    }
+                    function (kingdoms) {
+                        var kingdom;
+                        for (kingdom in kingdoms) {
+                            if (kingdoms.hasOwnProperty(kingdom)) {
+                                if (kingdoms[kingdom] === true) {
+                                    break;
                                 }
-                                kingdom = kingdom.charAt(0).toUpperCase() + kingdom.slice(1);
-
-                                xhr.get(application_root + '/cards/' + cardId, {handleAs: 'json'}).then(
-                                    function (data) {
-                                        var card = data.data;
-                                        topic.publish('open/form', 'card' + kingdom, 'Карточка № ' + card.id, '/cards/save', card);
-                                    });
-                            },
-                            function (error) {
-                                alert('Извините, произошла ошибка, попробуйте еще раз.');
                             }
-                        );
+                        }
+                        kingdom = kingdom.charAt(0).toUpperCase() + kingdom.slice(1);
+
+                        xhr.get(application_root + '/cards/' + cardId, {handleAs: 'json'}).then(
+                            function (data) {
+                                var card = data.data,
+                                    dialogSettings = data.editable ? {_dialog: {submit: true}} : null;
+                                topic.publish('open/form', 'card' + kingdom, 'Карточка № ' + card.id, '/cards/save', card, dialogSettings);
+                            });
+                    },
+                    function (error) {
+                        alert('Извините, произошла ошибка, попробуйте еще раз.');
+                    }
+                );
             });
         };
 

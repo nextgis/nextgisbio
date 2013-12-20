@@ -12,7 +12,7 @@ define([
     'ugrabio/Dialog',
     'dojo/domReady!'
 ], function (declare, array, on, topic, MenuBar, PopupMenuBarItem, Menu, MenuItem, DropDownMenu, Forms, Dialog) {
-    topic.subscribe('open/form', function (formId, title, action, values) {
+    topic.subscribe('open/form', function (formId, title, action, values, elementsSettings) {
         var formTemplate = Forms.forms[formId],
             listElementsId = formTemplate.elements,
             formElements = [];
@@ -29,6 +29,9 @@ define([
                     if (values && values[elementName]) {
                         element.set('value', values[elementName]);
                     }
+                    if (elementsSettings && elementsSettings[elementName]) {
+                        declare.safeMixin(element, elementsSettings[elementName]);
+                    }
                     formElements.push(element);
 
                 } else {
@@ -40,6 +43,9 @@ define([
                     if (values && values[elementName]) {
                         element.set('value', values[elementName]);
                     }
+                    if (elementsSettings && elementsSettings[elementName]) {
+                        declare.safeMixin(element, elementsSettings[elementName]);
+                    }
                     formElements.push(element);
                 }
             }
@@ -50,10 +56,16 @@ define([
             declare.safeMixin(formSettings, {action: action});
         }
 
+        var dialogSettings = null;
+        if (elementsSettings && elementsSettings['_dialog']) {
+            dialogSettings = elementsSettings['_dialog'];
+        }
+
         new Dialog({
             title: title,
             elements: formElements,
-            formSettings: formSettings
+            formSettings: formSettings,
+            dialogSettings: dialogSettings
         }).show();
     });
 });
