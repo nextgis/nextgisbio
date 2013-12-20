@@ -128,7 +128,7 @@ define([
         var options = {
             projection: epsg3857,
             maxExtent: extent,
-            restrictedExtent: extent,
+//            restrictedExtent: extent,
 //            layers: [osm, gsat, oopt, squareLayer, arealLayer, cardsLayer]
             layers: [osm, oopt, squareLayer, arealLayer, cardsLayer]
         };
