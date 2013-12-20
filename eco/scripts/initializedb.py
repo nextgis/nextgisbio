@@ -42,14 +42,6 @@ def main(argv=sys.argv):
     
     # Заполним таблицы данными:
     with transaction.manager:
-        # Пользователи
-        USERS = (
-            (u'admin', u'admin', u'admin'),
-            (u'editor', u'editor', u'editor'),
-        )
-        for login, password, role in USERS:
-            user = User(login=login, password=User.password_hash(password), role=role)
-            DBSession.add(user)
         
         # Таксоны
         taxons_file = 'eco/initial_data/csv/taxon.csv'
@@ -111,4 +103,8 @@ def main(argv=sys.argv):
         
         ann_file = 'eco/initial_data/csv/annotation.csv'
         Annotation.add_from_file(ann_file)
+
+        # Пользователи
+        users_file = 'eco/initial_data/csv/user.csv'
+        User.add_from_file(users_file)
 
