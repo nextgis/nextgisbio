@@ -27,9 +27,10 @@ class Annotation(Base, JsonifyMixin):
     key_area =      Column(Integer, ForeignKey('key_area.id'), nullable=False) # ключевой участок
     key_area_link = relationship('Key_area', backref='annotations')
 
-    identifier =    Column(Integer, ForeignKey('person.id'))       # определил
-    collecter =     Column(Integer, ForeignKey('person.id'))       # собрал
-    biblioref =     Column(Integer, ForeignKey('inforesources.id')) # библиогр. ссылка
+    inserter = Column(Integer, ForeignKey('person.id')),
+    identifier = Column(Integer, ForeignKey('person.id'))       # определил
+    collecter = Column(Integer, ForeignKey('person.id'))       # собрал
+    biblioref = Column(Integer, ForeignKey('inforesources.id')) # библиогр. ссылка
     
     original_name = Column(String) # Исходное название
     location =   Column(String) # Геопривязка
