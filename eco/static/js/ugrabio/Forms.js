@@ -82,6 +82,11 @@ define([
                     {label: 'vitality', action: 'open/window', params: ['/vitality_download']}
                 ]
             },
+            'Отчеты': {
+                items: [
+                    {label: 'Охраняемые виды', action: 'open/link/self', params: ['/species/redbooks']}
+                ]
+            },
             'Администратор': {
                 validate: function () {
                     return ugrabio.mode && ugrabio.mode === 'admin'
