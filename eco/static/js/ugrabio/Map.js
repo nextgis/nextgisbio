@@ -297,8 +297,9 @@ define([
 
                                             xhr.get(application_root + '/annotation/' + idAnnotation, {handleAs: 'json'}).then(
                                                 function (data) {
-                                                    var annotation = data.data;
-                                                    topic.publish('open/form', 'an' + kingdom, 'Аннотированный список № ' + annotation.id, '/annotation/save', annotation);
+                                                    var annotation = data.data,
+                                                        dialogSettings = data.editable ? {_dialog: {submit: true}} : null;
+                                                    topic.publish('open/form', 'an' + kingdom, 'Аннотированный список № ' + annotation.id, '/annotation/save', annotation, dialogSettings);
                                                 });
                                         },
                                         function (error) {
@@ -388,8 +389,9 @@ define([
 
                                 xhr.get(application_root + '/annotation/' + idAnnotation, {handleAs: 'json'}).then(
                                     function (data) {
-                                        var annotation = data.data;
-                                        topic.publish('open/form', 'an' + kingdom, 'Аннотированный список № ' + annotation.id, '/annotation/save', annotation);
+                                        var annotation = data.data,
+                                            dialogSettings = data.editable ? {_dialog: {submit: true}} : null;
+                                        topic.publish('open/form', 'an' + kingdom, 'Аннотированный список № ' + annotation.id, '/annotation/save', annotation, dialogSettings);
                                     });
                             },
                             function (error) {

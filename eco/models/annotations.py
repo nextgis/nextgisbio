@@ -20,36 +20,36 @@ class Annotation(Base, JsonifyMixin):
     Аннотированные списки
     '''
     __tablename__ = 'annotation'
-    
-    id =            Column(Integer, Sequence('annotation_id_seq', start=100000), primary_key=True)
-    species =       Column(Integer, ForeignKey('taxon.id'), nullable=False)
-    species_link =  relationship('Taxon')
-    key_area =      Column(Integer, ForeignKey('key_area.id'), nullable=False) # ключевой участок
+
+    id = Column(Integer, Sequence('annotation_id_seq', start=100000), primary_key=True)
+    species = Column(Integer, ForeignKey('taxon.id'), nullable=False)
+    species_link = relationship('Taxon')
+    key_area = Column(Integer, ForeignKey('key_area.id'), nullable=False) # ключевой участок
     key_area_link = relationship('Key_area', backref='annotations')
 
-    inserter = Column(Integer, ForeignKey('person.id')),
+    inserter = Column(Integer, ForeignKey('person.id'))
     identifier = Column(Integer, ForeignKey('person.id'))       # определил
     collecter = Column(Integer, ForeignKey('person.id'))       # собрал
     biblioref = Column(Integer, ForeignKey('inforesources.id')) # библиогр. ссылка
-    
+
     original_name = Column(String) # Исходное название
-    location =   Column(String) # Геопривязка
-    lon =        Column(Float)
-    lat =        Column(Float)
-    biotop =     Column(String) # Биотоп
+    location = Column(String) # Геопривязка
+    lon = Column(Float)
+    lat = Column(Float)
+    biotop = Column(String) # Биотоп
     difference = Column(String) # Отличия
-    substrat =   Column(String) # Субстрат
-    status =     Column(String) # статус
-    frequency =  Column(String) # Частота встречаемости
-    quantity =   Column(String) # количество (тип взял как в БД Access)
+    substrat = Column(String) # Субстрат
+    status = Column(String) # статус
+    frequency = Column(String) # Частота встречаемости
+    quantity = Column(String) # количество (тип взял как в БД Access)
     annotation = Column(String) # аннотация
     infosourse = Column(String) # Источник информации
-    year =       Column(Integer)
-    month =      Column(Integer)
-    day =        Column(Integer)
-    exposure =   Column(Integer) # Длительность экспозиции
-    
-    
+    year = Column(Integer)
+    month = Column(Integer)
+    day = Column(Integer)
+    exposure = Column(Integer) # Длительность экспозиции
+
+
     @staticmethod
     def add_from_file(filename):
         '''
@@ -62,27 +62,34 @@ class Annotation(Base, JsonifyMixin):
         reader = csv.reader(open(filename), delimiter='\t')
         row = reader.next() # пропускаем заголовки
         records = [line for line in reader]
-        
+
         for row in records:
+            x = [None if x == '' else x for x in row]
+            print str(len(x)) + ' - ' + str(x[0])
             (
-                id, species, key_area, identifier, collecter, 
-                biblioref, 
-                original_name, location,lon,lat,
+                id, species, inserter, key_area, identifier, collecter,
+                biblioref,
+                original_name, location, lon, lat,
                 biotop, difference, substrat, status,
                 frequency, quantity, annotation,
                 infosourse, year, month, day, exposure
-            ) = [None if x=='' else x  for x in row]
+            ) = [None if x == '' else x for x in row]
             ann = Annotation(
-                id = id,species = species,key_area = key_area,identifier = identifier,collecter = collecter,
-                biblioref = biblioref,
-                original_name = original_name,location = location,lon = lon,lat = lat,
-                biotop = biotop,difference = difference,substrat=substrat, status = status,
-                frequency = frequency,quantity = quantity,annotation = annotation,
-                infosourse = infosourse,year = year,month = month,day = day,exposure = exposure
+                id=id,
+                species=species,
+                inserter=inserter,
+                key_area=key_area,
+                identifier=identifier,
+                collecter=collecter,
+                biblioref=biblioref,
+                original_name=original_name, location=location, lon=lon, lat=lat,
+                biotop=biotop, difference=difference, substrat=substrat, status=status,
+                frequency=frequency, quantity=quantity, annotation=annotation,
+                infosourse=infosourse, year=year, month=month, day=day, exposure=exposure
             )
             dbsession.add(ann)
         dbsession.flush()
-    
+
     @staticmethod
     def as_join_list(taxon_list=None, header=True):
         '''
@@ -92,7 +99,7 @@ class Annotation(Base, JsonifyMixin):
         Если taxon_list=None, выбрать все карточки.
         header: добавлять ли в начало списка строку заголовков.
         '''
-        
+
         dbsession = DBSession()
         if taxon_list: # выдать списки-потомки определенных таксонов
             species = Taxon.species_by_taxon(taxon_list)
@@ -137,7 +144,7 @@ class Annotation(Base, JsonifyMixin):
                 inforesources ON annotation.biblioref = inforesources.id
             WHERE
                 annotation.species IN (%s)
-        ''' % ", ".join([ str(num) for num in species_id])
+        ''' % ", ".join([str(num) for num in species_id])
         anlists = dbsession.query(Annotation).from_statement(qs).all()
         names = [
             'id',

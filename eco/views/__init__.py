@@ -8,12 +8,14 @@ import shutil
 from pyramid import security
 from pyramid.response import Response
 from pyramid.view import view_config
+from pyramid.security import has_permission, ACLAllowed, authenticated_userid
 
 from sqlalchemy.exc import DBAPIError
 
 
 from eco.models import (
     DBSession,
+    User,
     table_by_name
 )
 from eco.models import MultipleResultsFound, NoResultFound
@@ -93,18 +95,33 @@ def table_browse(request):
 # Выдать данные по конкретной записи из таблицы в формате json
 @view_config(route_name='table_view', renderer='json')
 def table_view(request):
+    can_i_edit = has_permission('edit', request.context, request)
+    can_i_edit = isinstance(can_i_edit, ACLAllowed)
+    user_id = authenticated_userid(request)
+
     try:
         model = table_by_name(request.matchdict['table'])
     except KeyError:
         return {'success': False, 'msg': 'Ошибка: отсутствует таблица с указанным именем'}
         
-    dbsession = DBSession()
+    session = DBSession()
     try:
-        p = dbsession.query(model).filter_by(id=request.matchdict['id']).one()
-        result = {'data': p.as_json_dict(), 'success': True}
+        entity = session.query(model).filter_by(id=request.matchdict['id']).one()
+        user = session.query(User).filter_by(id=user_id).one() if can_i_edit else None
+        result = {'data': entity.as_json_dict(), 'success': True}
     except NoResultFound:
         result = {'success': False, 'msg': 'Результатов, соответствующих запросу, не найдено'}
-    return result 
+
+    if hasattr(entity, 'inserter'):
+        if isinstance(has_permission('admin', request.context, request), ACLAllowed):
+            is_editable = True
+        else:
+            is_editable = entity.inserter == user.person_id if user else False
+    else:
+        is_editable = True
+    result['editable'] = is_editable
+
+    return result
 
 
 
