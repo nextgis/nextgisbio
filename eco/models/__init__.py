@@ -6,8 +6,8 @@ from zope.sqlalchemy import ZopeTransactionExtension
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 
-DBSession    = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
-Base         = declarative_base()
+DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
+Base = declarative_base()
 
 from taxons import Taxon, Synonym, TAXON_ID_QUERY, TAXON_ALL_QUERY, TAXON_TYPES, MAMMALIA, AVES, PLANTAE, ARA, ARTHROPODA, MOSS, LICHENES, ORG_TYPES
 from references import (
@@ -20,6 +20,7 @@ from annotations import Annotation
 from squares import Squares, square_keyarea_association
 
 from security import User
+
 
 def table_by_name(table):
     '''
@@ -34,7 +35,6 @@ def table_by_name(table):
         Cards.__tablename__:    Cards,
         # Анн. списки
         Annotation.__tablename__: Annotation,
-        
         
         # Справочники
         Person.__tablename__:       Person,
@@ -52,7 +52,6 @@ def table_by_name(table):
         Footprint.__tablename__:    Footprint,
         Legend.__tablename__:       Legend,
         #Squares.__tablename__:      Squares,
-        Taxa_scheme.__tablename__:  Taxa_scheme,
         
         # Пользователи
         User.__tablename__:         User,
