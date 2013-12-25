@@ -14,10 +14,6 @@ from eco.models import Inforesources
 from eco.utils.jsonify import JsonifyMixin
 
 
-######################################
-# Карточки
-######################################
-
 class Cards(Base, JsonifyMixin):
     '''
     Карточки
@@ -61,7 +57,7 @@ class Cards(Base, JsonifyMixin):
     pull =  Column(Integer) # 
     egs =   Column(Integer) # 
     
-    publications = Column(String) # 
+    publications = Column(String) #
     
     notes = Column(String) # примечания
     
@@ -241,5 +237,3 @@ class Cards(Base, JsonifyMixin):
             )
             dbsession.add(card)
         dbsession.flush()
-
-
