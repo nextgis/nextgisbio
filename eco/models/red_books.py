@@ -55,9 +55,6 @@ class RedBook(Base, JsonifyMixin):
                 taxons = session.query(Taxon).filter_by(name=orig_name).all()
                 taxon_id = None
 
-                print 'orig_name' + orig_name
-                print 'len taxons: ' + str(len(taxons))
-
                 if len(taxons) == 1:
                     taxon_id = taxons[0].id
                 else:
