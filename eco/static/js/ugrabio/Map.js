@@ -171,6 +171,7 @@ define([
                 new OpenLayers.Size(0, 0),
                 "<b>Наблюдения</b><br/>" + refs,
                 null, true, null);
+            current_card_popup.minSize = new OpenLayers.Size(100, 100);
             current_card_popup.maxSize = new OpenLayers.Size(500, 300);
 
             f.popup = current_card_popup;
@@ -246,6 +247,7 @@ define([
                         new OpenLayers.Size(0, 0),
                         "<b>" + header + "</b><br/>" + descr,
                         null, true, null);
+                    current_square_popup.minSize = new OpenLayers.Size(100, 100);
                     current_square_popup.maxSize = new OpenLayers.Size(300, 300);
 
                     f.popup = current_square_popup;
@@ -365,6 +367,7 @@ define([
                         new OpenLayers.Size(0, 0),
                         "<b>" + header + "</b><br/>" + descr,
                         null, true, null);
+                    current_ann_popup.minSize = new OpenLayers.Size(100, 100);
                     current_ann_popup.maxSize = new OpenLayers.Size(300, 300);
 
                     f.popup = current_ann_popup;
