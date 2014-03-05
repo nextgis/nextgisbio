@@ -125,6 +125,7 @@ define(['dojo/dom', 'dojo/on', 'dojo/topic', 'dojo/store/JsonRest', 'cbtree/Tree
                     delete nodesChecked[nodeId];
                 }
             }
+            taxonsTree.collapseAll();
             onTaxonSelectedChanged();
         });
 
