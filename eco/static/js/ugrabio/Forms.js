@@ -18,7 +18,7 @@ define([
             identifier: 'id',
             pageSize: 10,
             queryExpr: '${0}',
-            style: 'width: 215px;'
+            style: 'width: 315px;'
         });
     };
 
@@ -222,7 +222,7 @@ define([
                         queryExpr: '${0}',
                         pageSize: 10,
                         title: 'Латинское название',
-                        style: 'width: 215px;'});
+                        style: 'width: 315px;'});
                 }
             },
             original_name: function () {
@@ -230,7 +230,7 @@ define([
                     name: 'original_name',
                     title: 'Исходное название',
                     readOnly: true,
-                    style: 'width: 215px;'
+                    style: 'width: 315px;'
                 });
             },
             inserter: function () {
@@ -252,7 +252,7 @@ define([
                     queryExpr: '${0}',
                     searchAttr: 'abundance',
                     title: 'Количество (баллы)',
-                    style: 'width: 215px;',
+                    style: 'width: 315px;',
                     required: false
                 });
             },
@@ -260,7 +260,7 @@ define([
                 return new Textarea({
                     name: 'annotation',
                     title: 'Аннотация',
-                    style: 'width: 215px;'
+                    style: 'width: 315px;'
                 });
             },
             anthr_press: function () {
@@ -271,11 +271,11 @@ define([
                     searchAttr: 'anthr_press',
                     title: 'Антропогенная нагрузка',
                     required: false,
-                    style: 'width: 215px;'});
+                    style: 'width: 315px;'});
             },
             area: function () {
                 return new TextBox({name: 'area', title: 'Площадь популяции',
-                    style: 'width: 215px;'});
+                    style: 'width: 315px;'});
             },
             biblioref: function () {
                 return new JsonFilteringSelect({
@@ -286,7 +286,7 @@ define([
                     labelAttr: 'filename',
                     required: false,
                     title: 'Библиографическая ссылка',
-                    style: 'width: 215px;'});
+                    style: 'width: 315px;'});
             },
             inforesources: function () {
                 return new JsonFilteringSelect({
@@ -297,13 +297,13 @@ define([
                     labelAttr: 'filename',
                     required: false,
                     title: 'Источник информации',
-                    style: 'width: 215px;'});
+                    style: 'width: 315px;'});
             },
             infosourse: function () {
                 return new TextBox({
                     name: 'infosourse',
                     title: 'Источник информации',
-                    style: 'width: 215px;'
+                    style: 'width: 315px;'
                 });
             },
             coord_type: function () {
@@ -314,7 +314,7 @@ define([
                     searchAttr: 'coord_type',
                     title: 'Тип координат',
                     required: false,
-                    style: 'width: 215px;'});
+                    style: 'width: 315px;'});
             },
             museum: function () {
                 return new JsonFilteringSelect({
@@ -324,13 +324,13 @@ define([
                     searchAttr: 'museum',
                     title: 'Музейные образцы',
                     required: false,
-                    style: 'width: 215px;'});
+                    style: 'width: 315px;'});
             },
             notes: function () {
                 return new Textarea({
                     name: 'notes',
                     title: 'Примечания',
-                    style: 'width: 215px;'});
+                    style: 'width: 315px;'});
             },
             pheno: function () {
                 return new JsonFilteringSelect({
@@ -340,38 +340,38 @@ define([
                     searchAttr: 'pheno',
                     title: 'Фаза жизненного цикла',
                     required: false,
-                    style: 'width: 215px;'});
+                    style: 'width: 315px;'});
             },
             photo: function () {
                 return new CheckBox({name: 'photo', title: 'Фото'});
             },
             protection: function () {
                 return new Textarea({name: 'protection', title: 'Меры защиты',
-                    style: 'width: 215px;'});
+                    style: 'width: 315px;'});
             },
             publications: function () {
                 return new Textarea({name: 'publications', title: 'Публикации',
-                    style: 'width: 215px;'});
+                    style: 'width: 315px;'});
             },
             quantity: function () {
                 return new NumberTextBox({name: 'quantity', title: 'Количество',
-                    style: 'width: 215px;'});
+                    style: 'width: 315px;'});
             },
             substrat: function () {
                 return new TextBox({name: 'substrat', title: 'Субстрат',
-                    style: 'width: 215px;'});
+                    style: 'width: 315px;'});
             },
             status: function () {
                 return new TextBox({name: 'status', title: 'Статус',
-                    style: 'width: 215px;'});
+                    style: 'width: 315px;'});
             },
             year: function () {
                 return new NumberTextBox({name: 'year', title: 'Год',
-                    style: 'width: 215px;'});
+                    style: 'width: 315px;'});
             },
             month: function () {
                 return new NumberTextBox({name: 'month', title: 'Месяц',
-                    style: 'width: 215px;'});
+                    style: 'width: 315px;'});
             },
             time: function () {
                 return new TimeTextBox({
@@ -380,27 +380,27 @@ define([
                     constraints: {
                         timePattern: 'dd/mm/yy HH:mm:ss'
                     },
-                    style: 'width: 215px;'});
+                    style: 'width: 315px;'});
             },
             day: function () {
                 return new NumberTextBox({name: 'day', title: 'День',
-                    style: 'width: 215px;'});
+                    style: 'width: 315px;'});
             },
             exposure: function () {
                 return new NumberTextBox({name: 'exposure', title: 'Длительность экспозиции',
-                    style: 'width: 215px;'});
+                    style: 'width: 315px;'});
             },
             difference: function () {
                 return new TextBox({name: 'difference', title: 'Отличия',
-                    style: 'width: 215px;'});
+                    style: 'width: 315px;'});
             },
             females: function () {
                 return new NumberTextBox({name: 'females', title: 'Самки',
-                    style: 'width: 215px;'});
+                    style: 'width: 315px;'});
             },
             males: function () {
                 return new NumberTextBox({name: 'males', title: 'Самцы',
-                    style: 'width: 215px;'});
+                    style: 'width: 315px;'});
             },
             footprint: function () {
                 return new JsonFilteringSelect({
@@ -410,15 +410,15 @@ define([
                     searchAttr: 'footprint',
                     title: 'Следы жизнедеятельности',
                     required: false,
-                    style: 'width: 215px;'});
+                    style: 'width: 315px;'});
             },
             frequency: function () {
                 return new TextBox({name: 'frequency', title: 'Частота встречаемости',
-                    style: 'width: 215px;'});
+                    style: 'width: 315px;'});
             },
             habitat: function () {
                 return new Textarea({name: 'habitat', title: 'Местообитание',
-                    style: 'width: 215px;'});
+                    style: 'width: 315px;'});
             },
             vitality: function () {
                 return new JsonFilteringSelect({
@@ -428,35 +428,35 @@ define([
                     searchAttr: 'vitality',
                     title: 'Состояние популяции',
                     required: false,
-                    style: 'width: 215px;'});
+                    style: 'width: 315px;'});
             },
             unknown_age: function () {
                 return new NumberTextBox({name: 'unknown_age', title: 'Возраст неопределен',
-                    style: 'width: 215px;'});
+                    style: 'width: 315px;'});
             },
             unknown_sex: function () {
                 return new NumberTextBox({name: 'unknown_sex', title: 'Пол неопределен',
-                    style: 'width: 215px;'});
+                    style: 'width: 315px;'});
             },
             ad: function () {
                 return new NumberTextBox({name: 'ad', title: 'Взрослые',
-                    style: 'width: 215px;'});
+                    style: 'width: 315px;'});
             },
             sad: function () {
                 return new NumberTextBox({name: 'sad', title: 'Предвзрослые',
-                    style: 'width: 215px;'});
+                    style: 'width: 315px;'});
             },
             juv: function () {
                 return new NumberTextBox({name: 'juv', title: 'Молодые',
-                    style: 'width: 215px;'});
+                    style: 'width: 315px;'});
             },
             pull: function () {
                 return new NumberTextBox({name: 'pull', title: 'Новорожденные',
-                    style: 'width: 215px;'});
+                    style: 'width: 315px;'});
             },
             egs: function () {
                 return new NumberTextBox({name: 'egs', title: 'Яйца',
-                    style: 'width: 215px;'});
+                    style: 'width: 315px;'});
             },
             key_area: function () {
                 return new JsonFilteringSelect({
@@ -467,29 +467,29 @@ define([
                     pageSize: 10,
                     title: 'Ключевой участок',
                     required: true,
-                    style: 'width: 215px;'});
+                    style: 'width: 315px;'});
             },
             lat: function () {
                 return new NumberTextBox({name: 'lat', title: 'Широта',
-                    style: 'width: 215px;'});
+                    style: 'width: 315px;'});
             },
             lon: function () {
                 return new NumberTextBox({name: 'lon', title: 'Долгота',
-                    style: 'width: 215px;'});
+                    style: 'width: 315px;'});
             },
             location: function () {
                 return new Textarea({name: 'location', title: 'Геопривязка',
-                    style: 'width: 215px;'});
+                    style: 'width: 315px;'});
             },
             limit_fact: function () {
                 return new Textarea({name: 'limit_fact', title: 'Лимитирующие факторы',
-                    style: 'width: 215px;'});
+                    style: 'width: 315px;'});
             },
             biotop: function () {
                 return new TextBox({
                     name: 'biotop',
                     title: 'Биотоп',
-                    style: 'width: 215px;'});
+                    style: 'width: 315px;'});
             },
             save_card: function () {
                 return new Button({
