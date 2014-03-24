@@ -52,7 +52,7 @@ class RedBook(Base, JsonifyMixin):
         with transaction.manager:
             for region, orig_name, lat_name, population, status, univ_status, year, bibl in records:
 
-                taxons = session.query(Taxon).filter_by(name=orig_name).all()
+                taxons = session.query(Taxon).filter_by(name=lat_name).all()
                 taxon_id = None
 
                 if len(taxons) == 1:
