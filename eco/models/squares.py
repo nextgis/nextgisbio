@@ -25,6 +25,7 @@ square_keyarea_association = Table('square_karea_association', Base.metadata,
     Column('key_area_id', Integer, ForeignKey('key_area.id'))
 )
 
+
 class Squares(Base, JsonifyMixin):
     __tablename__ = 'square'
     id = Column(Integer, Sequence('square_id_seq', start=100000), primary_key=True)
