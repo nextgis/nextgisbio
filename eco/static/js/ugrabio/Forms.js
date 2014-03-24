@@ -84,7 +84,7 @@ define([
             },
             'Отчеты': {
                 items: [
-                    {label: 'Охраняемые виды', action: 'open/link/self', params: ['/species/redbooks']}
+                    {label: 'Охраняемые виды', action: 'open/link/self', params: ['/reports/protected_species_list']}
                 ]
             },
             'Администратор': {

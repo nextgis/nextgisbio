@@ -50,7 +50,10 @@ def main(global_config, **settings):
     config.add_route('taxon_tree', '/tree/taxons/', factory=RootFactory)
     config.add_route('get_taxon', '/taxon/{id}', factory=RootFactory)
 
-
+    # reports
+    config.add_route('protected_species_list', '/reports/protected_species_list', factory=RootFactory)
+    config.add_route('redbook_filter', '/redbook/filter', factory=RootFactory)
+    config.add_route('species_by_redbook', '/species/redbook/{redbook_id}', factory=RootFactory)
 
     # Фильтр видов по его типу, подстроки названия и (если указан) id
     config.add_route('species_filter',    '/species/{type}/{id:[0-9]*}',       factory=RootFactory)
@@ -94,19 +97,19 @@ def main(global_config, **settings):
     config.add_route('s_ka_association_download',  'association_download',       factory=RootFactory)
 
     # Справочники:
-    
     config.add_route('person_name',         '/person_name',             factory=RootFactory)
     # Инфоресурсы
     config.add_route('inforesources_name',  'inforesources_name',       factory=RootFactory)
     
     # Выдать данные из таблицы в формате json
     config.add_route('table_browse',        '{table}_browse',           factory=RootFactory)
+
     # Выдать данные по конкретной записи из таблицы в формате json:
     config.add_route('table_view',          '/{table}/{id}',            factory=RootFactory)
     
     # Выдать данные из таблицы в формате csv
     config.add_route('table_download',        '{table}_download',       factory=RootFactory)
-    
+
     config.scan()
     
     return config.make_wsgi_app()
