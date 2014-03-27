@@ -53,12 +53,11 @@ class RedBook(Base, JsonifyMixin):
             for region, orig_name, lat_name, population, status, univ_status, year, bibl in records:
 
                 taxons = session.query(Taxon).filter_by(name=lat_name).all()
-                taxon_id = None
 
                 if len(taxons) == 1:
                     taxon_id = taxons[0].id
                 else:
-                    log['not_found'].append(orig_name)
+                    log['not_found'].append(lat_name)
                     continue
 
                 red_book_id = red_books[bibl]
