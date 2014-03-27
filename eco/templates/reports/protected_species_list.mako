@@ -33,7 +33,8 @@
                             columns: {
                                 name: 'Латинское название',
                                 russian_name: 'Русское название',
-                                status: 'Статус',
+                                status: 'Статус по книге',
+                                univ_status: 'Универсальный статус',
                                 region: 'Регион',
                                 population: 'Популяция',
                                 year: 'Год'
