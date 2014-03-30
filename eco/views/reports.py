@@ -11,11 +11,13 @@ import re
 from pyramid.security import remember
 from pyramid.security import forget
 
-from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.exc import DBAPIError
 
 from eco.models import DBSession
 from eco.models.red_books import RedBook, RedBookSpecies
 from eco.models.taxons import Taxon
+
+from eco.utils import dojo
 
 
 @view_config(route_name='protected_species_list', renderer='reports/protected_species_list.mako')
@@ -37,14 +39,19 @@ def redbook_filter(request):
     try:
         query_str_upper = query_str.upper()
         aFilter = u"UPPER({0}) LIKE '%{1}%'".format('name', query_str_upper)
-        red_books = dbsession.query(RedBook.id, RedBook.name).filter(aFilter).all()
+        order_by_clauses = []
+        order_by_clauses = dojo.parse_sort(request)
+
+        red_books = dbsession.query(RedBook.id, RedBook.name)\
+            .filter(aFilter)\
+            .order_by(order_by_clauses)\
+            .all()
 
         itemsPage = red_books[start:start + count]
 
     except DBAPIError:
         return {'success': False, 'msg': 'Ошибка подключения к БД'}
 
-    rows = []
     rows = [{'id': id, 'name': name} for id, name in itemsPage]
 
     return {'items': rows, 'success': True, 'numRows': len(itemsPage), 'identity': 'id'}
@@ -56,26 +63,7 @@ def species_by_redbook(request):
 
     redbook_id = request.matchdict['redbook_id']
 
-    order_by_clauses = None
-    for key, val in request.params.iteritems():
-        if key.startswith('sort('):
-            order_by_clauses = []
-            m = re.search(r"\(([A-Za-z0-9_+\-, ]+)\)", key)
-            if m:
-                clauses = m.group(0)[1:-1].split(',')
-                for clause in clauses:
-                    direcion = None
-                    if clause[0] == ' ':
-                        direcion = 'asc'
-                    elif clause[0] == '-':
-                        direcion = 'desc'
-                    order_by_clauses.append('{0} {1}'.format(clause[1:-1] + clause[-1], direcion))
-
-    if order_by_clauses:
-        order_by_clauses = ','.join(order_by_clauses)
-    else:
-       order_by_clauses = 'name asc'
-
+    order_by_clauses = dojo.parse_sort(request)
 
     species = dbsession.query(Taxon, RedBookSpecies) \
         .join(RedBookSpecies, Taxon.id == RedBookSpecies.specie_id) \
