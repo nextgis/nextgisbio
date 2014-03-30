@@ -2,16 +2,18 @@
 
 <%block name='inlineRequireAmd'>
     <script>
-        require(['ugrabio/Forms', 'ugrabio/Menu', 'ugrabio/TaxonSearcher', 'ugrabio/TaxonCbTree',
+        require(['ugrabio/Forms', 'ugrabio/TaxonSearcher', 'ugrabio/TaxonTree',
+            'ugrabio/TaxonEditorManager', 'ugrabio/TaxonViewer',
             'dojox/data/QueryReadStore', 'dojo/dom', 'dojo/parser', 'dojo/store/JsonRest',
             'dijit/layout/BorderContainer', 'dijit/layout/ContentPane',
             'dijit/Dialog', 'dijit/form/TextBox', 'dijit/form/Button',
             'dijit/form/ValidationTextBox', 'dojo/topic', 'dojo/domReady!',
-            'ugrabio/Loader', 'ugrabio/Map', 'ugrabio/Dialog', 'ugrabio/DialogManager',
+            'ugrabio/Loader', 'ugrabio/Dialog', 'ugrabio/DialogManager',
             'ugrabio/WindowManager', 'dojo/domReady!'],
-                function (Forms, Menu, TaxonSearcher, TaxonCbTree) {
-                    new Menu(Forms.menuMap, 'menu');
-                    new TaxonSearcher(TaxonCbTree);
+                function (Forms, TaxonSearcher, TaxonTree, TaxonEditorManager) {
+                    var tree = new TaxonTree();
+                    new TaxonSearcher(tree);
+                    new TaxonEditorManager(tree);
                 });
     </script>
 </%block>
