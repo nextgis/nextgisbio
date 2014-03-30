@@ -21,7 +21,8 @@ define('ugrabio/RedBookSearcher', [
                 pageSize: 10,
                 queryExpr: '${0}',
                 style: "width: 50%;",
-                autoComplete: false
+                autoComplete: false,
+                fetchProperties: {sort: [{attribute:"name",descending: true}]}
             }, "search");
         }
     });
