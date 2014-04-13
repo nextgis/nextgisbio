@@ -2,6 +2,7 @@
 
 import os
 import sys
+import time
 import transaction
 
 from sqlalchemy import engine_from_config
@@ -9,13 +10,13 @@ from sqlalchemy import engine_from_config
 from pyramid.paster import (
     get_appsettings,
     setup_logging,
-    )
+)
 
 from eco.models import (
     DBSession, Base,
     Taxon, Synonym, Cards,
-    Person, Taxa_scheme, Museum, Coord_type, Anthr_press, Vitality, 
-    Abundance, Footprint, Pheno, Doc_type, Inforesources, 
+    Person, Taxa_scheme, Museum, Coord_type, Anthr_press, Vitality,
+    Abundance, Footprint, Pheno, Doc_type, Inforesources,
     Area_type, Legend, Key_area,
     Annotation,
     Squares, square_keyarea_association, User
@@ -27,7 +28,7 @@ from eco.models.red_books import RedBook
 def usage(argv):
     cmd = os.path.basename(argv[0])
     print('usage: %s <config_uri>\n'
-          '(example: "%s development.ini")' % (cmd, cmd)) 
+          '(example: "%s development.ini")' % (cmd, cmd))
     sys.exit(1)
 
 
@@ -39,19 +40,19 @@ def main(argv=sys.argv):
     settings = get_appsettings(config_uri)
     engine = engine_from_config(settings, 'sqlalchemy.')
     DBSession.configure(bind=engine)
+
     Base.metadata.drop_all(engine)
     Base.metadata.create_all(engine)
-    
+
     # Заполним таблицы данными:
     with transaction.manager:
-        
         # Таксоны
         taxons_file = 'eco/initial_data/csv/taxon.csv'
         Taxon.add_from_file(taxons_file)
-        
+
         synonym_file = 'eco/initial_data/csv/synonym.csv'
         Synonym.add_from_file(synonym_file)
-        
+
         # Справочники
 
         person_file = 'eco/initial_data/csv/person.csv'
@@ -113,3 +114,5 @@ def main(argv=sys.argv):
     red_books_csv = 'eco/initial_data/csv/redbooks.csv'
     RedBook.import_from_csv(red_books_csv)
 
+if __name__ == "__main__":
+    main()
