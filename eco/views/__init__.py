@@ -61,7 +61,6 @@ def table_browse(request):
         if parsed_name:
             filter_conditions.append(getattr(table, tablename).ilike(parsed_name))
 
-
         try:
             if (start is not None) and (count is not None):
                 items = dbsession.query(table)\
