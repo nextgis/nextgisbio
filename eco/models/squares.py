@@ -68,7 +68,22 @@ class Squares(Base, JsonifyMixin):
             square.key_areas.append(key_a)
 
         dbsession.flush()
-    
+
+    @staticmethod
+    def export_to_file(filename):
+        from eco.utils.dump_to_file import dump
+        fieldnames = ['square_id', 'key_area_id']
+
+        squares_from_db = DBSession().query(Squares).join(Squares.key_areas).all()
+
+        squares = []
+        for square in squares_from_db:
+            for key_area in square.key_areas:
+                squares.append([square.id, key_area.id])
+
+        dump(filename, fieldnames, squares, is_array=True)
+
+
 GeometryDDL(Squares.__table__)
 
 

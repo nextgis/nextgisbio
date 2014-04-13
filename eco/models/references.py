@@ -48,8 +48,16 @@ class Person(Base, JsonifyMixin):
             person = Person(id=id, name=name, fullname=fullname, speciality=speciality, degree=degree, organization=organization, position=position, email=email, phone=phone, address=address)
             dbsession.add(person)
         dbsession.flush()
+
     def __repr__(self):
         return "<Person ('%s') >" % (self.name, )
+
+    @staticmethod
+    def export_to_file(filename):
+        from eco.utils.dump_to_file import dump
+        fieldnames = ['id', 'name', 'fullname', 'speciality', 'degree', 'organization', 'position', 'email', 'phone', 'address']
+        dbsession = DBSession()
+        dump(filename, fieldnames, dbsession.query(Person).all())
 
 
 class Taxa_scheme(Base, JsonifyMixin):
@@ -82,6 +90,12 @@ class Taxa_scheme(Base, JsonifyMixin):
     def __repr__(self):
         return "<Taxa_sceme('%s') >" % (self.taxa_scheme, )
 
+    @staticmethod
+    def export_to_file(filename):
+        from eco.utils.dump_to_file import dump
+        fieldnames = ['id', 'taxa_scheme']
+        dump(filename, fieldnames, DBSession().query(Taxa_scheme).all())
+
 
 class Museum(Base, JsonifyMixin):
     '''
@@ -109,6 +123,12 @@ class Museum(Base, JsonifyMixin):
             museum = Museum(id=id, museum = m)
             dbsession.add(museum)
         dbsession.flush()
+
+    @staticmethod
+    def export_to_file(filename):
+        from eco.utils.dump_to_file import dump
+        fieldnames = ['id', 'museum']
+        dump(filename, fieldnames, DBSession().query(Museum).all())
 
     def __repr__(self):
         return "<Museum('%s') >" % (self.museum, )
@@ -140,6 +160,12 @@ class Coord_type(Base, JsonifyMixin):
             dbsession.add(coord_type)
         dbsession.flush()
 
+    @staticmethod
+    def export_to_file(filename):
+        from eco.utils.dump_to_file import dump
+        fieldnames = ['id', 'coord_type']
+        dump(filename, fieldnames, DBSession().query(Coord_type).all())
+
     def __repr__(self):
         return "<Coord_type('%s') >" % (self.coord_type, )
 
@@ -170,6 +196,12 @@ class Anthr_press(Base, JsonifyMixin):
             an_p = Anthr_press(id=id, anthr_press=ap, description=desc)
             dbsession.add(an_p)
         dbsession.flush()
+
+    @staticmethod
+    def export_to_file(filename):
+        from eco.utils.dump_to_file import dump
+        fieldnames = ['id', 'anthr_press', 'description']
+        dump(filename, fieldnames, DBSession().query(Anthr_press).all())
 
     def __repr__(self):
         return "<Anthr_press('%s') >" % (self.anthr_press, )
@@ -203,6 +235,12 @@ class Vitality(Base, JsonifyMixin):
             dbsession.add(vit)
         dbsession.flush()
 
+    @staticmethod
+    def export_to_file(filename):
+        from eco.utils.dump_to_file import dump
+        fieldnames = ['id', 'vitality', 'org_type', 'description']
+        dump(filename, fieldnames, DBSession().query(Vitality).all())
+
     def __repr__(self):
         return "<Vitality('%s') >" % (self.vitality, )
 
@@ -232,6 +270,13 @@ class Abundance(Base, JsonifyMixin):
             abn = Abundance(id=id, abundance=ab)
             dbsession.add(abn)
         dbsession.flush()
+
+    @staticmethod
+    def export_to_file(filename):
+        from eco.utils.dump_to_file import dump
+        fieldnames = ['id', 'abundance']
+        dump(filename, fieldnames, DBSession().query(Abundance).all())
+
     def __repr__(self):
         return "<Abundance('%s') >" % (self.abundance, )
 
@@ -264,6 +309,13 @@ class Footprint(Base, JsonifyMixin):
             fp = Footprint(id=id, footprint=fpr, description=desc, org_type=t)
             dbsession.add(fp)
         dbsession.flush()
+
+    @staticmethod
+    def export_to_file(filename):
+        from eco.utils.dump_to_file import dump
+        fieldnames = ['id', 'footprint', 'org_type', 'description']
+        dump(filename, fieldnames, DBSession().query(Footprint).all())
+
     def __repr__(self):
         return "<Footprint('%s') >" % (self.footprint, )
        
@@ -295,6 +347,12 @@ class Pheno(Base, JsonifyMixin):
             dbsession.add(ph)
         dbsession.flush()
 
+    @staticmethod
+    def export_to_file(filename):
+        from eco.utils.dump_to_file import dump
+        fieldnames = ['id', 'pheno', 'description', 'org_type']
+        dump(filename, fieldnames, DBSession().query(Pheno).all())
+
     def __repr__(self):
         return "<Pheno('%s') >" % (self.pheno, )
 
@@ -324,6 +382,12 @@ class Doc_type(Base, JsonifyMixin):
             dtp = Doc_type(id=id, doc_type=dt)
             dbsession.add(dtp)
         dbsession.flush()
+
+    @staticmethod
+    def export_to_file(filename):
+        from eco.utils.dump_to_file import dump
+        fieldnames = ['id', 'doc_type']
+        dump(filename, fieldnames, DBSession().query(Doc_type).all())
 
     def __repr__(self):
         return "<Doc_type('%s') >" % (self.doc_type, )
@@ -410,6 +474,15 @@ class Inforesources(Base, JsonifyMixin):
             dbsession.add(infores)
         dbsession.flush()
 
+    @staticmethod
+    def export_to_file(filename):
+        from eco.utils.dump_to_file import dump
+        fieldnames = ['id', 'doc_type_id', 'filename', 'fullname',
+                'author', 'magazine', 'pages', 'mammals', 'birds',
+                'reptiles', 'amphibians', 'fish', 'invertebrates', 'vascular',
+                'bryophytes', 'lichens', 'fungi', 'maps']
+        dump(filename, fieldnames, DBSession().query(Inforesources).all())
+
     def __repr__(self, filename):
         return "<Inforesources('%s') >" % (self.filename, )
 
@@ -441,7 +514,13 @@ class Legend(Base, JsonifyMixin):
             leg = Legend(id=id, precision=p, count=c, description=d)
             dbsession.add(leg)
         dbsession.flush()
-    
+
+    @staticmethod
+    def export_to_file(filename):
+        from eco.utils.dump_to_file import dump
+        fieldnames = ['id', 'precision', 'count', 'description']
+        dump(filename, fieldnames, DBSession().query(Legend).all())
+
     def __repr__(self):
         return "<Legend('%s') >" % (self.count, )
 
@@ -472,6 +551,12 @@ class Area_type(Base, JsonifyMixin):
             a_type = Area_type(id=id, area_type = t)
             dbsession.add(a_type)
         dbsession.flush()
+
+    @staticmethod
+    def export_to_file(filename):
+        from eco.utils.dump_to_file import dump
+        fieldnames = ['id', 'area_type']
+        dump(filename, fieldnames, DBSession().query(Area_type).all())
 
     def __repr__(self):
         return "<Area_type('%s') >" % (self.area_type, )
@@ -506,6 +591,12 @@ class Key_area(Base, JsonifyMixin):
             key_a = Key_area(id=id, area_type = atype_id, legend=pr_id, name=k)
             dbsession.add(key_a)
         dbsession.flush()
+
+    @staticmethod
+    def export_to_file(filename):
+        from eco.utils.dump_to_file import dump
+        fieldnames = ['id', 'area_type', 'legend', 'name']
+        dump(filename, fieldnames, DBSession().query(Key_area).all())
 
     def __repr__(self):
         return "<Key_area('%s') >" % (self.id, )

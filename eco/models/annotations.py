@@ -1,18 +1,14 @@
 # encoding: utf-8
 
 import csv
-import sys
 
-from sqlalchemy import Column, Integer, String, Float, Boolean
+from sqlalchemy import Column, Integer, String, Float
 from sqlalchemy import ForeignKey, Sequence
-
 from sqlalchemy.orm import relationship
 
-from eco.models import DBSession, Base, Taxon, TAXON_TYPES
-from eco.models import Key_area, Person, Inforesources
-from eco.models import MultipleResultsFound, NoResultFound
-
+from eco.models import DBSession, Base, Taxon
 from eco.utils.jsonify import JsonifyMixin
+from eco.utils import csv_utf
 
 
 class Annotation(Base, JsonifyMixin):
@@ -89,6 +85,32 @@ class Annotation(Base, JsonifyMixin):
             )
             dbsession.add(ann)
         dbsession.flush()
+
+
+    @staticmethod
+    def export_to_file(filename):
+        fieldnames = ['id', 'species', 'inserter', 'key_area', 'identifier', 'collecter',
+                'biblioref',
+                'original_name', 'location', 'lon', 'lat',
+                'biotop', 'difference', 'substrat', 'status',
+                'frequency', 'quantity', 'annotation',
+                'infosourse', 'year', 'month', 'day', 'exposure']
+        
+        with open(filename, 'wb') as file:
+            writer = csv_utf.UnicodeWriter(file)
+            writer.writerow(fieldnames)
+        
+            dbsession = DBSession()
+            
+            annotations = [[ann.id, ann.species, ann.inserter, ann.key_area, ann.identifier, ann.collecter,
+                ann.biblioref,
+                ann.original_name, ann.location, ann.lon, ann.lat,
+                ann.biotop, ann.difference, ann.substrat, ann.status,
+                ann.frequency, ann.quantity, ann.annotation,
+                ann.infosourse, ann.year, ann.month, ann.day, ann.exposure] for ann in dbsession.query(Annotation)]
+
+            writer.writerows(annotations)
+
 
     @staticmethod
     def as_join_list(taxon_list=None, header=True):
@@ -175,10 +197,3 @@ class Annotation(Base, JsonifyMixin):
             row = [anlist.__getattribute__(attr) for attr in names]
             result.append(row)
         return result
-    
-    
-    
-    
-    
-    
-    

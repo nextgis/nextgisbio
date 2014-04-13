@@ -47,3 +47,9 @@ class User(Base, JsonifyMixin):
             )
             dbsession.add(user)
         dbsession.flush()
+
+    @staticmethod
+    def export_to_file(filename):
+        from eco.utils.dump_to_file import dump
+        fieldnames = ['id', 'login', 'password', 'person_id', 'role']
+        dump(filename, fieldnames, DBSession().query(User).all())

@@ -24,7 +24,8 @@ class RedBook(Base, JsonifyMixin):
 
         log = {
             'not_found': [],
-            'duplicates': []
+            'duplicates': [],
+            'multiple': []
         }
 
         reader = csv.reader(open(path_to_file), delimiter='\t')
@@ -51,19 +52,23 @@ class RedBook(Base, JsonifyMixin):
 
         with transaction.manager:
             for region, orig_name, lat_name, population, status, univ_status, year, bibl in records:
-
+                lat_name = lat_name.strip()
                 taxons = session.query(Taxon).filter_by(name=lat_name).all()
 
-                if len(taxons) == 1:
+                taxons_count = len(taxons)
+                if taxons_count == 1:
                     taxon_id = taxons[0].id
+                elif taxons_count > 1:
+                    log['multiple'].append(lat_name)
+                    continue
                 else:
                     log['not_found'].append(lat_name)
                     continue
 
                 red_book_id = red_books[bibl]
 
-                count = session.query(func.count(RedBookSpecies.specie_id))\
-                    .filter(RedBookSpecies.red_book_id == red_book_id)\
+                count = session.query(func.count(RedBookSpecies.specie_id)) \
+                    .filter(RedBookSpecies.red_book_id == red_book_id) \
                     .filter(RedBookSpecies.specie_id == taxon_id).scalar()
 
                 if count > 0:
@@ -77,14 +82,42 @@ class RedBook(Base, JsonifyMixin):
                     status=status,
                     univ_status=univ_status,
                     year=int(year) if year else None,
-                    region=region
+                    region=region,
+                    orig_name=orig_name.strip()
                 )
 
                 session.add(red_book_specie)
                 session.flush()
 
+        print '\n\rMULTIPLE:\n\r{0}'.format('\n\r'.join(log['multiple']))
         print '\n\rNOT FOUND:\n\r{0}'.format('\n\r'.join(log['not_found']))
         print '\n\rDUPLICATES:\n\r{0}'.format('\n\r'.join(log['duplicates']))
+
+    @staticmethod
+    def export_to_file(filename):
+        from eco.utils.dump_to_file import dump
+
+        dbsession = DBSession()
+        redbook_species_db = dbsession.query(RedBook, RedBookSpecies, Taxon)\
+            .join(RedBookSpecies, RedBook.id == RedBookSpecies.red_book_id)\
+            .join(Taxon, RedBookSpecies.specie_id == Taxon.id)\
+            .all()
+        attribute_names = ['region', 'orig_name', 'lat_name', 'population', 'status', 'univ_status', 'year', 'bibl']
+
+        objects_for_dump = [
+            [
+                o[1].region,
+                o[1].orig_name,
+                o[2].name,
+                o[1].population,
+                o[1].status,
+                o[1].univ_status,
+                o[1].year,
+                o[0].name
+            ] for o in redbook_species_db
+        ]
+
+        dump(filename, attribute_names, objects_for_dump, is_array=True)
 
 
 class RedBookSpecies(Base, JsonifyMixin):
@@ -98,3 +131,4 @@ class RedBookSpecies(Base, JsonifyMixin):
     year = Column(Integer, index=True)
     region = Column(Text)
     taxon = relationship("Taxon")
+    orig_name = Column(Text)
