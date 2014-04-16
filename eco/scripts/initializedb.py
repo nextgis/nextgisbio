@@ -114,5 +114,6 @@ def main(argv=sys.argv):
     red_books_csv = 'eco/initial_data/csv/redbooks.csv'
     RedBook.import_from_csv(red_books_csv)
 
+
 if __name__ == "__main__":
     main()
