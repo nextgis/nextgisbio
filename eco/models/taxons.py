@@ -163,7 +163,7 @@ class Taxon(Base, JsonifyMixin):
             'author',
             'source'
         ]
-        dump(filename, fieldnames, DBSession().query(Taxon).all())
+        dump(filename, fieldnames, DBSession().query(Taxon).order_by(Taxon.id).all())
 
     def __repr__(self):
         return "<Taxon('%s')>" % (self.name, )
