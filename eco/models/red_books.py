@@ -32,7 +32,7 @@ class RedBook(Base, JsonifyMixin):
         reader.next()
         records = [line for line in reader]
         red_books = {}
-        for region, orig_name, lat_name, population, status, univ_status, year, bibl in records:
+        for region, orig_name, lat_name, author, population, status, univ_status, year, bibl in records:
             if bibl in red_books:
                 continue
             else:
@@ -51,7 +51,7 @@ class RedBook(Base, JsonifyMixin):
             red_books[red_book_db.name.encode('utf8')] = red_book_db.id
 
         with transaction.manager:
-            for region, orig_name, lat_name, population, status, univ_status, year, bibl in records:
+            for region, orig_name, lat_name, author, population, status, univ_status, year, bibl in records:
                 lat_name = lat_name.strip()
                 taxons = session.query(Taxon).filter_by(name=lat_name).all()
 
@@ -59,8 +59,11 @@ class RedBook(Base, JsonifyMixin):
                 if taxons_count == 1:
                     taxon_id = taxons[0].id
                 elif taxons_count > 1:
-                    log['multiple'].append(lat_name)
-                    continue
+                    taxons = session.query(Taxon).filter_by(name=lat_name).filter_by(author=author).all()
+                    taxon_id = taxons[0].id
+                    if len(taxons) > 1:
+                        log['multiple'].append(lat_name)
+                        continue
                 else:
                     log['not_found'].append(lat_name)
                     continue
