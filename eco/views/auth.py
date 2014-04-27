@@ -35,8 +35,9 @@ def login(request):
         try:
             user = DBSession.query(User).filter_by(login=login, password=User.password_hash(password)).one()
             headers = remember(request, user.id)
-            return HTTPFound(location = next_url, headers = headers)
-        except NoResultFound: pass
+            return HTTPFound(location=next_url, headers=headers)
+        except NoResultFound:
+            pass
 
         message = u"Неверный логин или пароль!"
     return dict(
