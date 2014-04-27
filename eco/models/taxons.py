@@ -59,7 +59,7 @@ class Taxon(Base, JsonifyMixin):
         UniqueConstraint('old_id', 'taxon_type'),
     )
 
-    id = Column(Integer, Sequence('taxon_id_seq', start=100000), primary_key=True)
+    id = Column(Integer, Sequence('taxon_id_seq', start=100025), primary_key=True)
     parent_id = Column(Integer, ForeignKey('taxon.id'), nullable=True)
     old_id = Column(Integer)  # id таксона в таблице-источнике (MS ACCESS)
 
