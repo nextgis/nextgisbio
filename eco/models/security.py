@@ -37,7 +37,7 @@ class User(Base, JsonifyMixin):
         records = [line for line in reader]
 
         for row in records:
-            (id, login, password, person_id, role) = [None if x=='' else x  for x in row]
+            (id, login, password, person_id, role) = [None if x == '' else x for x in row]
             user = User(
                 id=id,
                 login=login,
