@@ -118,6 +118,31 @@ define('ugrabio/TaxonViewer', [
                     return new TextBox({});
                 }
             }
+        },
+
+        synonymsCreatorElements = {
+            name: {
+                title: 'Название',
+                getElement: function () {
+                    return new ValidationTextBox({
+                        required: true
+                    });
+                }
+            },
+
+            author: {
+                title: 'Автор',
+                getElement: function () {
+                    return new TextBox({});
+                }
+            },
+
+            source: {
+                title: 'Источник',
+                getElement: function () {
+                    return new TextBox({});
+                }
+            }
         }
 
     return declare('TaxonViewer', [_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
