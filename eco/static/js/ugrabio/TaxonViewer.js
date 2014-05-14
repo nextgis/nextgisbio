@@ -121,8 +121,8 @@ define('ugrabio/TaxonViewer', [
         },
 
         synonymsCreatorElements = {
-            name: {
-                title: 'Название',
+            synonym: {
+                title: 'Название синонима',
                 getElement: function () {
                     return new ValidationTextBox({
                         required: true
@@ -317,7 +317,7 @@ define('ugrabio/TaxonViewer', [
         _errorHandler: function (content, title) {
             content = content ? content : 'Извините, произошла ошибка, попробуйте еще раз.';
             title = title ? title : 'Ошибка';
-            var errorDialog = new Dialog({
+            new Dialog({
                 title: title,
                 content: content,
                 onHide: function () {
@@ -333,12 +333,13 @@ define('ugrabio/TaxonViewer', [
             }), Memory()));
 
             var columns = [
-                editor({label: 'Синоним', field: 'synonym', sortable: false}, 'text'),
-                editor({label: 'Автор', field: 'author', sortable: false}, 'text'),
-                editor({label: 'Источник', field: 'source', sortable: false}, 'text')
+                {label: 'Синоним', field: 'synonym', sortable: false},
+                {label: 'Автор', field: 'author', sortable: false},
+                {label: 'Источник', field: 'source', sortable: false}
             ];
 
-            var synonymsGrid = new (declare([Grid, Selection, Keyboard]))({
+            this._synonymsGrid = new (declare([Grid, Selection, Keyboard]))({
+                selectionMode: 'single',
                 id: 'synonymsGrid',
                 sort: 'id',
                 store: synonymsStore,
@@ -347,7 +348,9 @@ define('ugrabio/TaxonViewer', [
                 columns: columns
             }, synonymsTable);
 
-            this._buildSynonymsButtons(taxonId, synonymsStore, synonymsGrid);
+            this.nestedElements.push(this._synonymsGrid);
+
+            this._buildSynonymsButtons(taxonId, synonymsStore, this._synonymsGrid);
         },
 
         _buildSynonymsButtons: function (taxon_id, store, grid) {
@@ -356,7 +359,7 @@ define('ugrabio/TaxonViewer', [
             var addButton = new Button({
                 label: "Добавить синоним",
                 onClick: lang.hitch(this, function () {
-                    store.put({species_id: taxon_id});
+                    this.showCreateSynonymDialog(taxon_id);
                 })
             });
             this.nestedElements.push(addButton);
@@ -400,6 +403,66 @@ define('ugrabio/TaxonViewer', [
             this.nestedElements.push(revertButton);
             revertButton.placeAt(synonymsButtonsSection);
 
+        },
+
+        showCreateSynonymDialog: function (taxon_id) {
+            var layout = new TableContainer({
+                    showLabels: true,
+                    orientation: 'horiz'
+                }),
+                elementTemplateName, elementTemplate, element;
+
+            for (elementTemplateName in synonymsCreatorElements) {
+                if (synonymsCreatorElements.hasOwnProperty(elementTemplateName)) {
+                    elementTemplate = synonymsCreatorElements[elementTemplateName];
+                    element = elementTemplate.getElement();
+                    if (elementTemplate.title) {
+                        element.title = elementTemplate.title;
+                    }
+                    element.set('name', elementTemplateName);
+                    layout.addChild(element);
+                }
+            }
+
+            this._form = new Form();
+            layout.placeAt(this._form.containerNode);
+            layout.startup();
+
+            new Button({
+                label: 'Создать новый синоним',
+                onClick: lang.hitch(this, function () {
+                    if (this._form.validate()) {
+                        this.createSynonym(taxon_id);
+                    }
+                })
+            }).placeAt(this._form.containerNode);
+
+
+            this._dialog = new Dialog({
+                title: 'Создать новый синоним таксона',
+                content: this._form,
+                onHide: function () {
+                    this.destroyRecursive();
+                }
+            });
+
+            this._dialog.show();
+        },
+
+        createSynonym: function (taxon_id) {
+            var action = application_root + '/taxons/synonyms/'+ taxon_id + '/new',
+                json_form = domForm.toObject(this._form.domNode),
+                options = {
+                    data: json_form,
+                    handleAs: 'json'
+                };
+
+            xhr.put(action, options).then(lang.hitch(this, function (data) {
+                this._dialog.hide();
+                this._synonymsGrid.update();
+            }), function (error) {
+                this._errorHandler();
+            });
         }
     });
 });
