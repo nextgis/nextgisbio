@@ -461,9 +461,10 @@ class Synonyms(object):
 
     @view_config(request_method='DELETE', renderer='json')
     def delete(self):
-        sessions = DBSession()
-        synonym_id = int(self.request.matchdict['synonym_id'])
-        sessions.query(Synonym).filter_by(id=synonym_id).delete()
+        with transaction.manager:
+            sessions = DBSession()
+            synonym_id = int(self.request.matchdict['synonym_id'])
+            sessions.query(Synonym).filter_by(id=synonym_id).delete()
 
 
 @view_config(route_name='get_synonyms', renderer='json')
