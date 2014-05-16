@@ -442,28 +442,22 @@ class Synonyms(object):
     @view_config(request_method='POST', renderer='json')
     def post(self):
         synonym_dict = dict(self.request.json)
-        dbsession = DBSession()
-        dbsession.query(Synonym).filter_by(id=synonym_dict['id']).update(synonym_dict)
-        # for k, v in synonym_dict.items():
-        #     if v == '': v = None
-        #     if hasattr(synonym, k): setattr(synonym, k, v)
-        # synonym.species_id = int(self.request.matchdict['taxon_id'])
-        # dbsession.add(synonym)
-        dbsession.flush()
+        with transaction.manager:
+            dbsession = DBSession()
+            dbsession.query(Synonym).filter_by(id=synonym_dict['id']).update(synonym_dict)
         return synonym_dict
 
     @view_config(request_method='PUT', renderer='json')
     def put(self):
         new_synonym_dict = dict(self.request.POST)
-        dbsession = DBSession()
-        synonym = Synonym()
-        for k, v in new_synonym_dict.items():
-            if v == '': v = None
-            if hasattr(synonym, k): setattr(synonym, k, v)
-        synonym.species_id = int(self.request.matchdict['taxon_id'])
-        dbsession.add(synonym)
-        dbsession.flush()
-        dbsession.refresh(synonym)
+        with transaction.manager:
+            dbsession = DBSession()
+            synonym = Synonym()
+            for k, v in new_synonym_dict.items():
+                if v == '': v = None
+                if hasattr(synonym, k): setattr(synonym, k, v)
+            synonym.species_id = int(self.request.matchdict['taxon_id'])
+            dbsession.add(synonym)
 
     @view_config(request_method='DELETE', renderer='json')
     def delete(self):
