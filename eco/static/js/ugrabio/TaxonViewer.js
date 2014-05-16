@@ -385,23 +385,11 @@ define('ugrabio/TaxonViewer', [
             var saveButton = new Button({
                 label: 'Редактировать синоним',
                 onClick: lang.hitch(this, function () {
-                    var selectId;
-                    for (var selectKey in grid.selection) {
-                        if (grid.selection.hasOwnProperty(selectKey))
-                            selectId = selectKey;
-                        break;
-                    }
-
+                    var selectId = this.getFirstSelectedRowKey(grid.selection);
                     if (selectId) {
                         this.showCreateSynonymDialog(grid.row(selectId).data);
                     } else {
-                        new Dialog({
-                            title: 'Не выбран синоним!',
-                            content: 'Выберите синоним для редактирования',
-                            onHide: function () {
-                                this.destroyRecursive();
-                            }
-                        }).show();
+                        this.showNotSelectingDialog('Выберите синоним для редактирования');
                     }
                 })
             });
@@ -411,16 +399,38 @@ define('ugrabio/TaxonViewer', [
             var deleteButton = new Button({
                 label: 'Удалить синоним',
                 onClick: lang.hitch(this, function () {
-                    var isDeleting = confirm('Вы уверены, что хотите удалить синоним?');
-                    if (isDeleting) {
-                        for (var i in grid.selection) {
-                            store.remove(i);
+                    var selectId = this.getFirstSelectedRowKey(grid.selection);
+                    if (selectId) {
+                        var isDeleting = confirm('Вы уверены, что хотите удалить синоним?');
+                        if (isDeleting) {
+                            store.remove(selectId);
                         }
+                    } else {
+                        this.showNotSelectingDialog('Выберите синоним для удаления.');
                     }
+
                 })
             });
             this.nestedElements.push(deleteButton);
             deleteButton.placeAt(synonymsButtonsSection);
+        },
+
+        showNotSelectingDialog: function (content) {
+            new Dialog({
+                title: 'Не выбран синоним!',
+                content: content,
+                onHide: function () {
+                    this.destroyRecursive();
+                }
+            }).show();
+        },
+
+        getFirstSelectedRowKey: function (selection) {
+            for (var selectKey in selection) {
+                if (selection.hasOwnProperty(selectKey))
+                    return selectKey;
+            }
+            return null;
         },
 
         showCreateSynonymDialog: function (synonym) {
