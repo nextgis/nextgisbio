@@ -425,3 +425,59 @@ class TaxonTree(object):
     @view_config(request_method='DELETE', renderer='json')
     def delete(self):
         return delete_taxon(self.request)
+
+
+@view_defaults(route_name='synonyms_by_taxon')
+class Synonyms(object):
+    def __init__(self, request):
+        self.request = request
+
+    @view_config(request_method='GET', renderer='json')
+    def get(self):
+        sessions = DBSession()
+        taxon_id = int(self.request.matchdict['taxon_id'])
+        synonyms = sessions.query(Synonym).filter_by(species_id=taxon_id)
+        return [synonym.as_json_dict() for synonym in synonyms]
+
+    @view_config(request_method='POST', renderer='json')
+    def post(self):
+        synonym_dict = dict(self.request.json)
+        dbsession = DBSession()
+        dbsession.query(Synonym).filter_by(id=synonym_dict['id']).update(synonym_dict)
+        # for k, v in synonym_dict.items():
+        #     if v == '': v = None
+        #     if hasattr(synonym, k): setattr(synonym, k, v)
+        # synonym.species_id = int(self.request.matchdict['taxon_id'])
+        # dbsession.add(synonym)
+        dbsession.flush()
+        return synonym_dict
+
+    @view_config(request_method='PUT', renderer='json')
+    def put(self):
+        new_synonym_dict = dict(self.request.POST)
+        dbsession = DBSession()
+        synonym = Synonym()
+        for k, v in new_synonym_dict.items():
+            if v == '': v = None
+            if hasattr(synonym, k): setattr(synonym, k, v)
+        synonym.species_id = int(self.request.matchdict['taxon_id'])
+        dbsession.add(synonym)
+        dbsession.flush()
+        dbsession.refresh(synonym)
+
+    @view_config(request_method='DELETE', renderer='json')
+    def delete(self):
+        sessions = DBSession()
+        synonym_id = int(self.request.matchdict['synonym_id'])
+        sessions.query(Synonym).filter_by(id=synonym_id).delete()
+
+
+@view_config(route_name='get_synonyms', renderer='json')
+def get_synonyms(request):
+    sessions = DBSession()
+    taxon_id = int(request.matchdict['taxon_id'])
+    synonyms = sessions.query(Synonym).filter_by(species_id=taxon_id).all()
+    synonyms_json = [synonym.as_json_dict() for synonym in synonyms]
+    count_synonyms = len(synonyms_json)
+    request.response.headerlist = [('Content-Range', '{0}-{1}/{2}'.format(0, count_synonyms, count_synonyms))]
+    return synonyms_json

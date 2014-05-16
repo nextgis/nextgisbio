@@ -1,5 +1,6 @@
 import re
 
+
 def parse_sort(request, default='name asc'):
     order_by_clauses = None
     for key, val in request.params.iteritems():

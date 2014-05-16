@@ -236,7 +236,7 @@ class Taxon(Base, JsonifyMixin):
         return self.__parent_in_list__(LICHENES)
 
 
-class Synonym(Base):
+class Synonym(Base, JsonifyMixin):
     """
     Таблица синонимов
     """

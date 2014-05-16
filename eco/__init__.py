@@ -50,6 +50,9 @@ def main(global_config, **settings):
     config.add_route('taxon_tree', '/tree/taxons/', factory=RootFactory)
     config.add_route('get_taxon', '/taxon/{id}', factory=RootFactory)
 
+    config.add_route('get_synonyms', 'taxons/synonyms/{taxon_id}/', factory=RootFactory)
+    config.add_route('synonyms_by_taxon', 'taxons/synonyms/{taxon_id}/{synonym_id}', factory=RootFactory)
+
     # reports
     config.add_route('protected_species_list', '/reports/protected_species_list', factory=RootFactory)
     config.add_route('redbook_filter', '/redbook/filter', factory=RootFactory)
