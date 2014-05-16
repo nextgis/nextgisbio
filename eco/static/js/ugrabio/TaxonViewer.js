@@ -22,12 +22,13 @@ define('ugrabio/TaxonViewer', [
     'dgrid/Selection',
     'dgrid/editor',
     'dgrid/Keyboard',
+    'dgrid/extensions/ColumnHider',
     'dojo/store/JsonRest',
     'dojo/store/Observable',
     'dojo/store/Cache',
     'dojo/store/Memory',
     'dojo/domReady!'
-], function (declare, lang, array, domForm, xhr, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, query, topic, Form, Button, TextBox, ValidationTextBox, TableContainer, Dialog, template, mustache, List, Grid, Selection, editor, Keyboard, JsonRest, Observable, Cache, Memory) {
+], function (declare, lang, array, domForm, xhr, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, query, topic, Form, Button, TextBox, ValidationTextBox, TableContainer, Dialog, template, mustache, List, Grid, Selection, editor, Keyboard, ColumnHider, JsonRest, Observable, Cache, Memory) {
 
     var taxonTypes = {
             'Kingdom': {
@@ -121,6 +122,20 @@ define('ugrabio/TaxonViewer', [
         },
 
         synonymsCreatorElements = {
+            id: {
+                getElement: function () {
+                    return new TextBox({
+                        type: 'hidden'
+                    });
+                }
+            },
+            species_id: {
+                getElement: function () {
+                    return new TextBox({
+                        type: 'hidden'
+                    });
+                }
+            },
             synonym: {
                 title: 'Название синонима',
                 getElement: function () {
@@ -204,7 +219,7 @@ define('ugrabio/TaxonViewer', [
             this.nestedElements.push(deleteButton);
             deleteButton.placeAt(divButtons);
 
-            this._buildSynonymsTable(synonymsTable, this.id);
+            this._buildSynonymsTable(synonymsTable);
 
         },
 
@@ -326,44 +341,72 @@ define('ugrabio/TaxonViewer', [
             }).show();
         },
 
-        _buildSynonymsTable: function (synonymsTable, taxonId) {
+        _buildSynonymsTable: function (synonymsTable) {
             var synonymsStore = Observable(Cache(JsonRest({
-                target: application_root + '/taxons/synonyms/' + taxonId + '/',
+                target: application_root + '/taxons/synonyms/' + this.id + '/',
                 idProperty: 'id'
             }), Memory()));
 
             var columns = [
+                {label: 'Синоним', field: 'synonym', sortable: false, hidden: true, unhidable: false},
+                {label: 'Синоним', field: 'synonym', sortable: false, hidden: true, unhidable: false},
                 {label: 'Синоним', field: 'synonym', sortable: false},
                 {label: 'Автор', field: 'author', sortable: false},
                 {label: 'Источник', field: 'source', sortable: false}
             ];
 
-            this._synonymsGrid = new (declare([Grid, Selection, Keyboard]))({
+            this._synonymsGrid = new (declare([Grid, Selection, Keyboard, ColumnHider]))({
                 selectionMode: 'single',
                 id: 'synonymsGrid',
                 sort: 'id',
                 store: synonymsStore,
-                className: "dgrid-autoheight",
+                className: 'dgrid-autoheight',
                 getBeforePut: false,
                 columns: columns
             }, synonymsTable);
 
             this.nestedElements.push(this._synonymsGrid);
 
-            this._buildSynonymsButtons(taxonId, synonymsStore, this._synonymsGrid);
+            this._buildSynonymsButtons(synonymsStore, this._synonymsGrid);
         },
 
-        _buildSynonymsButtons: function (taxon_id, store, grid) {
+        _buildSynonymsButtons: function (store, grid) {
             var synonymsButtonsSection = query('div.synonym-buttons', this.domNode)[0];
 
             var addButton = new Button({
                 label: "Добавить синоним",
                 onClick: lang.hitch(this, function () {
-                    this.showCreateSynonymDialog(taxon_id);
+                    this.showCreateSynonymDialog();
                 })
             });
             this.nestedElements.push(addButton);
             addButton.placeAt(synonymsButtonsSection);
+
+            var saveButton = new Button({
+                label: 'Редактировать синоним',
+                onClick: lang.hitch(this, function () {
+                    var selectId;
+                    for (var selectKey in grid.selection) {
+                        if (grid.selection.hasOwnProperty(selectKey))
+                            selectId = selectKey;
+                        break;
+                    }
+
+                    if (selectId) {
+                        this.showCreateSynonymDialog(grid.row(selectId).data);
+                    } else {
+                        new Dialog({
+                            title: 'Не выбран синоним!',
+                            content: 'Выберите синоним для редактирования',
+                            onHide: function () {
+                                this.destroyRecursive();
+                            }
+                        }).show();
+                    }
+                })
+            });
+            this.nestedElements.push(saveButton);
+            saveButton.placeAt(synonymsButtonsSection);
 
             var deleteButton = new Button({
                 label: 'Удалить синоним',
@@ -378,34 +421,9 @@ define('ugrabio/TaxonViewer', [
             });
             this.nestedElements.push(deleteButton);
             deleteButton.placeAt(synonymsButtonsSection);
-
-            var saveButton = new Button({
-                label: 'Сохранить таблицу синонимов',
-                onClick: lang.hitch(this, function () {
-                    var isSaving = confirm('Вы уверены, что хотите сохранить текущую таблицу синонимов?');
-                    if (isSaving) {
-                        grid.save();
-                    }
-                })
-            });
-            this.nestedElements.push(saveButton);
-            saveButton.placeAt(synonymsButtonsSection);
-
-            var revertButton = new Button({
-                label: 'Сбросить правки',
-                onClick: lang.hitch(this, function () {
-                    var isReverting = confirm('Вы уверены, что хотите отменить правки в таблице синонимов?');
-                    if (isReverting) {
-                        grid.revert();
-                    }
-                })
-            });
-            this.nestedElements.push(revertButton);
-            revertButton.placeAt(synonymsButtonsSection);
-
         },
 
-        showCreateSynonymDialog: function (taxon_id) {
+        showCreateSynonymDialog: function (synonym) {
             var layout = new TableContainer({
                     showLabels: true,
                     orientation: 'horiz'
@@ -420,6 +438,11 @@ define('ugrabio/TaxonViewer', [
                         element.title = elementTemplate.title;
                     }
                     element.set('name', elementTemplateName);
+
+                    if (synonym) {
+                        element.set('value', synonym[elementTemplateName]);
+                    }
+
                     layout.addChild(element);
                 }
             }
@@ -429,17 +452,24 @@ define('ugrabio/TaxonViewer', [
             layout.startup();
 
             new Button({
-                label: 'Создать новый синоним',
+                label: synonym ? 'Сохранить' : 'Создать',
                 onClick: lang.hitch(this, function () {
-                    if (this._form.validate()) {
-                        this.createSynonym(taxon_id);
+                    if (!this._form.validate()) {
+                        return false;
+                    }
+
+                    var synonymFromForm = domForm.toObject(this._form.domNode);
+                    if (synonym) {
+                        this.updateSynonym(synonymFromForm);
+                    } else {
+                        this.createSynonym(synonymFromForm);
                     }
                 })
             }).placeAt(this._form.containerNode);
 
 
             this._dialog = new Dialog({
-                title: 'Создать новый синоним таксона',
+                title: synonym ? 'Редактирование синонима' : 'Создание нового синонима таксона',
                 content: this._form,
                 onHide: function () {
                     this.destroyRecursive();
@@ -449,20 +479,30 @@ define('ugrabio/TaxonViewer', [
             this._dialog.show();
         },
 
-        createSynonym: function (taxon_id) {
-            var action = application_root + '/taxons/synonyms/'+ taxon_id + '/new',
-                json_form = domForm.toObject(this._form.domNode),
+        createSynonym: function (synonym) {
+            var action = application_root + '/taxons/synonyms/' + this.id + '/new',
                 options = {
-                    data: json_form,
+                    data: synonym,
                     handleAs: 'json'
                 };
 
             xhr.put(action, options).then(lang.hitch(this, function (data) {
                 this._dialog.hide();
-                this._synonymsGrid.update();
+                this._synonymsGrid.revert();
             }), function (error) {
                 this._errorHandler();
             });
+        },
+
+        updateSynonym: function (synonym) {
+            var put = this._synonymsGrid.store.put(synonym, {id: synonym.id, incremental: true});
+
+            put.then(lang.hitch(this, function () {
+                this._dialog.hide();
+                this._synonymsGrid.revert();
+            }), lang.hitch(this, function () {
+                this._errorHandler();
+            }));
         }
     });
 });
