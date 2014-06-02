@@ -15,7 +15,8 @@ define([
     topic.subscribe('open/form', function (formId, title, action, values, elementsSettings) {
         var formTemplate = Forms.forms[formId],
             listElementsId = formTemplate.elements,
-            formElements = [];
+            formElements = [],
+            formElementsMap = {};
 
         array.forEach(listElementsId, function (elementName) {
             if (!Forms.elements[elementName]) {
@@ -32,8 +33,6 @@ define([
                     if (elementsSettings && elementsSettings[elementName]) {
                         declare.safeMixin(element, elementsSettings[elementName]);
                     }
-                    formElements.push(element);
-
                 } else {
                     var params = [];
                     array.forEach(elementTemplate.params, function (paramName) {
@@ -46,8 +45,9 @@ define([
                     if (elementsSettings && elementsSettings[elementName]) {
                         declare.safeMixin(element, elementsSettings[elementName]);
                     }
-                    formElements.push(element);
                 }
+                formElements.push(element);
+                formElementsMap[elementName] = element;
             }
         });
 
@@ -64,6 +64,7 @@ define([
         new Dialog({
             title: title,
             elements: formElements,
+            elementsMap: formElementsMap,
             formSettings: formSettings,
             dialogSettings: dialogSettings
         }).show();
