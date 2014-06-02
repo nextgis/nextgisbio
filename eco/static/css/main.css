@@ -87,6 +87,15 @@ div.dojoxFloatingPane textarea {
     font-size: 16px;
 }
 
+/*coordinatesPicker element*/
+span.dijitToggleButton.dijitChecked {
+    font-weight: bold;
+}
+
+label[for="coordinatesPicker"] {
+    display: none;
+}
+
 /* key area Dialog styles */
 div.dgrid div.dgrid-row-odd {
     background-color: #eff3f7;

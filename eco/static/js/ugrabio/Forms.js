@@ -5,8 +5,9 @@ define([
     'dijit/form/Textarea',
     'dijit/form/CheckBox',
     'dijit/form/TimeTextBox',
+    'ugrabio/CoordinatesPicker',
     'ugrabio/JsonFilteringSelect'
-], function (Button, TextBox, NumberTextBox, Textarea, CheckBox, TimeTextBox, JsonFilteringSelect) {
+], function (Button, TextBox, NumberTextBox, Textarea, CheckBox, TimeTextBox, CoordinatesPicker, JsonFilteringSelect) {
 
     var getPersonJsonFilteringSelect = function (title, name, required) {
         return new JsonFilteringSelect({
@@ -103,7 +104,7 @@ define([
                     method: 'POST'
                 },
                 type: 'mammalia',
-                elements: ['id', 'species', 'original_name', 'inserter', 'observer', 'identifier', 'museum', 'location', 'lat', 'lon', 'coord_type', 'year', 'month', 'day', 'time', 'photo', 'anthr_press', 'vitality', 'habitat', 'footprint', 'limit_fact', 'protection', 'notes', 'inforesources', 'publications', 'pheno', 'quantity', 'unknown_sex', 'males', 'females', 'unknown_age', 'ad', 'sad', 'juv', 'pull']
+                elements: ['id', 'species', 'original_name', 'inserter', 'observer', 'identifier', 'museum', 'location', 'lat', 'lon', 'coordinatesPicker', 'coord_type', 'year', 'month', 'day', 'time', 'photo', 'anthr_press', 'vitality', 'habitat', 'footprint', 'limit_fact', 'protection', 'notes', 'inforesources', 'publications', 'pheno', 'quantity', 'unknown_sex', 'males', 'females', 'unknown_age', 'ad', 'sad', 'juv', 'pull']
             },
             'cardAves': {
                 form: {
@@ -476,6 +477,14 @@ define([
             lon: function () {
                 return new NumberTextBox({name: 'lon', title: 'Долгота',
                     style: 'width: 315px;'});
+            },
+            coordinatesPicker: function () {
+                return new CoordinatesPicker({
+                    id: 'coordinatesPicker',
+                    name: 'coordPicker',
+                    showLabel: true,
+                    label: 'Взять координаты с карты'
+                });
             },
             location: function () {
                 return new Textarea({name: 'location', title: 'Геопривязка',
