@@ -64,6 +64,7 @@ define([
             });
 
             array.forEach(elements, lang.hitch(this, function (element) {
+                element._dialog = this;
                 this._layout.addChild(element);
             }));
 
