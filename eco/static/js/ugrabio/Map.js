@@ -16,8 +16,7 @@ define([
     'dojo/domReady!'
 ], function (declare, win, domConstruct, ready, topic, query, domAttr, on, xhr, Dialog, Memory, OnDemandGrid, ColumnHider, lang) {
 
-    var map = declare([], {
-        id: 'ugrabio_map',
+    var map = declare('ugrabio/Map', [], {
         constructor: function () {
             var taxon_nodes = [],
                 defaultPointStyle = new OpenLayers.Style(
@@ -130,7 +129,7 @@ define([
                 projection: epsg3857,
                 maxExtent: extent,
 //            restrictedExtent: extent,
-            layers: [osm, gsat, oopt, squareLayer, arealLayer, cardsLayer]
+                layers: [osm, gsat, oopt, squareLayer, arealLayer, cardsLayer]
 //                layers: [osm, oopt, squareLayer, arealLayer, cardsLayer]
             };
 
@@ -507,16 +506,96 @@ define([
             div.innerHTML = '<a href="http://nextgis.ru" target="_blank"><img src="' + application_root + '/static/img/nextgis.png" alt="NextGIS: открытые геотехнологии" width="100" height="33" /></a>';
             map.viewPortDiv.appendChild(div);
 
+            this._map = map;
+            return this._map;
+        },
 
-            return map;
+        _coordinatesPickerData: {
+            layer: null,
+            dragControl: null,
+            activeId: null
+        },
 
+        coordinatesPickerOn: function (id, callback, lat, lon) {
+            if (this._coordinatesPickerData.dragControl && this._coordinatesPickerData.dragControl.active) {
+                throw 'coordinatesPicker is busy!';
+            }
+
+            var latLon = null;
+            if (!lat || !lon) {
+                latLon = this._map.getCenter();
+                callback(OpenLayers.Projection.transform(
+                    {x: latLon.lon, y: latLon.lat},
+                    new OpenLayers.Projection('EPSG:3857'),
+                    new OpenLayers.Projection('EPSG:4326')));
+            } else {
+                latLon = new OpenLayers.LonLat(parseFloat(lat), parseFloat(lon));
+                latLon = latLon.transform(new OpenLayers.Projection('EPSG:4326'), new OpenLayers.Projection('EPSG:3857'));
+            }
+
+            this._coordinatesPickerData.activeId = id;
+
+            this._buildCoordinatesPickerData();
+            this._createCoordinatePickerMarker(latLon);
+            this._bindDragCallback(callback);
+            this._coordinatesPickerData.dragControl.activate();
+        },
+
+        coordinatesPickerOff: function (id) {
+            if (this._coordinatesPickerData.activeId == id) {
+                this._coordinatesPickerData.layer.removeAllFeatures();
+                this._coordinatesPickerData.dragControl.deactivate();
+            }
+        },
+
+        _createCoordinatePickerMarker: function (latLon) {
+            var markerStyle = {
+                    externalGraphic: application_root + '/static/js/lib/openlayers/img/marker.png',
+                    graphicWidth: 21,
+                    graphicHeight: 25,
+                    fillOpacity: 1
+                },
+                point = new OpenLayers.Geometry.Point(latLon.lon, latLon.lat),
+                marker = new OpenLayers.Feature.Vector(point, null, markerStyle);
+
+            this._coordinatesPickerData.layer.addFeatures([marker]);
+            this._map.panTo(latLon);
+        },
+
+        _buildCoordinatesPickerData: function () {
+            if (this._coordinatesPickerData.layer) return this._coordinatesPickerData;
+
+            this._coordinatesPickerData.layer = new OpenLayers.Layer.Vector('_coordinatesPicker', {
+                projection: new OpenLayers.Projection('EPSG:3857'),
+                displayInLayerSwitcher: false
+            });
+
+            this._map.addLayer(this._coordinatesPickerData.layer);
+
+            this._coordinatesPickerData.dragControl = new OpenLayers.Control.DragFeature(this._coordinatesPickerData.layer);
+            this._map.addControl(this._coordinatesPickerData.dragControl);
+        },
+
+        _bindDragCallback: function (callback) {
+            this._coordinatesPickerData.dragControl.onDrag =
+                function (val) {
+                    callback(OpenLayers.Projection.transform(
+                        {x: val.geometry.x, y: val.geometry.y},
+                        new OpenLayers.Projection('EPSG:3857'),
+                        new OpenLayers.Projection('EPSG:4326')));
+                };
         }
     });
 
-    var _instance = null;
-    ready(lang.hitch(this, function () {
-        _instance = new map();
-    }));
+    ready(function () {
+        if (!window.ugrabio.map) {
+            window.ugrabio.map = new map();
+        }
+    });
 
-    return _instance;
+    if (window.ugrabio.map) {
+        return window.ugrabio.map;
+    } else {
+        return null;
+    }
 });
