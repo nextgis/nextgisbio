@@ -4,9 +4,11 @@ define([
     'dojo/_base/lang',
     'dojo/_base/window',
     'dojo/dom',
+    'dojo/dom-style',
     'dojo/dom-class',
     'dojo/dom-construct',
     'dojo/dom-form',
+    'dojo/query',
     'dojo/request/xhr',
     'dijit/_WidgetBase',
     'dijit/_TemplatedMixin',
@@ -14,9 +16,11 @@ define([
     'dojox/layout/FloatingPane',
     'dijit/form/Form',
     'dojox/layout/TableContainer',
-    'dijit/form/Button'
+    'dijit/form/Button',
+    'dojo/NodeList-traverse',
+    'dojo/NodeList-dom'
 
-], function (declare, array, lang, win, dom, domClass, domConstruct, domForm, xhr, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, FloatingPane, Form, TableContainer, Button) {
+], function (declare, array, lang, win, dom, domStyle, domClass, domConstruct, domForm, query, xhr, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, FloatingPane, Form, TableContainer, Button) {
 
     var id_counter = 0;
 
@@ -87,11 +91,11 @@ define([
                                 data: json_form,
                                 handleAs: 'json'
                             }).then(function (data) {
-                                    alert('Данные успешно обновлены!');
-                                    dialog.close();
-                                }, function (error) {
-                                    alert('Извините, произошла ошибка, попробуйте еще раз.');
-                                });
+                                alert('Данные успешно обновлены!');
+                                dialog.close();
+                            }, function (error) {
+                                alert('Извините, произошла ошибка, попробуйте еще раз.');
+                            });
                         }
                     }
                 }).placeAt(this._form.containerNode);
@@ -105,6 +109,15 @@ define([
                 this._form.startup();
             }
             this._dialog.startup();
+        },
+
+        postCreate: function () {
+            this.inherited(arguments);
+            query('span.dijitToggleButton', this._dialog.domNode)
+                .closest('tr')
+                .children('td.tableContainer-labelCell')
+                .children('label')
+                .style('display', 'none');
         }
     });
 });
