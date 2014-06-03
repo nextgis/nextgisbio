@@ -19,8 +19,8 @@ define([
                         lonTextBox.set('value', point.y);
                     }, latTextBox.get('value'), lonTextBox.get('value'));
 
-                    latTextBox.set('disabled', false);
-                    lonTextBox.set('disabled', false);
+                    latTextBox.set('disabled', true);
+                    lonTextBox.set('disabled', true);
                 } catch (err) {
                     alert('Режим получения координат включен для другого окна. Отключите его или закройте окно.');
                     this.setChecked(false);
