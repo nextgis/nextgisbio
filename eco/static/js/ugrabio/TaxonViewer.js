@@ -28,7 +28,9 @@ define('ugrabio/TaxonViewer', [
     'dojo/store/Cache',
     'dojo/store/Memory',
     'dojo/domReady!'
-], function (declare, lang, array, domForm, xhr, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, query, topic, Form, Button, TextBox, ValidationTextBox, TableContainer, Dialog, template, mustache, List, Grid, Selection, editor, Keyboard, ColumnHider, JsonRest, Observable, Cache, Memory) {
+], function (declare, lang, array, domForm, xhr, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, query, topic,
+             Form, Button, TextBox, ValidationTextBox, TableContainer, Dialog, template, mustache, List, Grid,
+             Selection, editor, Keyboard, ColumnHider, JsonRest, Observable, Cache, Memory) {
 
     var taxonTypes = {
             'Kingdom': {
