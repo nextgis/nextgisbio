@@ -29,12 +29,12 @@
     <link rel="stylesheet" type="text/css" href="${request.static_url('eco:static/css/main.css')}" media="screen">
 
     <script type="text/javascript">
-        var ugrabio = {};
+        window.ugrabio = {};
             %if is_auth:
-                ugrabio.is_auth = true;
+                window.ugrabio.is_auth = true;
             %endif
             %if is_admin:
-                ugrabio.mode = 'admin';
+                window.ugrabio.mode = 'admin';
             %endif
     </script>
 
