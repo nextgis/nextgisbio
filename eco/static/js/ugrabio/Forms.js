@@ -111,42 +111,42 @@ define([
                     method: 'POST'
                 },
                 type: 'aves',
-                elements: ['id', 'species', 'original_name', 'inserter', 'observer', 'identifier', 'museum', 'location', 'lat', 'lon', 'coord_type', 'year', 'month', 'day', 'time', 'photo', 'anthr_press', 'vitality', 'footprint', 'habitat', 'limit_fact', 'protection', 'notes', 'inforesources', 'publications', 'pheno', 'quantity', 'unknown_sex', 'males', 'females', 'unknown_age', 'ad', 'sad', 'juv', 'pull', 'egs']
+                elements: ['id', 'species', 'original_name', 'inserter', 'observer', 'identifier', 'museum', 'location', 'lat', 'lon', 'coordinatesPicker', 'coord_type', 'year', 'month', 'day', 'time', 'photo', 'anthr_press', 'vitality', 'footprint', 'habitat', 'limit_fact', 'protection', 'notes', 'inforesources', 'publications', 'pheno', 'quantity', 'unknown_sex', 'males', 'females', 'unknown_age', 'ad', 'sad', 'juv', 'pull', 'egs']
             },
             'cardAra': {
                 form: {
                     method: 'POST'
                 },
                 type: 'ara',
-                elements: ['id', 'species', 'original_name', 'inserter', 'observer', 'identifier', 'museum', 'location', 'lat', 'lon', 'coord_type', 'year', 'month', 'day', 'time', 'photo', 'anthr_press', 'vitality', 'habitat', 'footprint', 'limit_fact', 'protection', 'notes', 'inforesources', 'publications', 'pheno', 'quantity', 'unknown_sex', 'males', 'females', 'unknown_age', 'ad', 'sad', 'juv', 'pull', 'egs']
+                elements: ['id', 'species', 'original_name', 'inserter', 'observer', 'identifier', 'museum', 'location', 'lat', 'lon', 'coordinatesPicker', 'coord_type', 'year', 'month', 'day', 'time', 'photo', 'anthr_press', 'vitality', 'habitat', 'footprint', 'limit_fact', 'protection', 'notes', 'inforesources', 'publications', 'pheno', 'quantity', 'unknown_sex', 'males', 'females', 'unknown_age', 'ad', 'sad', 'juv', 'pull', 'egs']
             },
             'cardArthropoda': {
                 form: {
                     method: 'POST'
                 },
                 type: 'arthropoda',
-                elements: ['id', 'species', 'original_name', 'inserter', 'observer', 'identifier', 'museum', 'location', 'lat', 'lon', 'coord_type', 'year', 'month', 'day', 'time', 'photo', 'substrat', 'anthr_press', 'vitality', 'habitat', 'footprint', 'limit_fact', 'protection', 'notes', 'inforesources', 'publications', 'pheno', 'quantity', 'unknown_sex', 'males', 'females', 'unknown_age', 'ad', 'sad', 'juv', 'pull', 'egs']
+                elements: ['id', 'species', 'original_name', 'inserter', 'observer', 'identifier', 'museum', 'location', 'lat', 'lon', 'coordinatesPicker', 'coord_type', 'year', 'month', 'day', 'time', 'photo', 'substrat', 'anthr_press', 'vitality', 'habitat', 'footprint', 'limit_fact', 'protection', 'notes', 'inforesources', 'publications', 'pheno', 'quantity', 'unknown_sex', 'males', 'females', 'unknown_age', 'ad', 'sad', 'juv', 'pull', 'egs']
             },
             'cardMoss': {
                 form: {
                     method: 'POST'
                 },
                 type: 'moss',
-                elements: ['id', 'species', 'original_name', 'inserter', 'observer', 'identifier', 'museum', 'location', 'lat', 'lon', 'coord_type', 'year', 'month', 'day', 'time', 'photo', 'anthr_press', 'vitality', 'habitat', 'substrat', 'limit_fact', 'protection', 'notes', 'inforesources', 'publications', 'pheno', 'abundance', 'area']
+                elements: ['id', 'species', 'original_name', 'inserter', 'observer', 'identifier', 'museum', 'location', 'lat', 'lon', 'coordinatesPicker', 'coord_type', 'year', 'month', 'day', 'time', 'photo', 'anthr_press', 'vitality', 'habitat', 'substrat', 'limit_fact', 'protection', 'notes', 'inforesources', 'publications', 'pheno', 'abundance', 'area']
             },
             'cardPlantae': {
                 form: {
                     method: 'POST'
                 },
                 type: 'plantae',
-                elements: ['id', 'species', 'original_name', 'inserter', 'observer', 'identifier', 'museum', 'location', 'lat', 'lon', 'coord_type', 'year', 'month', 'day', 'time', 'photo', 'substrat', 'anthr_press', 'vitality', 'habitat', 'limit_fact', 'protection', 'notes', 'inforesources', 'publications', 'pheno', 'quantity', 'abundance', 'area']
+                elements: ['id', 'species', 'original_name', 'inserter', 'observer', 'identifier', 'museum', 'location', 'lat', 'lon', 'coordinatesPicker', 'coord_type', 'year', 'month', 'day', 'time', 'photo', 'substrat', 'anthr_press', 'vitality', 'habitat', 'limit_fact', 'protection', 'notes', 'inforesources', 'publications', 'pheno', 'quantity', 'abundance', 'area']
             },
             'cardLichenes': {
                 form: {
                     method: 'POST'
                 },
                 type: 'lichenes',
-                elements: ['id', 'species', 'original_name', 'inserter', 'observer', 'identifier', 'museum', 'location', 'lat', 'lon', 'coord_type', 'year', 'month', 'day', 'time', 'photo', 'anthr_press', 'vitality', 'habitat', 'substrat', 'limit_fact', 'protection', 'notes', 'inforesources', 'publications', 'pheno', 'quantity', 'abundance', 'area']
+                elements: ['id', 'species', 'original_name', 'inserter', 'observer', 'identifier', 'museum', 'location', 'lat', 'lon', 'coordinatesPicker', 'coord_type', 'year', 'month', 'day', 'time', 'photo', 'anthr_press', 'vitality', 'habitat', 'substrat', 'limit_fact', 'protection', 'notes', 'inforesources', 'publications', 'pheno', 'quantity', 'abundance', 'area']
             },
             'anMammalia': {
                 form: {
@@ -480,7 +480,7 @@ define([
             },
             coordinatesPicker: function () {
                 return new CoordinatesPicker({
-                    id: 'coordinatesPicker',
+//                    id: 'coordinatesPicker',
                     name: 'coordPicker',
                     showLabel: true,
                     label: 'Взять координаты с карты'
