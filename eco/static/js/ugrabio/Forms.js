@@ -480,10 +480,9 @@ define([
             },
             coordinatesPicker: function () {
                 return new CoordinatesPicker({
-//                    id: 'coordinatesPicker',
                     name: 'coordPicker',
                     showLabel: true,
-                    label: 'Взять координаты с карты'
+                    label: 'Указать координаты на карте'
                 });
             },
             location: function () {
