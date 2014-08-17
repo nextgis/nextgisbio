@@ -29,8 +29,14 @@ define([
         constructor: function (options) {
             declare.safeMixin(this, options);
 
-            if (typeof this.submit === 'undefined') {
-                this.submit = true;
+            if (!this.dialogSettings) {
+                this.dialogSettings = {};
+            }
+
+            if (!this.dialogSettings['submit'] || typeof this.dialogSettings['submit'] === 'undefined') {
+                if (window.ugrabio.is_auth) {
+                    this.dialogSettings['submit'] = true;
+                }
             }
 
             if (!this.style) {
