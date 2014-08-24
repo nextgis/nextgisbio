@@ -472,10 +472,12 @@ define([
             },
             lat: function () {
                 return new NumberTextBox({name: 'lat', title: 'Широта',
+                    constraints: {pattern: '###0.#####'},
                     style: 'width: 315px;'});
             },
             lon: function () {
                 return new NumberTextBox({name: 'lon', title: 'Долгота',
+                    constraints: {pattern: '###0.#####'},
                     style: 'width: 315px;'});
             },
             coordinatesPicker: function () {
