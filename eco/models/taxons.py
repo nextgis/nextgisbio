@@ -128,26 +128,27 @@ class Taxon(Base, JsonifyMixin):
         Файл filename в формате csv, колонки:
         id  parent_id   old_id  taxon_type  name    russian_name    author  source
         '''
-        dbsession = DBSession()
+        import transaction
+        with transaction.manager:
+            dbsession = DBSession()
 
-        reader = csv.reader(open(filename), delimiter='\t')
-        row = reader.next()  # пропускаем заголовки
-        records = [line for line in reader]
-        for row in records:
-            id, parent_id, old_id, taxon_type, name, russian_name, author, source = [None if x == '' else x for x in
-                                                                                     row]
-            taxon = Taxon(
-                id=id,
-                parent_id=parent_id,
-                old_id=old_id,
-                taxon_type=taxon_type,
-                name=name,
-                russian_name=russian_name,
-                author=author,
-                source=source
-            )
-            dbsession.add(taxon)
-        dbsession.flush()
+            reader = csv.reader(open(filename), delimiter='\t')
+            row = reader.next()  # пропускаем заголовки
+            records = [line for line in reader]
+            for row in records:
+                id, parent_id, old_id, taxon_type, name, russian_name, author, source = [None if x == '' else x for x in
+                                                                                         row]
+                taxon = Taxon(
+                    id=id,
+                    parent_id=parent_id,
+                    old_id=old_id,
+                    taxon_type=taxon_type,
+                    name=name,
+                    russian_name=russian_name,
+                    author=author,
+                    source=source
+                )
+                dbsession.add(taxon)
 
     @staticmethod
     def export_to_file(filename):
@@ -256,17 +257,18 @@ class Synonym(Base, JsonifyMixin):
         Файл filename в формате csv, колонки:
         id  species_id  synonym author  source
         '''
-        dbsession = DBSession()
+        import transaction
+        with transaction.manager:
+            dbsession = DBSession()
 
-        reader = csv.reader(open(filename), delimiter='\t')
-        row = reader.next()  # пропускаем заголовки
-        records = [line for line in reader]
+            reader = csv.reader(open(filename), delimiter='\t')
+            row = reader.next()  # пропускаем заголовки
+            records = [line for line in reader]
 
-        for row in records:
-            id, species_id, synonym, author, source = [None if x == '' else x for x in row]
-            synonym = Synonym(id=id, species_id=species_id, synonym=synonym, author=author, source=source)
-            dbsession.add(synonym)
-        dbsession.flush()
+            for row in records:
+                id, species_id, synonym, author, source = [None if x == '' else x for x in row]
+                synonym = Synonym(id=id, species_id=species_id, synonym=synonym, author=author, source=source)
+                dbsession.add(synonym)
 
     @staticmethod
     def export_to_file(filename):

@@ -38,16 +38,17 @@ class Person(Base, JsonifyMixin):
         Файл filename в формате csv, колонки:
         id  name    fullname    speciality  degree  organization    position    email   phone   address
         '''
-        dbsession = DBSession()
-        
-        reader = csv.reader(open(filename), delimiter='\t')
-        row = reader.next() # пропускаем заголовки
-        records = [line for line in reader]
-        
-        for (id, name, fullname, speciality, degree, organization, position, email, phone, address) in records:
-            person = Person(id=id, name=name, fullname=fullname, speciality=speciality, degree=degree, organization=organization, position=position, email=email, phone=phone, address=address)
-            dbsession.add(person)
-        dbsession.flush()
+        import transaction
+        with transaction.manager:
+            dbsession = DBSession()
+
+            reader = csv.reader(open(filename), delimiter='\t')
+            row = reader.next() # пропускаем заголовки
+            records = [line for line in reader]
+
+            for (id, name, fullname, speciality, degree, organization, position, email, phone, address) in records:
+                person = Person(id=id, name=name, fullname=fullname, speciality=speciality, degree=degree, organization=organization, position=position, email=email, phone=phone, address=address)
+                dbsession.add(person)
 
     def __repr__(self):
         return "<Person ('%s') >" % (self.name, )
@@ -76,16 +77,17 @@ class Taxa_scheme(Base, JsonifyMixin):
         Файл filename в формате csv, колонки:
         id  taxa_scheme
         '''
-        dbsession = DBSession()
-        
-        reader = csv.reader(open(filename), delimiter='\t')
-        row = reader.next() # пропускаем заголовки
-        records = [line for line in reader]
-        
-        for id, t_scheme in records:
-            t = Taxa_scheme(id=id, taxa_scheme = t_scheme)
-            dbsession.add(t)
-        dbsession.flush()
+        import transaction
+        with transaction.manager:
+            dbsession = DBSession()
+
+            reader = csv.reader(open(filename), delimiter='\t')
+            row = reader.next() # пропускаем заголовки
+            records = [line for line in reader]
+
+            for id, t_scheme in records:
+                t = Taxa_scheme(id=id, taxa_scheme = t_scheme)
+                dbsession.add(t)
         
     def __repr__(self):
         return "<Taxa_sceme('%s') >" % (self.taxa_scheme, )
@@ -113,16 +115,17 @@ class Museum(Base, JsonifyMixin):
         Файл filename в формате csv, колонки:
         id  museum
         '''
-        dbsession = DBSession()
-        
-        reader = csv.reader(open(filename), delimiter='\t')
-        row = reader.next() # пропускаем заголовки
-        records = [line for line in reader]
-        
-        for id, m in records:
-            museum = Museum(id=id, museum = m)
-            dbsession.add(museum)
-        dbsession.flush()
+        import transaction
+        with transaction.manager:
+            dbsession = DBSession()
+
+            reader = csv.reader(open(filename), delimiter='\t')
+            row = reader.next() # пропускаем заголовки
+            records = [line for line in reader]
+
+            for id, m in records:
+                museum = Museum(id=id, museum = m)
+                dbsession.add(museum)
 
     @staticmethod
     def export_to_file(filename):
@@ -150,15 +153,17 @@ class Coord_type(Base, JsonifyMixin):
         Файл filename в формате csv, колонки:
         id  coord_type
         '''
-        dbsession = DBSession()
-        
-        reader = csv.reader(open(filename), delimiter='\t')
-        row = reader.next() # пропускаем заголовки
-        records = [line for line in reader]
-        for id, ct in records:
-            coord_type = Coord_type(id=id, coord_type = ct)
-            dbsession.add(coord_type)
-        dbsession.flush()
+        import transaction
+        with transaction.manager:
+            dbsession = DBSession()
+
+            reader = csv.reader(open(filename), delimiter='\t')
+            row = reader.next() # пропускаем заголовки
+            records = [line for line in reader]
+            for id, ct in records:
+                coord_type = Coord_type(id=id, coord_type = ct)
+                dbsession.add(coord_type)
+
 
     @staticmethod
     def export_to_file(filename):
@@ -187,15 +192,16 @@ class Anthr_press(Base, JsonifyMixin):
         Файл filename в формате csv, колонки:
         id  anthr_press description
         '''
-        dbsession = DBSession()
-        
-        reader = csv.reader(open(filename), delimiter='\t')
-        row = reader.next() # пропускаем заголовки
-        records = [line for line in reader]
-        for id, ap, desc in records:
-            an_p = Anthr_press(id=id, anthr_press=ap, description=desc)
-            dbsession.add(an_p)
-        dbsession.flush()
+        import transaction
+        with transaction.manager:
+            dbsession = DBSession()
+
+            reader = csv.reader(open(filename), delimiter='\t')
+            row = reader.next() # пропускаем заголовки
+            records = [line for line in reader]
+            for id, ap, desc in records:
+                an_p = Anthr_press(id=id, anthr_press=ap, description=desc)
+                dbsession.add(an_p)
 
     @staticmethod
     def export_to_file(filename):
@@ -225,15 +231,16 @@ class Vitality(Base, JsonifyMixin):
         Файл filename в формате csv, колонки:
         id  vitality    org_type    description
         '''
-        dbsession = DBSession()
-        
-        reader = csv.reader(open(filename), delimiter='\t')
-        row = reader.next() # пропускаем заголовки
-        records = [line for line in reader]
-        for id, vit, t, descr in records:
-            vit = Vitality(id=id, vitality=vit, description=descr, org_type= t)
-            dbsession.add(vit)
-        dbsession.flush()
+        import transaction
+        with transaction.manager:
+            dbsession = DBSession()
+
+            reader = csv.reader(open(filename), delimiter='\t')
+            row = reader.next() # пропускаем заголовки
+            records = [line for line in reader]
+            for id, vit, t, descr in records:
+                vit = Vitality(id=id, vitality=vit, description=descr, org_type= t)
+                dbsession.add(vit)
 
     @staticmethod
     def export_to_file(filename):
@@ -261,15 +268,16 @@ class Abundance(Base, JsonifyMixin):
         Файл filename в формате csv, колонки:
         id  abundance
         '''
-        dbsession = DBSession()
-        
-        reader = csv.reader(open(filename), delimiter='\t')
-        row = reader.next() # пропускаем заголовки
-        records = [line for line in reader]
-        for id, ab in records:
-            abn = Abundance(id=id, abundance=ab)
-            dbsession.add(abn)
-        dbsession.flush()
+        import transaction
+        with transaction.manager:
+            dbsession = DBSession()
+
+            reader = csv.reader(open(filename), delimiter='\t')
+            row = reader.next() # пропускаем заголовки
+            records = [line for line in reader]
+            for id, ab in records:
+                abn = Abundance(id=id, abundance=ab)
+                dbsession.add(abn)
 
     @staticmethod
     def export_to_file(filename):
@@ -300,15 +308,16 @@ class Footprint(Base, JsonifyMixin):
         Файл filename в формате csv, колонки:
         id  footprint   org_type    description
         '''
-        dbsession = DBSession()
-        
-        reader = csv.reader(open(filename), delimiter='\t')
-        row = reader.next() # пропускаем заголовки
-        records = [line for line in reader]
-        for id, fpr, t, desc in records:
-            fp = Footprint(id=id, footprint=fpr, description=desc, org_type=t)
-            dbsession.add(fp)
-        dbsession.flush()
+        import transaction
+        with transaction.manager:
+            dbsession = DBSession()
+
+            reader = csv.reader(open(filename), delimiter='\t')
+            row = reader.next() # пропускаем заголовки
+            records = [line for line in reader]
+            for id, fpr, t, desc in records:
+                fp = Footprint(id=id, footprint=fpr, description=desc, org_type=t)
+                dbsession.add(fp)
 
     @staticmethod
     def export_to_file(filename):
@@ -337,15 +346,16 @@ class Pheno(Base, JsonifyMixin):
         Файл filename в формате csv, колонки:
         id  pheno   description org_type
         '''
-        dbsession = DBSession()
-        
-        reader = csv.reader(open(filename), delimiter='\t')
-        row = reader.next() # пропускаем заголовки
-        records = [line for line in reader]
-        for id, p, desc, t in records:
-            ph = Pheno(id=id, pheno=p, description=desc, org_type=t)
-            dbsession.add(ph)
-        dbsession.flush()
+        import transaction
+        with transaction.manager:
+            dbsession = DBSession()
+
+            reader = csv.reader(open(filename), delimiter='\t')
+            row = reader.next() # пропускаем заголовки
+            records = [line for line in reader]
+            for id, p, desc, t in records:
+                ph = Pheno(id=id, pheno=p, description=desc, org_type=t)
+                dbsession.add(ph)
 
     @staticmethod
     def export_to_file(filename):
@@ -425,54 +435,55 @@ class Inforesources(Base, JsonifyMixin):
         Файл filename в формате csv, колонки:
         id  doc_type_id filename    fullname    author  magazine    pages   mammals birds   reptiles    amphibians  fish    invertebrates   vascular    bryophytes  lichens fungi   maps
         '''
-        dbsession = DBSession()
-        
-        reader = csv.reader(open(filename), delimiter='\t')
-        row = reader.next() # пропускаем заголовки
-        records = [line for line in reader]
-        for row in records:
-            (
-                id,
-                doc_type_id,
-                filename,
-                fullname,
-                author,
-                magazine,
-                pages,
-                mammals,
-                birds,
-                reptiles,
-                amphibians,
-                fish,
-                invertebrates,
-                vascular,
-                bryophytes,
-                lichens,
-                fungi,
-                maps
-            ) = [None if x=='' else x  for x in row]
-            infores = Inforesources(
-                id = id,
-                doc_type_id = doc_type_id,
-                filename = filename,
-                fullname = fullname,
-                author = author,
-                magazine = magazine,
-                pages = pages,
-                mammals = mammals,
-                birds = birds,
-                reptiles = reptiles,
-                amphibians = amphibians,
-                fish = fish,
-                invertebrates = invertebrates,
-                vascular = vascular,
-                bryophytes = bryophytes,
-                lichens = lichens,
-                fungi = fungi,
-                maps = maps
-            )
-            dbsession.add(infores)
-        dbsession.flush()
+        import transaction
+        with transaction.manager:
+            dbsession = DBSession()
+
+            reader = csv.reader(open(filename), delimiter='\t')
+            row = reader.next() # пропускаем заголовки
+            records = [line for line in reader]
+            for row in records:
+                (
+                    id,
+                    doc_type_id,
+                    filename,
+                    fullname,
+                    author,
+                    magazine,
+                    pages,
+                    mammals,
+                    birds,
+                    reptiles,
+                    amphibians,
+                    fish,
+                    invertebrates,
+                    vascular,
+                    bryophytes,
+                    lichens,
+                    fungi,
+                    maps
+                ) = [None if x=='' else x  for x in row]
+                infores = Inforesources(
+                    id = id,
+                    doc_type_id = doc_type_id,
+                    filename = filename,
+                    fullname = fullname,
+                    author = author,
+                    magazine = magazine,
+                    pages = pages,
+                    mammals = mammals,
+                    birds = birds,
+                    reptiles = reptiles,
+                    amphibians = amphibians,
+                    fish = fish,
+                    invertebrates = invertebrates,
+                    vascular = vascular,
+                    bryophytes = bryophytes,
+                    lichens = lichens,
+                    fungi = fungi,
+                    maps = maps
+                )
+                dbsession.add(infores)
 
     @staticmethod
     def export_to_file(filename):
@@ -504,16 +515,17 @@ class Legend(Base, JsonifyMixin):
         Файл filename в формате csv, колонки:
         id  precision   count   description
         '''
-        dbsession = DBSession()
-        
-        reader = csv.reader(open(filename), delimiter='\t')
-        row = reader.next() # пропускаем заголовки
-        records = [line for line in reader]
-        
-        for id, p, c, d in records:
-            leg = Legend(id=id, precision=p, count=c, description=d)
-            dbsession.add(leg)
-        dbsession.flush()
+        import transaction
+        with transaction.manager:
+            dbsession = DBSession()
+
+            reader = csv.reader(open(filename), delimiter='\t')
+            row = reader.next() # пропускаем заголовки
+            records = [line for line in reader]
+
+            for id, p, c, d in records:
+                leg = Legend(id=id, precision=p, count=c, description=d)
+                dbsession.add(leg)
 
     @staticmethod
     def export_to_file(filename):
@@ -541,16 +553,17 @@ class Area_type(Base, JsonifyMixin):
         Файл filename в формате csv, колонки:
         id  area_type
         '''
-        dbsession = DBSession()
-        
-        reader = csv.reader(open(filename), delimiter='\t')
-        row = reader.next() # пропускаем заголовки
-        records = [line for line in reader]
-        
-        for id, t in records:
-            a_type = Area_type(id=id, area_type = t)
-            dbsession.add(a_type)
-        dbsession.flush()
+        import transaction
+        with transaction.manager:
+            dbsession = DBSession()
+
+            reader = csv.reader(open(filename), delimiter='\t')
+            row = reader.next() # пропускаем заголовки
+            records = [line for line in reader]
+
+            for id, t in records:
+                a_type = Area_type(id=id, area_type = t)
+                dbsession.add(a_type)
 
     @staticmethod
     def export_to_file(filename):
@@ -581,16 +594,17 @@ class Key_area(Base, JsonifyMixin):
         Файл filename в формате csv, колонки:
         id  area_type   legend  name
         '''
-        dbsession = DBSession()
-        
-        reader = csv.reader(open(filename), delimiter='\t')
-        row = reader.next() # пропускаем заголовки
-        records = [line for line in reader]
-        
-        for id, atype_id, pr_id, k in records:
-            key_a = Key_area(id=id, area_type = atype_id, legend=pr_id, name=k)
-            dbsession.add(key_a)
-        dbsession.flush()
+        import transaction
+        with transaction.manager:
+            dbsession = DBSession()
+
+            reader = csv.reader(open(filename), delimiter='\t')
+            row = reader.next() # пропускаем заголовки
+            records = [line for line in reader]
+
+            for id, atype_id, pr_id, k in records:
+                key_a = Key_area(id=id, area_type = atype_id, legend=pr_id, name=k)
+                dbsession.add(key_a)
 
     @staticmethod
     def export_to_file(filename):

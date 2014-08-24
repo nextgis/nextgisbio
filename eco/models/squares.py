@@ -41,33 +41,33 @@ class Squares(Base, JsonifyMixin):
         Файл filename в формате csv (разделитель табуляция), колонки:
         square_id   key_area_id
         '''
-        dbsession = DBSession()
-        
-        ogrData = ogr.Open(shp_filename)
-        layer = ogrData.GetLayer(0)
-        sq = layer.GetNextFeature()
-        while sq is not None:
-            id = sq.GetFieldAsString(0)
-            geom = sq.GetGeometryRef()
-            geom = geom.ExportToWkt()
-            square = Squares(id=id, geom=WKTSpatialElement(geom, srid=3857))
-            dbsession.add(square)
-            
-            sq = layer.GetNextFeature()
-        dbsession.flush()
-        
-        reader = csv.reader(open(associations_filename), delimiter='\t')
-        row = reader.next() # пропускаем заголовки
-        records = [line for line in reader]
-        
-        for id, key_area_id in records:
-            # Определим ключевоq уч-к по его id
-            key_a = dbsession.query(Key_area).filter_by(id = key_area_id).one()
-            # Определим полигон по его id
-            square = dbsession.query(Squares).filter_by(id=id).one()
-            square.key_areas.append(key_a)
+        import transaction
+        with transaction.manager:
+            dbsession = DBSession()
 
-        dbsession.flush()
+            ogrData = ogr.Open(shp_filename)
+            layer = ogrData.GetLayer(0)
+            sq = layer.GetNextFeature()
+            while sq is not None:
+                id = sq.GetFieldAsString(0)
+                geom = sq.GetGeometryRef()
+                geom = geom.ExportToWkt()
+                square = Squares(id=id, geom=WKTSpatialElement(geom, srid=3857))
+                dbsession.add(square)
+
+                sq = layer.GetNextFeature()
+            dbsession.flush()
+
+            reader = csv.reader(open(associations_filename), delimiter='\t')
+            row = reader.next() # пропускаем заголовки
+            records = [line for line in reader]
+
+            for id, key_area_id in records:
+                # Определим ключевоq уч-к по его id
+                key_a = dbsession.query(Key_area).filter_by(id = key_area_id).one()
+                # Определим полигон по его id
+                square = dbsession.query(Squares).filter_by(id=id).one()
+                square.key_areas.append(key_a)
 
     @staticmethod
     def export_to_file(filename):

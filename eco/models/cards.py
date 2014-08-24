@@ -177,68 +177,69 @@ class Cards(Base, JsonifyMixin):
         Файл filename в формате csv, колонки:
         id  species inserter    observer    identifier  taxa_scheme museum  anthr_press vitality    abundance   footprint   pheno   inforesources   original_name   photo   year    month   day time    habitat substrat    limit_fact  protection  area    quantity    unknown_age unknown_sex males   females ad  sad juv pull    egs publications    notes   location    lon lat coord_type
         '''
-        dbsession = DBSession()
-        reader = csv.reader(open(filename), delimiter='\t')
-        row = reader.next()  # пропускаем заголовки
-        records = [line for line in reader]
+        import transaction
+        with transaction.manager:
+            dbsession = DBSession()
+            reader = csv.reader(open(filename), delimiter='\t')
+            row = reader.next()  # пропускаем заголовки
+            records = [line for line in reader]
 
-        for row in records:
-            (
-                id, species, inserter, observer,
-                identifier, taxa_scheme, museum,
-                anthr_press, vitality, abundance,
-                footprint, pheno, inforesources,
-                original_name, photo, year, month,
-                day, time, habitat, substrat, limit_fact,
-                protection, area, quantity, unknown_age,
-                unknown_sex, males, females, ad, sad,
-                juv, pull, egs, publications, notes,
-                location, lon, lat, coord_type
-            ) = [None if x == '' else x for x in row]
-            card = Cards(
-                id=id,
-                species=species,
-                inserter=inserter,
-                observer=observer,
-                identifier=identifier,
-                taxa_scheme=taxa_scheme,
-                museum=museum,
-                anthr_press=anthr_press,
-                vitality=vitality,
-                abundance=abundance,
-                footprint=footprint,
-                pheno=pheno,
-                inforesources=inforesources,
-                original_name=original_name,
-                photo=photo,
-                year=year,
-                month=month,
-                day=day,
-                time=time,
-                habitat=habitat,
-                substrat=substrat,
-                limit_fact=limit_fact,
-                protection=protection,
-                area=area,
-                quantity=quantity,
-                unknown_age=unknown_age,
-                unknown_sex=unknown_sex,
-                males=males,
-                females=females,
-                ad=ad,
-                sad=sad,
-                juv=juv,
-                pull=pull,
-                egs=egs,
-                publications=publications,
-                notes=notes,
-                location=location,
-                lon=lon,
-                lat=lat,
-                coord_type=coord_type
-            )
-            dbsession.add(card)
-        dbsession.flush()
+            for row in records:
+                (
+                    id, species, inserter, observer,
+                    identifier, taxa_scheme, museum,
+                    anthr_press, vitality, abundance,
+                    footprint, pheno, inforesources,
+                    original_name, photo, year, month,
+                    day, time, habitat, substrat, limit_fact,
+                    protection, area, quantity, unknown_age,
+                    unknown_sex, males, females, ad, sad,
+                    juv, pull, egs, publications, notes,
+                    location, lon, lat, coord_type
+                ) = [None if x == '' else x for x in row]
+                card = Cards(
+                    id=id,
+                    species=species,
+                    inserter=inserter,
+                    observer=observer,
+                    identifier=identifier,
+                    taxa_scheme=taxa_scheme,
+                    museum=museum,
+                    anthr_press=anthr_press,
+                    vitality=vitality,
+                    abundance=abundance,
+                    footprint=footprint,
+                    pheno=pheno,
+                    inforesources=inforesources,
+                    original_name=original_name,
+                    photo=photo,
+                    year=year,
+                    month=month,
+                    day=day,
+                    time=time,
+                    habitat=habitat,
+                    substrat=substrat,
+                    limit_fact=limit_fact,
+                    protection=protection,
+                    area=area,
+                    quantity=quantity,
+                    unknown_age=unknown_age,
+                    unknown_sex=unknown_sex,
+                    males=males,
+                    females=females,
+                    ad=ad,
+                    sad=sad,
+                    juv=juv,
+                    pull=pull,
+                    egs=egs,
+                    publications=publications,
+                    notes=notes,
+                    location=location,
+                    lon=lon,
+                    lat=lat,
+                    coord_type=coord_type
+                )
+                dbsession.add(card)
 
     @staticmethod
     def export_to_file(filename):

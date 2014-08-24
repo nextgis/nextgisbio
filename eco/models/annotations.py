@@ -54,37 +54,38 @@ class Annotation(Base, JsonifyMixin):
         Файл filename в формате csv, колонки:
         id  species key_area    identifier  collecter   biblioref   original_name   location    lon lat biotop  difference  substrat    status  frequency   quantity    annotation  infosourse  year    month   day exposure
         '''
-        dbsession = DBSession()
-        reader = csv.reader(open(filename), delimiter='\t')
-        row = reader.next() # пропускаем заголовки
-        records = [line for line in reader]
+        import transaction
+        with transaction.manager:
+            dbsession = DBSession()
+            reader = csv.reader(open(filename), delimiter='\t')
+            row = reader.next() # пропускаем заголовки
+            records = [line for line in reader]
 
-        for row in records:
-            x = [None if x == '' else x for x in row]
-            print str(len(x)) + ' - ' + str(x[0])
-            (
-                id, species, inserter, key_area, identifier, collecter,
-                biblioref,
-                original_name, location, lon, lat,
-                biotop, difference, substrat, status,
-                frequency, quantity, annotation,
-                infosourse, year, month, day, exposure
-            ) = [None if x == '' else x for x in row]
-            ann = Annotation(
-                id=id,
-                species=species,
-                inserter=inserter,
-                key_area=key_area,
-                identifier=identifier,
-                collecter=collecter,
-                biblioref=biblioref,
-                original_name=original_name, location=location, lon=lon, lat=lat,
-                biotop=biotop, difference=difference, substrat=substrat, status=status,
-                frequency=frequency, quantity=quantity, annotation=annotation,
-                infosourse=infosourse, year=year, month=month, day=day, exposure=exposure
-            )
-            dbsession.add(ann)
-        dbsession.flush()
+            for row in records:
+                x = [None if x == '' else x for x in row]
+                print str(len(x)) + ' - ' + str(x[0])
+                (
+                    id, species, inserter, key_area, identifier, collecter,
+                    biblioref,
+                    original_name, location, lon, lat,
+                    biotop, difference, substrat, status,
+                    frequency, quantity, annotation,
+                    infosourse, year, month, day, exposure
+                ) = [None if x == '' else x for x in row]
+                ann = Annotation(
+                    id=id,
+                    species=species,
+                    inserter=inserter,
+                    key_area=key_area,
+                    identifier=identifier,
+                    collecter=collecter,
+                    biblioref=biblioref,
+                    original_name=original_name, location=location, lon=lon, lat=lat,
+                    biotop=biotop, difference=difference, substrat=substrat, status=status,
+                    frequency=frequency, quantity=quantity, annotation=annotation,
+                    infosourse=infosourse, year=year, month=month, day=day, exposure=exposure
+                )
+                dbsession.add(ann)
 
 
     @staticmethod

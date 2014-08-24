@@ -31,22 +31,23 @@ class User(Base, JsonifyMixin):
 
     @staticmethod
     def add_from_file(users_csv_file_path):
-        dbsession = DBSession()
-        reader = csv.reader(open(users_csv_file_path), delimiter='\t')
-        row = reader.next() # пропускаем заголовки
-        records = [line for line in reader]
+        import transaction
+        with transaction.manager:
+            dbsession = DBSession()
+            reader = csv.reader(open(users_csv_file_path), delimiter='\t')
+            row = reader.next() # пропускаем заголовки
+            records = [line for line in reader]
 
-        for row in records:
-            (id, login, password, person_id, role) = [None if x == '' else x for x in row]
-            user = User(
-                id=id,
-                login=login,
-                password=User.password_hash(password),
-                role=role,
-                person_id=person_id
-            )
-            dbsession.add(user)
-        dbsession.flush()
+            for row in records:
+                (id, login, password, person_id, role) = [None if x == '' else x for x in row]
+                user = User(
+                    id=id,
+                    login=login,
+                    password=User.password_hash(password),
+                    role=role,
+                    person_id=person_id
+                )
+                dbsession.add(user)
 
     @staticmethod
     def export_to_file(filename):
