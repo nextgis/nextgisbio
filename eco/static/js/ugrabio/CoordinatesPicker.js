@@ -15,9 +15,9 @@ define([
             if (value) {
                 try {
                     Map.coordinatesPickerOn(this.id, function (point) {
-                        latTextBox.set('value', point.x);
-                        lonTextBox.set('value', point.y);
-                    }, latTextBox.get('value'), lonTextBox.get('value'));
+                        latTextBox.set('value', point.y);
+                        lonTextBox.set('value', point.x);
+                    }, lonTextBox.get('value'), latTextBox.get('value'));
 
                     latTextBox.set('disabled', true);
                     lonTextBox.set('disabled', true);
