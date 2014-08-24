@@ -34,7 +34,7 @@ def taxon_cbtree(request):
     with transaction.manager:
         dbsession = DBSession()
         parent_taxon = dbsession.query(Taxon).filter_by(id=parent_id).first()
-        children_taxons = dbsession.query(Taxon).filter_by(parent_id=parent_id)
+        children_taxons = dbsession.query(Taxon).filter_by(parent_id=parent_id).all()
 
     if hierarchical_path == '.':
         block = {
