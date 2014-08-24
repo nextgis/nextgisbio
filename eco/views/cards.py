@@ -13,6 +13,7 @@ import shutil
 import osgeo.ogr as ogr
 import osgeo.osr as osr
 
+import transaction
 
 from pyramid.response import Response
 from pyramid.view import view_config
@@ -38,20 +39,20 @@ def points_text(request):
     # Требуется вернуть карточки наблюдений соотв. таксонов
     # 
     # Граничный случай, когда нужно выбрать все карточки: nodes="root_"
-    
+
     dbsession = DBSession()
     try:
         taxons = request.params['nodes']
     except KeyError:
         taxons = ''
-        
+
     can_i_edit = has_permission('edit', request.context, request)
     can_i_edit = isinstance(can_i_edit, ACLAllowed)
-    
+
     if taxons:
         taxons = urllib.unquote(taxons)
         taxons = taxons.split(',')
-        
+
         if "root" in taxons:
             cards = dbsession.query(Cards,Taxon).join(Taxon).all()
         else:
@@ -67,7 +68,7 @@ def points_text(request):
                 taxon
                 ON cards.species = taxon.id """ +  ' AND cards.species IN (' +  subquery +');'
             cards = dbsession.query(Cards, Taxon).from_statement(qs).all()
-        
+
         points = []
         for card, taxon in cards:
             id, spec_id, lat, lon = card.id, card.species, card.lat, card.lon
@@ -77,7 +78,7 @@ def points_text(request):
                     # сдвинем координаты перед показом примерно на 10 км в случайном направлении
                     lat = lat + (random()-random())/7
                     lon = lon + (random()-random())/4
-                    
+
                 points.append({'lat': lat, 'lon': lon, 'name': name, 'card_id': id, 'spec_id': spec_id})
     else:
         points = {}
@@ -87,10 +88,10 @@ def points_text(request):
 @view_config(route_name='cards_download', renderer='string', permission='edit')
 def cards_download(request):
     format = id=request.matchdict['format']
-    
+
     if not format in ['csv', 'shp']:
         return Response()
-    
+
     try:
         #taxon_list -- список, аналогичный querystring в points_text
         # (taxon_id1,taxon_id2)
@@ -106,15 +107,15 @@ def cards_download(request):
             taxon_list = None
     except KeyError:
         taxon_list = None
-    
+
     cards = Cards.as_join_list(taxon_list)
-    
+
     if format == 'csv':
         fname = tempfile.mktemp()
         try:
             file = open(fname, 'w')
             writer = csv.writer(file, delimiter = '\t')
-            
+
             # Сохраним в файл
             for card in cards:
                 x = [try_encode(v) for v in card]
@@ -126,17 +127,17 @@ def cards_download(request):
             resname = 'cards.csv'
         finally: # в любом случае удаляем файл
             os.remove(fname)
-            
+
     elif format == 'shp':
         workdir = tempfile.mkdtemp()
         try:
             driver = ogr.GetDriverByName('ESRI Shapefile')
             sr = osr.SpatialReference()
             sr.ImportFromProj4("+init=epsg:4326")
-            
+
             ds = driver.CreateDataSource( workdir)
             lyr = ds.CreateLayer('point_out', sr, ogr.wkbPoint)
-            
+
             # Создадим поля в dbf, при этом 
             # Обрежем имена полей на 10-ти символах для сохранения в dbf
             fieldnames = [name[:10] for name in cards[0]]
@@ -146,8 +147,8 @@ def cards_download(request):
                 field_defn.SetWidth(fieldsize)
                 if lyr.CreateField ( field_defn ) != 0:
                     print "Creating Name field failed.\n"
-                
-            #Заполним данными         
+
+            #Заполним данными
             lon_idx, lat_idx = 37, 38 # номера полей lat,lon в cards
             for row in  cards[1:]: # пропустили загловки
                 row = [try_encode(v, 'cp1251') for v in row]
@@ -167,12 +168,12 @@ def cards_download(request):
                         print "Failed to create feature in shapefile.\n"
                     feat.Destroy()
             ds = None
-            
+
             zipfd = tempfile.NamedTemporaryFile(delete=False, suffix='.zip', prefix='')
             zipa = zipfile.ZipFile(zipfd, 'w')
             for dirname, dirnames, filenames in os.walk(workdir):
                 for filename in filenames:
-                    zipa.write(os.path.join(dirname, filename), os.path.join(dirname, filename).replace(workdir + os.sep, ''), zipfile.ZIP_DEFLATED) 
+                    zipa.write(os.path.join(dirname, filename), os.path.join(dirname, filename).replace(workdir + os.sep, ''), zipfile.ZIP_DEFLATED)
 
             zipa.close()
             file = open(zipa.filename, 'r')
@@ -182,9 +183,9 @@ def cards_download(request):
             # в любом случае подчищаем папку с собранными данными
             shutil.rmtree(workdir)
 
-    return Response(content_type="application/octet-stream", 
+    return Response(content_type="application/octet-stream",
             content_disposition="attachment; filename=%s" % (resname, ), body=data)
-        
+
 
 
 # Выдать данные по конкретной карточке в формате json
@@ -202,7 +203,7 @@ def table_view(request):
         result = card.as_json_dict()
     except NoResultFound:
         result = {'success': False, 'msg': 'Результатов, соответствующих запросу, не найдено'}
-    
+
 
     if not can_i_edit:
         # обнулим координаты перед показом
@@ -220,7 +221,7 @@ def table_view(request):
 @view_config(route_name='save_card', renderer='json', permission='edit')
 def save_card(request):
     dbsession = DBSession()
-    
+
     new_data = dict(request.POST)
     id = new_data['id']
     success = True
@@ -238,20 +239,22 @@ def save_card(request):
 
 @view_config(route_name='new_card', renderer='json', permission='edit')
 def new_card(request):
-    dbsession = DBSession()
- 
     new_data = dict(request.POST)
     success = True
-
+    new_card_id = None
     try:
+        dbsession = DBSession()
         card = Cards()
         for k,v in new_data.items():
             if v == '': v = None
             if hasattr(card, k): setattr(card, k, v)
         dbsession.add(card)
-    except :
+        dbsession.flush()
+        dbsession.refresh(card)
+        new_card_id = card.id
+    except:
         success = False
-    return {'success': success}
+    return {'success': success, 'id': new_card_id}
 
 
 
