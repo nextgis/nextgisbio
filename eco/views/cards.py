@@ -222,19 +222,19 @@ def table_view(request):
 
 @view_config(route_name='save_card', renderer='json', permission='edit')
 def save_card(request):
-    dbsession = DBSession()
-
     new_data = dict(request.POST)
     id = new_data['id']
     success = True
     try:
-        card = dbsession.query(Cards).filter_by(id=id).one()
-        for k,v in new_data.items():
-            if v == '': v = None
-            if hasattr(card, k): setattr(card, k, v)
-        if not 'photo' in new_data.keys(): # Ext не посылает сброшенные значения checkbox
-            setattr(card, 'photo', None)
-    except :
+        with transaction.manager:
+            dbsession = DBSession()
+            card = dbsession.query(Cards).filter_by(id=id).one()
+            for k,v in new_data.items():
+                if v == '': v = None
+                if hasattr(card, k): setattr(card, k, v)
+            if not 'photo' in new_data.keys(): # Ext не посылает сброшенные значения checkbox
+                setattr(card, 'photo', None)
+    except:
         success = False
     return {'success': success}
 
@@ -242,21 +242,19 @@ def save_card(request):
 def new_card(request):
     new_data = dict(request.POST)
     success = True
-    new_card_id = None
-    dbsession = DBSession()
 
     try:
-        card = Cards()
-        for k,v in new_data.items():
-            if v == '': v = None
-            if hasattr(card, k): setattr(card, k, v)
-        dbsession.add(card)
-        dbsession.flush()
-        dbsession.refresh(card)
-        new_card_id = card.id
+        with transaction.manager:
+            dbsession = DBSession()
+            card = Cards()
+            for k,v in new_data.items():
+                if v == '': v = None
+                if hasattr(card, k): setattr(card, k, v)
+            dbsession.add(card)
     except:
         success = False
-    return {'success': success, 'id': new_card_id}
+
+    return {'success': success}
 
 
 
