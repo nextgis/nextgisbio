@@ -31,10 +31,10 @@ def taxon_cbtree(request):
     else:
         parent_id = int(str.split(str(hierarchical_path), '/')[-1])
 
-    dbsession = DBSession()
-    parent_taxon = dbsession.query(Taxon).filter_by(id=parent_id).first()
-    children_taxons = dbsession.query(Taxon).filter_by(parent_id=parent_id)
-    dbsession.flush()
+    with transaction.manager:
+        dbsession = DBSession()
+        parent_taxon = dbsession.query(Taxon).filter_by(id=parent_id).first()
+        children_taxons = dbsession.query(Taxon).filter_by(parent_id=parent_id)
 
     if hierarchical_path == '.':
         block = {
@@ -101,17 +101,18 @@ def direct_child(request):
     # taxon.is_last_taxon == True: конец иерархии (это последний таксон) => leaf:=True
     node = request.params['node']
 
-    dbsession = DBSession()
-    try:
-        if node == 'root':
-            childern = dbsession.query(Taxon).filter_by(parent_id=None).all()
-        else:
-            node = node.split('_')
-            id = int(node[1])
-            childern = dbsession.query(Taxon).filter_by(parent_id=id).all()
+    with transaction.manager:
+        dbsession = DBSession()
+        try:
+            if node == 'root':
+                childern = dbsession.query(Taxon).filter_by(parent_id=None).all()
+            else:
+                node = node.split('_')
+                id = int(node[1])
+                childern = dbsession.query(Taxon).filter_by(parent_id=id).all()
 
-    except NoResultFound:
-        return {'success': False, 'msg': 'Результатов, соответствующих запросу, не найдено'}
+        except NoResultFound:
+            return {'success': False, 'msg': 'Результатов, соответствующих запросу, не найдено'}
 
     # Генерируем описания узлов для Ext.treepanel
     rows = []
@@ -135,87 +136,89 @@ def direct_child(request):
 # Выдать данные из таблиц taxon,synonym в формате json согласно фильтру
 @view_config(route_name='taxon_filter', renderer='json')
 def taxon_filter(request):
-    dbsession = DBSession()
+    with transaction.manager:
+        dbsession = DBSession()
 
-    query_str = request.params['name'].encode('utf-8').decode('utf-8')
-    start = int(request.params['start'])
-    count = int(request.params['count'])
+        query_str = request.params['name'].encode('utf-8').decode('utf-8')
+        start = int(request.params['start'])
+        count = int(request.params['count'])
 
-    # Нужно выдернуть номера id, названия таксонов и авторов (для синонимов) из таблиц таксонов и синонимов
-    try:
-        query_str_upper = query_str.upper()
-        # ищем в таблице таксонов:
-        aFilter = u"UPPER({0}) LIKE '%{1}%'".format('name', query_str_upper)
-        tax_all = dbsession.query(Taxon.id, Taxon.name, Taxon.author).filter(aFilter).all()
+        # Нужно выдернуть номера id, названия таксонов и авторов (для синонимов) из таблиц таксонов и синонимов
+        try:
+            query_str_upper = query_str.upper()
+            # ищем в таблице таксонов:
+            aFilter = u"UPPER({0}) LIKE '%{1}%'".format('name', query_str_upper)
+            tax_all = dbsession.query(Taxon.id, Taxon.name, Taxon.author).filter(aFilter).all()
 
-        aFilter = u"UPPER({0}) LIKE '%{1}%'".format('russian_name', query_str_upper)
-        rus_all = dbsession.query(Taxon.id, Taxon.russian_name, Taxon.author).filter(aFilter).all()
+            aFilter = u"UPPER({0}) LIKE '%{1}%'".format('russian_name', query_str_upper)
+            rus_all = dbsession.query(Taxon.id, Taxon.russian_name, Taxon.author).filter(aFilter).all()
 
-        # ищем в таблице синонимов:
-        aFilter = u"UPPER({0}) LIKE '%{1}%'".format('synonym', query_str_upper)
-        s_all = dbsession.query(Synonym.species_id, Synonym.synonym, Synonym.author).filter(aFilter).all()
+            # ищем в таблице синонимов:
+            aFilter = u"UPPER({0}) LIKE '%{1}%'".format('synonym', query_str_upper)
+            s_all = dbsession.query(Synonym.species_id, Synonym.synonym, Synonym.author).filter(aFilter).all()
 
-        all = [tax_all + s_all + rus_all][0]
-        itemsPage = all[start:start + count]
-    except DBAPIError:
-        return {'success': False, 'msg': 'Ошибка подключения к БД'}
-    rows = []
-    if all:
-        rec_id = itertools.count()
-        rows = [{'recId': rec_id.next(), 'id': id, 'name': name, 'author': author} for id, name, author in itemsPage]
+            all = [tax_all + s_all + rus_all][0]
+            itemsPage = all[start:start + count]
+        except DBAPIError:
+            return {'success': False, 'msg': 'Ошибка подключения к БД'}
+        rows = []
+        if all:
+            rec_id = itertools.count()
+            rows = [{'recId': rec_id.next(), 'id': id, 'name': name, 'author': author} for id, name, author in itemsPage]
     return {'items': rows, 'success': True, 'numRows': len(all), 'identity': 'id'}
 
 
 # Выдать данные из таблиц taxon,synonym в формате json согласно фильтру
 @view_config(route_name='species_filter', renderer='json')
 def species_filter(request):
-    dbsession = DBSession()
-    try:
-        query_str = request.params['name']
-    except KeyError:
-        query_str = ''
-    taxon_id = request.matchdict['id']
-    taxon_type = request.matchdict['type']
+    with transaction.manager:
+        dbsession = DBSession()
+        try:
+            query_str = request.params['name']
+        except KeyError:
+            query_str = ''
+        taxon_id = request.matchdict['id']
+        taxon_type = request.matchdict['type']
 
-    species_types = {'mammalia': MAMMALIA, 'aves': AVES, 'plantae': PLANTAE, 'ara': ARA,
-                     'arthropoda': ARTHROPODA, 'moss': MOSS, 'lichenes': LICHENES}
-    try:
-        sp = species_types[taxon_type]
-    except KeyError:
-        return {'success': False, 'msg': 'Неверный вид организма'}
+        species_types = {'mammalia': MAMMALIA, 'aves': AVES, 'plantae': PLANTAE, 'ara': ARA,
+                         'arthropoda': ARTHROPODA, 'moss': MOSS, 'lichenes': LICHENES}
+        try:
+            sp = species_types[taxon_type]
+        except KeyError:
+            return {'success': False, 'msg': 'Неверный вид организма'}
 
-    known_tax, all_t, all_s = [], [], []
-    success = True
-    try:
-        # Если id известен, выберем запись:
-        if ('id' in request.params) and request.params['id']:
-            taxon_id = int(request.params['id'])
-            known_tax = dbsession.query(Taxon.id, Taxon.name, Taxon.author, Taxon.source).filter(
-                Taxon.id == taxon_id).all()
-        else:
-            # Если пришла строка запроса, обработаем:
-            if query_str or query_str == '':
-                target = dbsession.query(Taxon).filter(Taxon.name.in_(sp)).all()
-                target_ids = [t.id for t in target]
-                target_ids = ", ".join([str(num) for num in target_ids])
+        known_tax, all_t, all_s = [], [], []
+        success = True
+        try:
+            # Если id известен, выберем запись:
+            if ('id' in request.params) and request.params['id']:
+                taxon_id = int(request.params['id'])
+                known_tax = dbsession.query(Taxon.id, Taxon.name, Taxon.author, Taxon.source).filter(
+                    Taxon.id == taxon_id).all()
+            else:
+                # Если пришла строка запроса, обработаем:
+                if query_str or query_str == '':
+                    target = dbsession.query(Taxon).filter(Taxon.name.in_(sp)).all()
+                    target_ids = [t.id for t in target]
+                    target_ids = ", ".join([str(num) for num in target_ids])
 
-                # Найдем таксоны заданного типа организмов с названием, удовл. шаблону:
-                qs = TAXON_ALL_QUERY % (target_ids, TAXON_TYPES[len(TAXON_TYPES) - 1])
-                subquery = " AND UPPER(%s) LIKE '%s%s%s'" % ('name', '%', query_str.upper(), '%')
-                qs = qs + subquery + ';'
-                all_t = dbsession.query(Taxon.id, Taxon.name, Taxon.author, Taxon.source).from_statement(qs).all()
+                    # Найдем таксоны заданного типа организмов с названием, удовл. шаблону:
+                    qs = TAXON_ALL_QUERY % (target_ids, TAXON_TYPES[len(TAXON_TYPES) - 1])
+                    subquery = " AND UPPER(%s) LIKE '%s%s%s'" % ('name', '%', query_str.upper(), '%')
+                    qs = qs + subquery + ';'
+                    all_t = dbsession.query(Taxon.id, Taxon.name, Taxon.author, Taxon.source).from_statement(qs).all()
 
-                # Синонимы
-                subquery = TAXON_ID_QUERY % (target_ids, TAXON_TYPES[len(TAXON_TYPES) - 1])
-                qsyn = '''
-                SELECT * FROM synonym
-                WHERE
-                  UPPER(%s) LIKE '%s%s%s' AND species_id IN ( %s);
-                ''' % ('synonym', '%', query_str.upper(), '%', subquery)
-                all_s = dbsession.query(Synonym.species_id, Synonym.synonym, Synonym.author,
-                                        Synonym.source).from_statement(qsyn).all()
-    except DBAPIError:
-        success = False
+                    # Синонимы
+                    subquery = TAXON_ID_QUERY % (target_ids, TAXON_TYPES[len(TAXON_TYPES) - 1])
+                    qsyn = '''
+                    SELECT * FROM synonym
+                    WHERE
+                      UPPER(%s) LIKE '%s%s%s' AND species_id IN ( %s);
+                    ''' % ('synonym', '%', query_str.upper(), '%', subquery)
+                    all_s = dbsession.query(Synonym.species_id, Synonym.synonym, Synonym.author,
+                                            Synonym.source).from_statement(qsyn).all()
+        except DBAPIError:
+            success = False
 
     taxons = known_tax + all_t + all_s
     numRows = len(taxons)
@@ -248,40 +251,41 @@ def parent_path(request):
 # Выборка видов из БД
 @view_config(route_name='species_name', renderer='json')
 def species_name(request):
-    dbsession = DBSession()
-    species_types = {'mammalia': MAMMALIA, 'aves': AVES, 'plantae': PLANTAE, 'ara': ARA,
-                     'arthropoda': ARTHROPODA, 'moss': MOSS, 'lichenes': LICHENES}
-    rows = []
-    rec_id = itertools.count()
-    try:
-        for sp in species_types.keys():
-            slist = species_types[sp]
-            target = dbsession.query(Taxon).filter(Taxon.name.in_(slist)).all()
-            target_ids = [t.id for t in target]
-            tax_all = Taxon.species_by_taxon(target_ids)
-            rows = rows + [
-                {'recId': rec_id.next(),
-                 'id': row['id'],
-                 'name': row['name'],
-                 'author': row['author'],
-                 'source': row['source'],
-                 'organism': sp, 'synonim': False
-                }
-                for row in tax_all]
-            # соберем синонимы:
-            syn = dbsession.query(Synonym.species_id, Synonym.synonym, Synonym.author, Synonym.source).filter(
-                Synonym.species_id.in_([row['id'] for row in tax_all])).all()
-            rows = rows + [
-                {'recId': rec_id.next(),
-                 'id': row[0],
-                 'name': row[1],
-                 'author': row[2],
-                 'source': row[3],
-                 'organism': sp, 'synonim': True
-                }
-                for row in syn]
-    except DBAPIError:
-        result = {'success': False, 'msg': 'Ошибка подключения к БД'}
+    with transaction.manager:
+        dbsession = DBSession()
+        species_types = {'mammalia': MAMMALIA, 'aves': AVES, 'plantae': PLANTAE, 'ara': ARA,
+                         'arthropoda': ARTHROPODA, 'moss': MOSS, 'lichenes': LICHENES}
+        rows = []
+        rec_id = itertools.count()
+        try:
+            for sp in species_types.keys():
+                slist = species_types[sp]
+                target = dbsession.query(Taxon).filter(Taxon.name.in_(slist)).all()
+                target_ids = [t.id for t in target]
+                tax_all = Taxon.species_by_taxon(target_ids)
+                rows = rows + [
+                    {'recId': rec_id.next(),
+                     'id': row['id'],
+                     'name': row['name'],
+                     'author': row['author'],
+                     'source': row['source'],
+                     'organism': sp, 'synonim': False
+                    }
+                    for row in tax_all]
+                # соберем синонимы:
+                syn = dbsession.query(Synonym.species_id, Synonym.synonym, Synonym.author, Synonym.source).filter(
+                    Synonym.species_id.in_([row['id'] for row in tax_all])).all()
+                rows = rows + [
+                    {'recId': rec_id.next(),
+                     'id': row[0],
+                     'name': row[1],
+                     'author': row[2],
+                     'source': row[3],
+                     'organism': sp, 'synonim': True
+                    }
+                    for row in syn]
+        except DBAPIError:
+            result = {'success': False, 'msg': 'Ошибка подключения к БД'}
 
     return {'data': rows, 'success': True, 'totalCount': len(rows)}
 
@@ -290,11 +294,12 @@ def species_name(request):
 def taxon_type(request):
     taxon_id = request.matchdict['id']
 
-    dbsession = DBSession()
-    p = dbsession.query(Taxon).filter(Taxon.id == taxon_id).one()
+    with transaction.manager:
+        dbsession = DBSession()
+        p = dbsession.query(Taxon).filter(Taxon.id == taxon_id).one()
 
-    types = {'mammalia': p.is_mammalia(), 'aves': p.is_aves(), 'plantae': p.is_plantae(), 'ara': p.is_ara(),
-             'arthropoda': p.is_arthropoda(), 'moss': p.is_moss(), 'lichenes': p.is_lichenes()}
+        types = {'mammalia': p.is_mammalia(), 'aves': p.is_aves(), 'plantae': p.is_plantae(), 'ara': p.is_ara(),
+                 'arthropoda': p.is_arthropoda(), 'moss': p.is_moss(), 'lichenes': p.is_lichenes()}
 
     return types
 
@@ -315,26 +320,26 @@ def taxon_tree(request):
     if taxon_parent_id != 'root':
         parent_id = int(taxon_parent_id)
 
-    dbsession = DBSession()
-    parent_taxon = dbsession.query(Taxon).filter_by(id=parent_id).first()
-    children_taxons = dbsession.query(Taxon).filter_by(parent_id=parent_id)
-    dbsession.flush()
+    with transaction.manager:
+        dbsession = DBSession()
+        parent_taxon = dbsession.query(Taxon).filter_by(id=parent_id).first()
+        children_taxons = dbsession.query(Taxon).filter_by(parent_id=parent_id)
 
-    if taxon_parent_id == 'root':
-        parent_taxon_json = {
-            'id': 'root',
-            'name': 'Все таксоны'
-        }
-    else:
-        parent_taxon_json = parent_taxon.as_json_dict()
+        if taxon_parent_id == 'root':
+            parent_taxon_json = {
+                'id': 'root',
+                'name': 'Все таксоны'
+            }
+        else:
+            parent_taxon_json = parent_taxon.as_json_dict()
 
-    if taxon_parent_id == 'root':
-        parent_taxon_json['id'] = 'root'
+        if taxon_parent_id == 'root':
+            parent_taxon_json['id'] = 'root'
 
-    children_taxons_json = []
-    for taxon in children_taxons:
-        children_taxons_json.append(_taxon_to_json(taxon))
-    parent_taxon_json['children'] = children_taxons_json
+        children_taxons_json = []
+        for taxon in children_taxons:
+            children_taxons_json.append(_taxon_to_json(taxon))
+        parent_taxon_json['children'] = children_taxons_json
 
     return parent_taxon_json
 
@@ -374,14 +379,14 @@ def update_taxon(request):
     new_data = dict(request.POST)
     id = new_data['id']
 
-    dbsession = DBSession()
-    taxon = None
+    with transaction.manager:
+        dbsession = DBSession()
+        taxon = None
 
-    taxon = dbsession.query(Taxon).filter_by(id=id).one()
-    for k, v in new_data.items():
-        if v == '': v = None
-        if hasattr(taxon, k): setattr(taxon, k, v)
-    dbsession.flush()
+        taxon = dbsession.query(Taxon).filter_by(id=id).one()
+        for k, v in new_data.items():
+            if v == '': v = None
+            if hasattr(taxon, k): setattr(taxon, k, v)
 
     return {'item': taxon.as_json_dict()}
 
