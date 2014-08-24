@@ -25,7 +25,7 @@ import helpers
 
 
 @view_config(route_name='home', renderer='main.mako', permission='view')
-def my_view(request):
+def home_view(request):
     return {
         'is_auth': security.authenticated_userid(request),
         'is_admin': security.has_permission('admin', request.context, request)
