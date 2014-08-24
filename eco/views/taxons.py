@@ -323,7 +323,7 @@ def taxon_tree(request):
     with transaction.manager:
         dbsession = DBSession()
         parent_taxon = dbsession.query(Taxon).filter_by(id=parent_id).first()
-        children_taxons = dbsession.query(Taxon).filter_by(parent_id=parent_id)
+        children_taxons = dbsession.query(Taxon).filter_by(parent_id=parent_id).all()
 
         if taxon_parent_id == 'root':
             parent_taxon_json = {
@@ -441,7 +441,7 @@ class Synonyms(object):
     def get(self):
         sessions = DBSession()
         taxon_id = int(self.request.matchdict['taxon_id'])
-        synonyms = sessions.query(Synonym).filter_by(species_id=taxon_id)
+        synonyms = sessions.query(Synonym).filter_by(species_id=taxon_id).all()
         return [synonym.as_json_dict() for synonym in synonyms]
 
     @view_config(request_method='POST', renderer='json')

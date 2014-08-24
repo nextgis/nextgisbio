@@ -45,18 +45,19 @@ def save_anlist(request):
 @view_config(route_name='new_anlist', renderer='json', permission='edit')
 def new_anlist(request):
     logged_in = authenticated_userid(request)
-    dbsession = DBSession()
- 
     new_data = dict(request.POST)
     success = True
 
     try:
-        anlist = Annotation()
-        for k,v in new_data.items():
-            if v == '': v = None
-            if hasattr(anlist, k): setattr(anlist, k, v)
-        dbsession.add(anlist)
-    except :
+        import transaction
+        with transaction.manager:
+            dbsession = DBSession()
+            anlist = Annotation()
+            for k,v in new_data.items():
+                if v == '': v = None
+                if hasattr(anlist, k): setattr(anlist, k, v)
+            dbsession.add(anlist)
+    except:
         success = False
     return {'success': success}
 

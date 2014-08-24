@@ -302,7 +302,7 @@ class Cards(Base, JsonifyMixin):
                       card.lon,
                       card.lat,
                       card.coord_type] for card in
-                     dbsession.query(Cards)]
+                     dbsession.query(Cards).all()]
 
             writer.writerows(cards)
 

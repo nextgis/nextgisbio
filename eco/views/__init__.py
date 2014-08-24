@@ -49,8 +49,9 @@ def table_browse(request):
     if ('id' in request.params) and request.params['id'].isdigit():
         id = int(request.params['id'])
         try:
-            items = dbsession.query(table)\
-                .filter(table.id == id)
+            items = dbsession.query(table) \
+                .filter(table.id == id) \
+                .all()
             numRows = 1
         except DBAPIError:
             success = False
@@ -66,7 +67,8 @@ def table_browse(request):
                 items = dbsession.query(table)\
                     .filter(*filter_conditions) \
                     .order_by(tablename + ' asc') \
-                    .slice(start, start+count)
+                    .slice(start, start+count) \
+                    .all()
                 numRows = dbsession.query(table) \
                     .filter(*filter_conditions) \
                     .count()
@@ -103,10 +105,10 @@ def table_view(request):
     except KeyError:
         return {'success': False, 'msg': 'Ошибка: отсутствует таблица с указанным именем'}
         
-    session = DBSession()
+    dbsession = DBSession()
     try:
-        entity = session.query(model).filter_by(id=request.matchdict['id']).one()
-        user = session.query(User).filter_by(id=user_id).one() if can_i_edit else None
+        entity = dbsession.query(model).filter_by(id=request.matchdict['id']).one()
+        user = dbsession.query(User).filter_by(id=user_id).one() if can_i_edit else None
         result = {'data': entity.as_json_dict(), 'success': True}
     except NoResultFound:
         result = {'success': False, 'msg': 'Результатов, соответствующих запросу, не найдено'}

@@ -1,5 +1,3 @@
-
-
 def get_paging_params(request_params):
     start, count = None, None
     if ('start' in request_params) and request_params['start'].isdigit() and \

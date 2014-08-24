@@ -33,7 +33,8 @@ def login(request):
         password = request.params['password']
 
         try:
-            user = DBSession.query(User).filter_by(login=login, password=User.password_hash(password)).one()
+            dbsession = DBSession()
+            user = dbsession.query(User).filter_by(login=login, password=User.password_hash(password)).one()
             headers = remember(request, user.id)
             return HTTPFound(location=next_url, headers=headers)
         except NoResultFound:

@@ -88,8 +88,8 @@ class Taxon(Base, JsonifyMixin):
         '''
         dbsession = DBSession()
         qs = TAXON_ALL_QUERY % (", ".join([str(num) for num in taxon_ids]), TAXON_TYPES[len(TAXON_TYPES) - 1]) + ';'
-        taxons = dbsession.query(Taxon.id, Taxon.taxon_type, Taxon.name, Taxon.author, Taxon.source).from_statement(
-            qs).all()
+        taxons = dbsession.query(Taxon.id, Taxon.taxon_type, Taxon.name, Taxon.author, Taxon.source) \
+            .from_statement(qs).all()
         taxons = [{'id': t[0], 'taxon_type': t[1], 'name': t[2], 'author': t[3], 'source': t[4]} for t in taxons]
         return taxons
 

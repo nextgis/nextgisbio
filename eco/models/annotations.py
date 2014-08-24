@@ -108,7 +108,7 @@ class Annotation(Base, JsonifyMixin):
                 ann.original_name, ann.location, ann.lon, ann.lat,
                 ann.biotop, ann.difference, ann.substrat, ann.status,
                 ann.frequency, ann.quantity, ann.annotation,
-                ann.infosourse, ann.year, ann.month, ann.day, ann.exposure] for ann in dbsession.query(Annotation)]
+                ann.infosourse, ann.year, ann.month, ann.day, ann.exposure] for ann in dbsession.query(Annotation).all()]
 
             writer.writerows(annotations)
 

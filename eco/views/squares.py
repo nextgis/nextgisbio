@@ -192,7 +192,7 @@ def s_ka_association_download(request):
     dbsession = DBSession()
     
     try:
-            all = dbsession.query(square_keyarea_association).all()
+        all = dbsession.query(square_keyarea_association).all()
     except DBAPIError:
         result = {'success': False, 'msg': 'Ошибка подключения к БД'}
     

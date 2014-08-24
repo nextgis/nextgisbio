@@ -232,7 +232,6 @@ def save_card(request):
             if hasattr(card, k): setattr(card, k, v)
         if not 'photo' in new_data.keys(): # Ext не посылает сброшенные значения checkbox
             setattr(card, 'photo', None)
-        dbsession.flush()
     except :
         success = False
     return {'success': success}
@@ -242,8 +241,9 @@ def new_card(request):
     new_data = dict(request.POST)
     success = True
     new_card_id = None
+    dbsession = DBSession()
+
     try:
-        dbsession = DBSession()
         card = Cards()
         for k,v in new_data.items():
             if v == '': v = None

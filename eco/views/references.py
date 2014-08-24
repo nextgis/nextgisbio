@@ -31,8 +31,7 @@ def person_name(request):
     if ('id' in request.params) and request.params['id'].isdigit():
         id = int(request.params['id'])
         try:
-            persons = dbsession.query(Person.id, Person.name)\
-                .filter(Person.id == id)
+            persons = dbsession.query(Person.id, Person.name).filter(Person.id == id).all()
             numRows = 1
         except DBAPIError:
             success = False
@@ -48,7 +47,8 @@ def person_name(request):
                 persons = dbsession.query(Person.id, Person.name) \
                     .filter(*filter_conditions) \
                     .order_by(Person.name) \
-                    .slice(start, start + count)
+                    .slice(start, start + count) \
+                    .all()
                 numRows = dbsession.query(Person) \
                     .filter(*filter_conditions) \
                     .count()
@@ -80,7 +80,7 @@ def inforesources_name(request):
         id = int(request.params['id'])
         try:
             inforesources = dbsession.query(Inforesources.id, Inforesources.filename)\
-                .filter(Inforesources.id == id)
+                .filter(Inforesources.id == id).all()
             numRows = 1
         except DBAPIError:
             success = False
@@ -97,7 +97,8 @@ def inforesources_name(request):
                 inforesources = dbsession.query(Inforesources.id, Inforesources.filename) \
                     .filter(*filter_conditions) \
                     .order_by(Inforesources.filename) \
-                    .slice(start, start + count)
+                    .slice(start, start + count) \
+                    .all()
                 numRows = dbsession.query(Inforesources) \
                     .filter(*filter_conditions) \
                     .count()
