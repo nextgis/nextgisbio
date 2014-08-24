@@ -54,7 +54,7 @@ def points_text(request):
         taxons = taxons.split(',')
 
         if "root" in taxons:
-            cards = dbsession.query(Cards,Taxon).join(Taxon).all()
+            cards = dbsession.query(Cards, Taxon).join(Taxon).all()
         else:
             taxon_id = []
             for taxon in taxons:
@@ -82,6 +82,7 @@ def points_text(request):
                 points.append({'lat': lat, 'lon': lon, 'name': name, 'card_id': id, 'spec_id': spec_id})
     else:
         points = {}
+    dbsession.close()
     return {'points': points}
 
 

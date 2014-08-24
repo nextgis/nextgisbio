@@ -35,6 +35,7 @@ def login(request):
         try:
             dbsession = DBSession()
             user = dbsession.query(User).filter_by(login=login, password=User.password_hash(password)).one()
+            dbsession.close()
             headers = remember(request, user.id)
             return HTTPFound(location=next_url, headers=headers)
         except NoResultFound:
@@ -53,5 +54,4 @@ def login(request):
 @view_config(route_name='logout')
 def logout(request):
     headers = forget(request)
-    return HTTPFound(location = route_url('home', request),
-                     headers = headers)
+    return HTTPFound(location = route_url('home', request), headers = headers)
