@@ -216,6 +216,7 @@ def table_view(request):
     else:
         is_editable = card.inserter == user.person_id if user else False
 
+    dbsession.close()
     return {'data': result, 'editable': is_editable, 'success': True}
 
 

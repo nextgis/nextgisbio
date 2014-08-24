@@ -105,6 +105,8 @@ class RedBook(Base, JsonifyMixin):
             .join(RedBookSpecies, RedBook.id == RedBookSpecies.red_book_id)\
             .join(Taxon, RedBookSpecies.specie_id == Taxon.id)\
             .all()
+        dbsession.close()
+
         attribute_names = ['region', 'orig_name', 'lat_name', 'population', 'status', 'univ_status', 'year', 'bibl']
 
         objects_for_dump = [

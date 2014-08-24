@@ -29,6 +29,7 @@ from eco.models import (
 
 from eco.utils.try_encode import try_encode
 
+
 def _get_squares_by_taxonlist(taxons, geomtype='geojson'):
     '''
     Выбор квадратов из БД, на которые приходятся анн.списки таксонов из taxons='taxon_id1,taxon_id2,...'.
@@ -65,29 +66,28 @@ def _get_squares_by_taxonlist(taxons, geomtype='geojson'):
         else:
             all =  dbsession.query(Squares.id, sqlalchemy.func.st_astext(Squares.geom.RAW)).filter(Squares.id.in_(k_set)).all()
 
+    dbsession.close()
     return all
-        
 
 @view_config(route_name='squares_text', renderer='squares.mak')
 def squares_text(request):
-        
     dbsession = DBSession()
     all = dbsession.query(Squares, sqlalchemy.func.st_asgeojson(Squares.geom.RAW)).all()
     squares = []
     for sq, geom in all:
         squares.append({'id': sq.id, 'geom': geom})
+
+    dbsession.close()
     return {'squares' : squares}
-    
-    
+
 @view_config(route_name='square', renderer='json')
 def square(request):
-        
     dbsession = DBSession()
-    
     id = request.matchdict['id']
     square = dbsession.query(Squares).filter_by(id=id).one()
     key_areas = [{'id': s.id, 'name': s.name} for s in square.key_areas]
-    
+
+    dbsession.close()
     return {'id': square.id, 'key_areas': key_areas }
     
 @view_config(route_name='areal_text', renderer='squares.mak')
@@ -216,6 +216,7 @@ def s_ka_association_download(request):
         resname = 'square_karea_association.csv'
     finally: # в любом случае удаляем файл
         os.remove(fname)
-        
+
+    dbsession.close()
     return Response(content_type="application/octet-stream", 
             content_disposition="attachment; filename=%s" % (resname, ), body=data)

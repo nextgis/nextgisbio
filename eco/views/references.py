@@ -64,6 +64,7 @@ def person_name(request):
     persons_json = []
     for (id, name) in persons:
         persons_json.append({'id': id, 'name': name})
+    dbsession.close()
     return {'items': persons_json, 'success': success, 'numRows': numRows, 'identifier': 'id'}
 
 
@@ -114,6 +115,8 @@ def inforesources_name(request):
     inforesources_json = []
     for (id, name) in inforesources:
         inforesources_json.append({'id': id, 'filename': name})
+
+    dbsession.close()
     return {
         'items': inforesources_json,
         'success': success,
@@ -134,4 +137,5 @@ def karea_ann(request):
     for ann in karea.annotations:
         annotations.append({'id': ann.id, 'name': ann.species_link.name, 'species': ann.species})
 
+    dbsession.close()
     return {'data': annotations}

@@ -54,6 +54,7 @@ def redbook_filter(request):
 
     rows = [{'id': id, 'name': name} for id, name in itemsPage]
 
+    dbsession.close()
     return {'items': rows, 'success': True, 'numRows': len(itemsPage), 'identity': 'id'}
 
 
@@ -73,4 +74,5 @@ def species_by_redbook(request):
 
     rows = [dict(specie[0].as_json_dict().items() + specie[1].as_json_dict().items()) for specie in species]
 
+    dbsession.close()
     return rows

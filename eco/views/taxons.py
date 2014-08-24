@@ -31,10 +31,10 @@ def taxon_cbtree(request):
     else:
         parent_id = int(str.split(str(hierarchical_path), '/')[-1])
 
-    with transaction.manager:
-        dbsession = DBSession()
-        parent_taxon = dbsession.query(Taxon).filter_by(id=parent_id).first()
-        children_taxons = dbsession.query(Taxon).filter_by(parent_id=parent_id).all()
+    dbsession = DBSession()
+    parent_taxon = dbsession.query(Taxon).filter_by(id=parent_id).first()
+    children_taxons = dbsession.query(Taxon).filter_by(parent_id=parent_id).all()
+    dbsession.close()
 
     if hierarchical_path == '.':
         block = {
@@ -101,18 +101,19 @@ def direct_child(request):
     # taxon.is_last_taxon == True: конец иерархии (это последний таксон) => leaf:=True
     node = request.params['node']
 
-    with transaction.manager:
-        dbsession = DBSession()
-        try:
-            if node == 'root':
-                childern = dbsession.query(Taxon).filter_by(parent_id=None).all()
-            else:
-                node = node.split('_')
-                id = int(node[1])
-                childern = dbsession.query(Taxon).filter_by(parent_id=id).all()
+    dbsession = DBSession()
+    try:
+        if node == 'root':
+            childern = dbsession.query(Taxon).filter_by(parent_id=None).all()
+        else:
+            node = node.split('_')
+            id = int(node[1])
+            childern = dbsession.query(Taxon).filter_by(parent_id=id).all()
+            dbsession.close()
+    except NoResultFound:
+        dbsession.close()
+        return {'success': False, 'msg': 'Результатов, соответствующих запросу, не найдено'}
 
-        except NoResultFound:
-            return {'success': False, 'msg': 'Результатов, соответствующих запросу, не найдено'}
 
     # Генерируем описания узлов для Ext.treepanel
     rows = []
@@ -136,35 +137,37 @@ def direct_child(request):
 # Выдать данные из таблиц taxon,synonym в формате json согласно фильтру
 @view_config(route_name='taxon_filter', renderer='json')
 def taxon_filter(request):
-    with transaction.manager:
-        dbsession = DBSession()
+    query_str = request.params['name'].encode('utf-8').decode('utf-8')
+    start = int(request.params['start'])
+    count = int(request.params['count'])
 
-        query_str = request.params['name'].encode('utf-8').decode('utf-8')
-        start = int(request.params['start'])
-        count = int(request.params['count'])
+    # Нужно выдернуть номера id, названия таксонов и авторов (для синонимов) из таблиц таксонов и синонимов
+    dbsession = DBSession()
+    try:
+        query_str_upper = query_str.upper()
+        # ищем в таблице таксонов:
+        aFilter = u"UPPER({0}) LIKE '%{1}%'".format('name', query_str_upper)
+        tax_all = dbsession.query(Taxon.id, Taxon.name, Taxon.author).filter(aFilter).all()
 
-        # Нужно выдернуть номера id, названия таксонов и авторов (для синонимов) из таблиц таксонов и синонимов
-        try:
-            query_str_upper = query_str.upper()
-            # ищем в таблице таксонов:
-            aFilter = u"UPPER({0}) LIKE '%{1}%'".format('name', query_str_upper)
-            tax_all = dbsession.query(Taxon.id, Taxon.name, Taxon.author).filter(aFilter).all()
+        aFilter = u"UPPER({0}) LIKE '%{1}%'".format('russian_name', query_str_upper)
+        rus_all = dbsession.query(Taxon.id, Taxon.russian_name, Taxon.author).filter(aFilter).all()
 
-            aFilter = u"UPPER({0}) LIKE '%{1}%'".format('russian_name', query_str_upper)
-            rus_all = dbsession.query(Taxon.id, Taxon.russian_name, Taxon.author).filter(aFilter).all()
+        # ищем в таблице синонимов:
+        aFilter = u"UPPER({0}) LIKE '%{1}%'".format('synonym', query_str_upper)
+        s_all = dbsession.query(Synonym.species_id, Synonym.synonym, Synonym.author).filter(aFilter).all()
 
-            # ищем в таблице синонимов:
-            aFilter = u"UPPER({0}) LIKE '%{1}%'".format('synonym', query_str_upper)
-            s_all = dbsession.query(Synonym.species_id, Synonym.synonym, Synonym.author).filter(aFilter).all()
+        all = [tax_all + s_all + rus_all][0]
+        itemsPage = all[start:start + count]
+        dbsession.close()
+    except DBAPIError:
+        dbsession.close()
+        return {'success': False, 'msg': 'Ошибка подключения к БД'}
 
-            all = [tax_all + s_all + rus_all][0]
-            itemsPage = all[start:start + count]
-        except DBAPIError:
-            return {'success': False, 'msg': 'Ошибка подключения к БД'}
-        rows = []
-        if all:
-            rec_id = itertools.count()
-            rows = [{'recId': rec_id.next(), 'id': id, 'name': name, 'author': author} for id, name, author in itemsPage]
+
+    rows = []
+    if all:
+        rec_id = itertools.count()
+        rows = [{'recId': rec_id.next(), 'id': id, 'name': name, 'author': author} for id, name, author in itemsPage]
     return {'items': rows, 'success': True, 'numRows': len(all), 'identity': 'id'}
 
 

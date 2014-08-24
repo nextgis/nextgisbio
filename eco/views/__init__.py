@@ -81,6 +81,7 @@ def table_browse(request):
         except DBAPIError:
             success = False
 
+    dbsession.close()
     items_json = []
     for row in items:
         items_json.append(row.as_json_dict())
@@ -122,10 +123,8 @@ def table_view(request):
         is_editable = True
     result['editable'] = is_editable
 
+    dbsession.close()
     return result
-
-
-
 
 # Выдать данные из таблицы в формате csv
 @view_config(route_name='table_download', renderer='string', permission='admin')
@@ -138,7 +137,8 @@ def table_download(request):
         return {'success': False, 'msg': 'Ошибка: отсутствует таблица с указанным именем'}
     
     try:
-            all = dbsession.query(model).all()
+        all = dbsession.query(model).all()
+        dbsession.close()
     except DBAPIError:
         result = {'success': False, 'msg': 'Ошибка подключения к БД'}
     

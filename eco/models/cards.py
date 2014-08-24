@@ -156,6 +156,8 @@ class Cards(Base, JsonifyMixin):
                 cards.species IN (%s)
         ''' % ", ".join([str(num) for num in species_id])
         cards = dbsession.query(Cards).from_statement(qs).all()
+        dbsession.close()
+
         names = ['id', 'species', 'original_name', 'inserter', 'observer', 'identifier', 'taxa_scheme', 'museum',
                  'anthr_press', 'vitality', 'abundance', 'footprint', 'pheno',
                  'inforesources',
@@ -303,7 +305,7 @@ class Cards(Base, JsonifyMixin):
                       card.lat,
                       card.coord_type] for card in
                      dbsession.query(Cards).all()]
-
+            dbsession.close()
             writer.writerows(cards)
 
 

@@ -169,4 +169,5 @@ def anns_text(request):
             squares.append({'name': name, 'ann_id': id, 'spec_id': spec_id})
     else:
         points = {}
+    dbsession.close()
     return {'data': squares}

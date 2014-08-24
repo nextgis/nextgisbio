@@ -169,6 +169,8 @@ class Annotation(Base, JsonifyMixin):
                 annotation.species IN (%s)
         ''' % ", ".join([str(num) for num in species_id])
         anlists = dbsession.query(Annotation).from_statement(qs).all()
+        dbsession.close()
+
         names = [
             'id',
             'species',
