@@ -56,7 +56,8 @@
                 {name: 'dgrid', location: 'lib/dgrid'},
                 {name: 'put-selector', location: 'lib/put-selector'},
                 {name: 'xstyle', location: 'lib/xstyle'},
-                {name: 'mustache', location: 'lib/mustache'}
+                {name: 'mustache', location: 'lib/mustache'},
+                {name: 'jssor', location: 'lib/jssor'}
             ]
         };
     </script>
