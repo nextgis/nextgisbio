@@ -6,8 +6,10 @@ define([
     'dijit/form/CheckBox',
     'dijit/form/TimeTextBox',
     'ugrabio/CoordinatesPicker',
-    'ugrabio/JsonFilteringSelect'
-], function (Button, TextBox, NumberTextBox, Textarea, CheckBox, TimeTextBox, CoordinatesPicker, JsonFilteringSelect) {
+    'ugrabio/JsonFilteringSelect',
+    'ugrabio/PhotoGallery'
+], function (Button, TextBox, NumberTextBox, Textarea, CheckBox, TimeTextBox, CoordinatesPicker, JsonFilteringSelect,
+             PhotoGallery) {
 
     var getPersonJsonFilteringSelect = function (title, name, required) {
         return new JsonFilteringSelect({
@@ -30,13 +32,13 @@ define([
             },
             'Карточки наблюдений': {
                 items: [
-                    {label: 'Млекопитающие', action: 'open/form', params: ['cardMammalia', 'Млекопитающие: создать карточку', '/cards/new']},
-                    {label: 'Птицы', action: 'open/form', params: ['cardAves', 'Птицы: создать карточку', '/cards/new']},
-                    {label: 'Рептилии, амфибии, рыбы', action: 'open/form', params: ['cardAra', 'Рептилии, амфибии, рыбы: создать карточку', '/cards/new']},
-                    {label: 'Членистоногие', action: 'open/form', params: ['cardArthropoda', 'Членистоногие: создать карточку', '/cards/new']},
-                    {label: 'Мхи', action: 'open/form', params: ['cardMoss', 'Мхи: создать карточку', '/cards/new']},
-                    {label: 'Сосудистые растения', action: 'open/form', params: ['cardPlantae', 'Сосудистые растения: создать карточку', '/cards/new']},
-                    {label: 'Грибы, лишайники', action: 'open/form', params: ['cardLichenes', 'Грибы, лишайники: создать карточку', '/cards/new']},
+                    {label: 'Млекопитающие', action: 'open/form', params: ['card', 'cardMammalia', 'Млекопитающие: создать карточку', '/cards/new']},
+                    {label: 'Птицы', action: 'open/form', params: ['card', 'cardAves', 'Птицы: создать карточку', '/cards/new']},
+                    {label: 'Рептилии, амфибии, рыбы', action: 'open/form', params: ['card', 'cardAra', 'Рептилии, амфибии, рыбы: создать карточку', '/cards/new']},
+                    {label: 'Членистоногие', action: 'open/form', params: ['card', 'cardArthropoda', 'Членистоногие: создать карточку', '/cards/new']},
+                    {label: 'Мхи', action: 'open/form', params: ['card', 'cardMoss', 'Мхи: создать карточку', '/cards/new']},
+                    {label: 'Сосудистые растения', action: 'open/form', params: ['card', 'cardPlantae', 'Сосудистые растения: создать карточку', '/cards/new']},
+                    {label: 'Грибы, лишайники', action: 'open/form', params: ['card', 'cardLichenes', 'Грибы, лишайники: создать карточку', '/cards/new']},
                     'separator',
                     {label: 'Экспорт в csv', action: 'open/window/taxon_list', params: ['/cards_download/csv/']},
                     {label: 'Экспорт в shp', action: 'open/window/taxon_list', params: ['/cards_download/shp/']}
@@ -44,13 +46,13 @@ define([
             },
             'Аннотированные списки': {
                 items: [
-                    {label: 'Млекопитающие', action: 'open/form', params: ['anMammalia', 'Млекопитающие: создать список', '/annotation/new']},
-                    {label: 'Птицы', action: 'open/form', params: ['anAves', 'Птицы: создать список', '/annotation/new']},
-                    {label: 'Рептилии, амфибии, рыбы', action: 'open/form', params: ['anAra', 'Рептилии, амфибии, рыбы: создать список', '/annotation/new']},
-                    {label: 'Членистоногие', action: 'open/form', params: ['anArthropoda', 'Членистоногие: создать список', '/annotation/new']},
-                    {label: 'Мхи', action: 'open/form', params: ['anMoss', 'Мхи: создать список', '/annotation/new']},
-                    {label: 'Сосудистые растения', action: 'open/form', params: ['anPlantae', 'Сосудистые растения: создать список', '/annotation/new']},
-                    {label: 'Грибы, лишайники', action: 'open/form', params: ['anLichenes', 'Грибы, лишайники: создать список', '/annotation/new']},
+                    {label: 'Млекопитающие', action: 'open/form', params: ['an', 'anMammalia', 'Млекопитающие: создать список', '/annotation/new']},
+                    {label: 'Птицы', action: 'open/form', params: ['an', 'anAves', 'Птицы: создать список', '/annotation/new']},
+                    {label: 'Рептилии, амфибии, рыбы', action: 'open/form', params: ['an', 'anAra', 'Рептилии, амфибии, рыбы: создать список', '/annotation/new']},
+                    {label: 'Членистоногие', action: 'open/form', params: ['an', 'anArthropoda', 'Членистоногие: создать список', '/annotation/new']},
+                    {label: 'Мхи', action: 'open/form', params: ['an', 'anMoss', 'Мхи: создать список', '/annotation/new']},
+                    {label: 'Сосудистые растения', action: 'open/form', params: ['an', 'anPlantae', 'Сосудистые растения: создать список', '/annotation/new']},
+                    {label: 'Грибы, лишайники', action: 'open/form', params: ['an', 'anLichenes', 'Грибы, лишайники: создать список', '/annotation/new']},
                     'separator',
                     {label: 'Экспорт в csv', action: 'open/window/taxon_list', params: ['/anns_download/csv/']}
                 ]
@@ -343,8 +345,13 @@ define([
                     required: false,
                     style: 'width: 315px;'});
             },
-            photo: function () {
-                return new CheckBox({name: 'photo', title: 'Фото'});
+            photo: function (type, values) {
+                return new PhotoGallery({
+                    title: "Фотографии",
+                    style: 'width: 315px;',
+                    type: type,
+                    obj: values
+                });
             },
             protection: function () {
                 return new Textarea({name: 'protection', title: 'Меры защиты',
