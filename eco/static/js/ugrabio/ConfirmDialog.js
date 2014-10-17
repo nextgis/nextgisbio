@@ -34,4 +34,4 @@ define([
             this.connect(this.content.cancelButton, "onClick", "onCancel");
         }
     });
-})
+});
