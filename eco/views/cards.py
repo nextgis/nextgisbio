@@ -5,6 +5,7 @@ import urllib
 import csv
 import os
 from random import random
+from urlparse import urlparse
 
 import tempfile
 import zipfile
@@ -18,16 +19,19 @@ import transaction
 from pyramid.response import Response
 from pyramid.view import view_config
 from pyramid.security import has_permission, ACLAllowed, authenticated_userid
+from pyramid.httpexceptions import HTTPInternalServerError
 
 from sqlalchemy.exc import DBAPIError
 from sqlalchemy.orm.exc import NoResultFound
-
+from sqlalchemy.orm import joinedload
 
 from eco.models import (
     DBSession,
     Cards, User, Person, Inforesources,
     Taxon, TAXON_ID_QUERY, TAXON_TYPES
 )
+
+from eco.models.cards import CardsPhoto
 
 from eco.utils.try_encode import try_encode
 
@@ -257,7 +261,23 @@ def new_card(request):
     return {'success': success}
 
 
+@view_config(route_name='get_card_images', renderer='json')
+def get_card_images(request):
+    card_id = request.matchdict['id']
 
+    images_result = []
+    try:
+        with transaction.manager:
+            dbsession = DBSession()
+            photos = dbsession.query(CardsPhoto).filter_by(card_id=card_id).options(joinedload('photo'))
+            for photo in photos:
+                photo_json = photo.photo.as_json_dict()
+                # photo_json['url'] = {}
+                # url = urlparse(photo.photo.url)
+                # photo_json['url']['name'] =
 
+                images_result.append(photo_json)
+    except:
+        return HTTPInternalServerError()
 
-
+    return images_result
