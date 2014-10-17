@@ -25,6 +25,10 @@
           href="${request.static_url('eco:static/js/lib/dojo-release-1.9.1/dojox/layout/resources/ResizeHandle.css')}"/>
     <link rel="stylesheet"
           href="${request.static_url('eco:static/js/lib/dgrid/css/dgrid.css')}"/>
+    <link rel="stylesheet"
+          href="${request.static_url('eco:static/js/lib/dropzone/css/basic.css')}"/>
+    <link rel="stylesheet"
+          href="${request.static_url('eco:static/js/lib/dropzone/css/dropzone.css')}"/>
 
     <link rel="stylesheet" type="text/css" href="${request.static_url('eco:static/css/main.css')}" media="screen">
 
@@ -57,14 +61,16 @@
                 {name: 'put-selector', location: 'lib/put-selector'},
                 {name: 'xstyle', location: 'lib/xstyle'},
                 {name: 'mustache', location: 'lib/mustache'},
-                {name: 'jssor', location: 'lib/jssor'}
+                {name: 'jssor', location: 'lib/jssor'},
+                {name: 'dropzone', location: 'lib/dropzone'}
             ]
         };
     </script>
-    <script type="text/javascript"
-            src="${request.static_url('eco:static/js/lib/dojo-release-1.9.1/dojo/dojo.js')}"></script>
-    ##    <script src="http://maps.google.com/maps/api/js?v=3.6&amp;sensor=false"></script>
-    <script src="https://maps.google.com/maps/api/js?sensor=false"></script>
+    <script type="text/javascript" src="${request.static_url('eco:static/js/lib/dojo-release-1.9.1/dojo/dojo.js')}">
+    </script>
+
+    <script src="http://maps.google.com/maps/api/js?v=3.6&amp;sensor=false"></script>
+##    <script src="https://maps.google.com/maps/api/js?sensor=false"></script>
 
     <script src="${request.static_url('eco:static/js/lib/openlayers/OpenLayers.js')}" type="text/javascript"></script>
 
