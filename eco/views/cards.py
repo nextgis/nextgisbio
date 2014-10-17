@@ -274,6 +274,7 @@ def get_card_images(request):
             photos = dbsession.query(CardsPhoto).filter_by(card_id=card_id).options(joinedload('photo'))
             for photo in photos:
                 photo_json = photo.photo.as_json_dict()
+                photo_json['url'] = request.application_url + photo_json['url']
                 images_result.append(photo_json)
     except:
         return HTTPInternalServerError()
