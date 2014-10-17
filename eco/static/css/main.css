@@ -120,3 +120,23 @@ div.keyAreaDialog div.dgrid.dgrid-grid {
 #synonymsGrid th {
     font-weight: normal;
 }
+
+/* PhotoGallery */
+div.photo-gallery.status span {
+    color: gray;
+    display: inline;
+}
+
+div.photo-gallery.status div.images {
+    display: none;
+}
+
+div.photo-gallery span {
+    display: none;
+}
+
+div.dropzone-dialog div.dijitDialogPaneContent {
+    width: 100%;
+    height: 100%;
+    background-color: #ffffff;
+}
