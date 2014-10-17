@@ -19,6 +19,7 @@ requires = [
     'GeoAlchemy',
     #'GDAL',
     'shapely',
+    'Pillow'
     ]
 
 setup(name='eco',
