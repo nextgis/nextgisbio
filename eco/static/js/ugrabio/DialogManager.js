@@ -12,7 +12,7 @@ define([
     'ugrabio/Dialog',
     'dojo/domReady!'
 ], function (declare, array, on, topic, MenuBar, PopupMenuBarItem, Menu, MenuItem, DropDownMenu, Forms, Dialog) {
-    topic.subscribe('open/form', function (formId, title, action, values, elementsSettings) {
+    topic.subscribe('open/form', function (type, formId, title, action, values, elementsSettings) {
         var formTemplate = Forms.forms[formId],
             listElementsId = formTemplate.elements,
             formElements = [],
@@ -26,7 +26,7 @@ define([
                     element;
 
                 if (typeof elementTemplate === 'function') {
-                    element = elementTemplate();
+                    element = elementTemplate.call(this, type, values);
                     if (values && values[elementName]) {
                         element.set('value', values[elementName]);
                     }
