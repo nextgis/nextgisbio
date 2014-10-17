@@ -73,7 +73,8 @@ def main(global_config, **settings):
     config.add_route('save_card',           '/cards/save',         factory=RootFactory)
     # Карточка наблюдений в формате json
     config.add_route('cards_view',          '/cards/{id}',              factory=RootFactory)
-    
+    config.add_route('get_card_images', '/card/{id}/images', factory=RootFactory)
+
     # Аннотированные списки в квадрате № id, с описанем определенного таксона:
     config.add_route('anns_text',         '/anns_text/square/{id}',     factory=RootFactory)
     # Экспорт аннотированных списков
@@ -98,6 +99,9 @@ def main(global_config, **settings):
     
     # Выдать данные из таблицы связей квадраты-КУ в формате csv
     config.add_route('s_ka_association_download',  'association_download',       factory=RootFactory)
+
+    config.add_route('upload_image', '/images/upload/{type}/{id}', factory=RootFactory)
+    config.add_route('remove_image', '/images/remove/{type}/{image_id}', factory=RootFactory)
 
     # Справочники:
     config.add_route('person_name',         '/person_name',             factory=RootFactory)
