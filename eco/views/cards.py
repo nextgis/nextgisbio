@@ -233,11 +233,11 @@ def save_card(request):
         with transaction.manager:
             dbsession = DBSession()
             card = dbsession.query(Cards).filter_by(id=id).one()
-            for k,v in new_data.items():
-                if v == '': v = None
-                if hasattr(card, k): setattr(card, k, v)
-            if not 'photo' in new_data.keys(): # Ext не посылает сброшенные значения checkbox
-                setattr(card, 'photo', None)
+            for k, v in new_data.items():
+                if v == '':
+                    v = None
+                if hasattr(card, k):
+                    setattr(card, k, v)
     except:
         success = False
     return {'success': success}
@@ -251,9 +251,11 @@ def new_card(request):
         with transaction.manager:
             dbsession = DBSession()
             card = Cards()
-            for k,v in new_data.items():
-                if v == '': v = None
-                if hasattr(card, k): setattr(card, k, v)
+            for k, v in new_data.items():
+                if v == '':
+                    v = None
+                if hasattr(card, k):
+                    setattr(card, k, v)
             dbsession.add(card)
     except:
         success = False
@@ -272,10 +274,6 @@ def get_card_images(request):
             photos = dbsession.query(CardsPhoto).filter_by(card_id=card_id).options(joinedload('photo'))
             for photo in photos:
                 photo_json = photo.photo.as_json_dict()
-                # photo_json['url'] = {}
-                # url = urlparse(photo.photo.url)
-                # photo_json['url']['name'] =
-
                 images_result.append(photo_json)
     except:
         return HTTPInternalServerError()

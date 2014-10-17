@@ -34,7 +34,6 @@ class Cards(Base, JsonifyMixin):
     inforesources = Column(Integer, ForeignKey('inforesources.id'))
 
     original_name = Column(String)  # Исходное название
-    photo = Column(Boolean)
     year = Column(Integer)
     month = Column(Integer)
     day = Column(Integer)
@@ -99,7 +98,6 @@ class Cards(Base, JsonifyMixin):
                 footprint.footprint,
                 pheno.pheno,
                 inforesources.filename as inforesources,
-                cards.photo,
                 cards.year,
                 cards.month,
                 cards.day,
@@ -159,9 +157,8 @@ class Cards(Base, JsonifyMixin):
         dbsession.close()
 
         names = ['id', 'species', 'original_name', 'inserter', 'observer', 'identifier', 'taxa_scheme', 'museum',
-                 'anthr_press', 'vitality', 'abundance', 'footprint', 'pheno',
-                 'inforesources',
-                 'photo', 'year', 'month', 'day', 'time', 'habitat', 'substrat', 'limit_fact', 'protection', 'area',
+                 'anthr_press', 'vitality', 'abundance', 'footprint', 'pheno', 'inforesources',
+                 'year', 'month', 'day', 'time', 'habitat', 'substrat', 'limit_fact', 'protection', 'area',
                  'quantity', 'unknown_age', 'unknown_sex', 'males', 'females', 'ad', 'sad', 'juv', 'pull', 'egs',
                  'publications', 'notes', 'location', 'lon', 'lat', 'coord_type']
         result = [names]
@@ -214,7 +211,6 @@ class Cards(Base, JsonifyMixin):
                     pheno=pheno,
                     inforesources=inforesources,
                     original_name=original_name,
-                    photo=photo,
                     year=year,
                     month=month,
                     day=day,
@@ -278,7 +274,7 @@ class Cards(Base, JsonifyMixin):
                       card.pheno,
                       card.inforesources,
                       card.original_name,
-                      card.photo,
+                      None,
                       card.year,
                       card.month,
                       card.day,
