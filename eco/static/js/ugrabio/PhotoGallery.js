@@ -33,8 +33,27 @@ define([
 
         postCreate: function () {
             this.inherited(arguments);
-            this._fetchImagesFromServer();
-            this._bindEvents();
+
+            var isNewForm = this.obj ? false : true;
+            if (isNewForm) {
+                this._hideStatus();
+                var domLinkAddPhoto = query('a.add-photo', this.domNode)[0];
+                html.setStyle(domLinkAddPhoto, 'color', 'gray');
+                on(domLinkAddPhoto, 'click', lang.hitch(this, function (e) {
+                    var dialog = new Dialog({
+                        title: 'Добавить фотографии',
+                        content: 'Для добавления фотографий необходимо создать карточку',
+                        hide: function () {
+                            dialog.destroy();
+                        }
+                    });
+                    dialog.show();
+                }));
+                return false;
+            } else {
+                this._fetchImagesFromServer();
+                this._bindEvents();
+            }
         },
 
         _fetchImagesFromServer: function () {
