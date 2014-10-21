@@ -48,6 +48,7 @@
         dojoConfig = {
             async: true,
             debug: true,
+            cacheBust: true,
             parseOnLoad: true,
             baseUrl: "${request.static_url('eco:static/js/')}",
             locale: "ru-ru",
