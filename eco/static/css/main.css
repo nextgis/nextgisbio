@@ -38,6 +38,11 @@ div.loader {
     width: 14em;
 }
 
+.claro {
+    font-size: 0.73em;
+    font-family: arial, tahoma, helvetica, sans-serif;
+}
+
 .claro .demoLayout .edgePanel {
     background-color: #d0e9fc;
 }
@@ -55,8 +60,22 @@ div.user-data {
     float: right;
 }
 
+/*Tree*/
 div.dijitTreeNode .dijitCheckBoxInput {
     opacity: 1;
+}
+
+.dijitCheckBox,
+.dijitRadio,
+.dijitCheckBoxInput {
+    width: 15px;
+    height: 15px;
+}
+
+.claro div.dijitTreeRow,
+.claro div.dijitTreeNode .dojoDndItemBefore,
+.claro div.dijitTreeNode .dojoDndItemAfter {
+    padding: 2px 0 1px 0;
 }
 
 div.olControlLayerSwitcher {
@@ -66,7 +85,8 @@ div.olControlLayerSwitcher {
 #leftCol div.clearTree {
     width: 100%;
     text-align: right;
-    font-size: 80%;
+    margin-bottom: 9px;
+    font-size: 90%;
 }
 
 #menu {
@@ -109,7 +129,6 @@ div.keyAreaDialog div.dgrid.dgrid-grid {
 /* OpenLayers popup styles */
 #map div.olPopup {
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 13px;
 }
 
 /* Synonyms grid */
