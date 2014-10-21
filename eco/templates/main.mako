@@ -69,8 +69,8 @@
     <script type="text/javascript" src="${request.static_url('eco:static/js/lib/dojo-release-1.9.1/dojo/dojo.js')}">
     </script>
 
-    <script src="http://maps.google.com/maps/api/js?v=3.6&amp;sensor=false"></script>
-##    <script src="https://maps.google.com/maps/api/js?sensor=false"></script>
+##    <script src="http://maps.google.com/maps/api/js?v=3.6&amp;sensor=false"></script>
+    <script src="https://maps.google.com/maps/api/js?sensor=false"></script>
 
     <script src="${request.static_url('eco:static/js/lib/openlayers/OpenLayers.js')}" type="text/javascript"></script>
 
