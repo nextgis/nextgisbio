@@ -10,6 +10,8 @@
     <meta charset="utf-8">
     <title>ГИС по объектам животного и растительного мира Ханты-Мансийского автономного округа</title>
 
+    <link rel="icon" type="image/ico" href="${request.static_url('eco:static/favicon.ico')}" />
+
     <link rel="stylesheet"
           href="${request.static_url('eco:static/js/lib/dojo-release-1.9.1/dijit/themes/claro/claro.css')}"
           media="screen">
