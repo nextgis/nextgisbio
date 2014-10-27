@@ -33,7 +33,7 @@ def taxon_cbtree(request):
 
     dbsession = DBSession()
     parent_taxon = dbsession.query(Taxon).filter_by(id=parent_id).first()
-    children_taxons = dbsession.query(Taxon).filter_by(parent_id=parent_id).all()
+    children_taxons = dbsession.query(Taxon).filter_by(parent_id=parent_id).order_by(Taxon.name).all()
     dbsession.close()
 
     if hierarchical_path == '.':
@@ -190,7 +190,7 @@ def species_filter(request):
         except KeyError:
             return {'success': False, 'msg': 'Неверный вид организма'}
 
-        known_tax, all_t, all_s = [], [], []
+        known_tax, all_taxons, all_russian_name, all_synonyms = [], [], [], []
         success = True
         try:
             # Если id известен, выберем запись:
@@ -199,31 +199,31 @@ def species_filter(request):
                 known_tax = dbsession.query(Taxon.id, Taxon.name, Taxon.author, Taxon.source).filter(
                     Taxon.id == taxon_id).all()
             else:
-                # Если пришла строка запроса, обработаем:
                 if query_str or query_str == '':
                     target = dbsession.query(Taxon).filter(Taxon.name.in_(sp)).all()
                     target_ids = [t.id for t in target]
                     target_ids = ", ".join([str(num) for num in target_ids])
 
-                    # Найдем таксоны заданного типа организмов с названием, удовл. шаблону:
                     qs = TAXON_ALL_QUERY % (target_ids, TAXON_TYPES[len(TAXON_TYPES) - 1])
-                    subquery = " AND UPPER(%s) LIKE '%s%s%s'" % ('name', '%', query_str.upper(), '%')
+                    subquery = " AND UPPER(%s) LIKE '%s%s%s' ORDER BY name" % ('name', '%', query_str.upper(), '%')
                     qs = qs + subquery + ';'
-                    all_t = dbsession.query(Taxon.id, Taxon.name, Taxon.author, Taxon.source).from_statement(qs).all()
+                    all_taxons = dbsession.query(Taxon.id, Taxon.name, Taxon.author, Taxon.source).from_statement(qs).all()
 
-                    # Синонимы
+                    qs = TAXON_ALL_QUERY % (target_ids, TAXON_TYPES[len(TAXON_TYPES) - 1])
+                    subquery = " AND UPPER(%s) LIKE '%s%s%s' ORDER BY russian_name" % ('russian_name', '%', query_str.upper(), '%')
+                    qs = qs + subquery + ';'
+                    all_russian_name = dbsession.query(Taxon.id, Taxon.russian_name, Taxon.author, Taxon.source).from_statement(qs).all()
+
                     subquery = TAXON_ID_QUERY % (target_ids, TAXON_TYPES[len(TAXON_TYPES) - 1])
-                    qsyn = '''
-                    SELECT * FROM synonym
-                    WHERE
-                      UPPER(%s) LIKE '%s%s%s' AND species_id IN ( %s);
-                    ''' % ('synonym', '%', query_str.upper(), '%', subquery)
-                    all_s = dbsession.query(Synonym.species_id, Synonym.synonym, Synonym.author,
-                                            Synonym.source).from_statement(qsyn).all()
+                    synonyms_query = "SELECT * FROM synonym WHERE UPPER(%s) LIKE '%s%s%s' AND species_id IN ( %s) ORDER BY synonym;" % \
+                           ('synonym', '%', query_str.upper(), '%', subquery)
+
+                    all_synonyms = dbsession.query(Synonym.species_id, Synonym.synonym, Synonym.author,
+                                            Synonym.source).from_statement(synonyms_query).all()
         except DBAPIError:
             success = False
 
-    taxons = known_tax + all_t + all_s
+    taxons = known_tax + all_taxons + all_russian_name + all_synonyms
     numRows = len(taxons)
 
     start, count = helpers.get_paging_params(request.params)
