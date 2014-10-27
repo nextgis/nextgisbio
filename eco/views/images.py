@@ -16,6 +16,9 @@ from eco.models import (
 from eco.models.cards import Cards
 from eco.models.image import Images, CardsImages
 
+THUMBNAIL_SIZES = {
+    'medium': (200, 200)
+}
 
 @view_config(route_name='upload_image', renderer='json', permission='edit')
 def upload_image(request):
@@ -38,14 +41,10 @@ def upload_image(request):
     with open(base_file_path, 'wb') as output_file:
         shutil.copyfileobj(input_file, output_file)
 
-    thumbnail_sizes = {
-        'medium': (200, 200)
-    }
-
-    for key_size in thumbnail_sizes:
+    for key_size in THUMBNAIL_SIZES:
         try:
             im = Image.open(base_file_path)
-            im.thumbnail(thumbnail_sizes[key_size], Image.BICUBIC)
+            im.thumbnail(THUMBNAIL_SIZES[key_size], Image.BICUBIC)
             im.save(os.path.join(path_to_images_now, '.'.join([random_file_name + '_' + key_size, 'jpg'])), 'JPEG',
                     quality=70)
         except IOError:
@@ -82,6 +81,10 @@ def remove_image(request):
         image = dbSession.query(Images).filter_by(id=image_id).one()
         if image.local and os.path.exists(image.local):
             os.remove(image.local)
+            path_without_ext, extension = os.path.splitext(image.local)[0], os.path.splitext(image.local)[1]
+            for key_size in THUMBNAIL_SIZES:
+                os.remove('%s_%s%s' % (path_without_ext, key_size, extension))
+
         dbSession.delete(image)
 
     return {'success': True}
