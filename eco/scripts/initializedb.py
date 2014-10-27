@@ -2,11 +2,8 @@
 
 import os
 import sys
-import time
-import transaction
 
 from sqlalchemy import engine_from_config
-
 from pyramid.paster import (
     get_appsettings,
     setup_logging,
@@ -16,13 +13,13 @@ from eco.models import (
     DBSession, Base,
     Taxon, Synonym, Cards,
     Person, Taxa_scheme, Museum, Coord_type, Anthr_press, Vitality,
-    Abundance, Footprint, Pheno, Doc_type, Inforesources,
+    Abundance, Footprint, Pheno, Inforesources,
     Area_type, Legend, Key_area,
     Annotation,
-    Squares, square_keyarea_association, User
+    Squares, User
 )
-
 from eco.models.red_books import RedBook
+from eco.models.image import Images, CardsImages
 
 
 def usage(argv):
@@ -113,6 +110,12 @@ def main(argv=sys.argv):
 
     red_books_csv = 'eco/initial_data/csv/redbooks.csv'
     RedBook.import_from_csv(red_books_csv)
+
+    images_csv = 'eco/initial_data/csv/images.csv'
+    Images.import_from_csv(images_csv)
+
+    cards_images_csv = 'eco/initial_data/csv/cards_images.csv'
+    CardsImages.import_from_csv(cards_images_csv)
 
 
 if __name__ == "__main__":
