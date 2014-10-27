@@ -21,7 +21,7 @@ from eco.models import (
     Squares, User
 )
 from eco.models.red_books import RedBook
-from eco.models.image import Images
+from eco.models.image import Images, CardsImages
 
 
 def dump_data():
@@ -56,7 +56,7 @@ def dump_data():
         Taxon.export_to_file(get_path_name('taxon.csv'))
         Synonym.export_to_file(get_path_name('synonym.csv'))
         Images.export_to_file(get_path_name('images.csv'))
-        Images.export_to_file(get_path_name('cards_images.csv'))
+        CardsImages.export_to_file(get_path_name('cards_images.csv'))
 
 
 def usage(argv):
