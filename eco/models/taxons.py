@@ -60,12 +60,12 @@ class Taxon(Base, JsonifyMixin):
     )
 
     id = Column(Integer, Sequence('taxon_id_seq', start=100025), primary_key=True)
-    parent_id = Column(Integer, ForeignKey('taxon.id'), nullable=True)
+    parent_id = Column(Integer, ForeignKey('taxon.id'), nullable=True, index=True)
     old_id = Column(Integer)  # id таксона в таблице-источнике (MS ACCESS)
 
     taxon_type = Column(Enum(*TAXON_TYPES, native_enum=False))
-    name = Column(String, nullable=False)
-    russian_name = Column(String)
+    name = Column(String, nullable=False, index=True)
+    russian_name = Column(String, index=True)
     author = Column(String)
     source = Column(String)
 
@@ -243,7 +243,7 @@ class Synonym(Base, JsonifyMixin):
     """
     __tablename__ = 'synonym'
 
-    id = Column(Integer, Sequence('synonym_id_seq', start=100000), primary_key=True)
+    id = Column(Integer, Sequence('synonym_id_seq', start=100025), primary_key=True)
     species_id = Column(Integer, ForeignKey('taxon.id'), nullable=False)
     synonym = Column(String, nullable=False)
     author = Column(String)
