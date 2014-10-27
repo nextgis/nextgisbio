@@ -86,6 +86,7 @@ class RedBook(Base, JsonifyMixin):
                     univ_status=univ_status,
                     year=int(year) if year else None,
                     region=region,
+                    author=author,
                     orig_name=orig_name.strip()
                 )
 
@@ -107,13 +108,14 @@ class RedBook(Base, JsonifyMixin):
             .all()
         dbsession.close()
 
-        attribute_names = ['region', 'orig_name', 'lat_name', 'population', 'status', 'univ_status', 'year', 'bibl']
+        attribute_names = ['region', 'orig_name', 'lat_name', 'author', 'population', 'status', 'univ_status', 'year', 'bibl']
 
         objects_for_dump = [
             [
                 o[1].region,
                 o[1].orig_name,
                 o[2].name,
+                o[1].author,
                 o[1].population,
                 o[1].status,
                 o[1].univ_status,
@@ -132,6 +134,7 @@ class RedBookSpecies(Base, JsonifyMixin):
     specie_id = Column(Integer, ForeignKey('taxon.id'), primary_key=True)
     population = Column(Text)
     status = Column(Text, index=True)
+    author = Column(Text)
     univ_status = Column(Text, index=True)
     year = Column(Integer, index=True)
     region = Column(Text)
