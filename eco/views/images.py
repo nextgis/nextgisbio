@@ -1,34 +1,20 @@
 # encoding: utf-8
 
-import json
-import urlparse
-import csv
 import os
 import datetime
 import uuid
-
-import tempfile
-import zipfile
 import shutil
-
-import osgeo.ogr as ogr
-import osgeo.osr as osr
 
 import transaction
 from PIL import Image
-
-from pyramid.response import Response
 from pyramid.view import view_config
-from pyramid.security import has_permission, ACLAllowed, authenticated_userid
-
-from sqlalchemy.exc import DBAPIError
-from sqlalchemy.orm.exc import NoResultFound
 
 import eco
 from eco.models import (
     DBSession
 )
-from eco.models.cards import Cards, Photos, CardsPhoto
+from eco.models.cards import Cards
+from eco.models.image import Images, CardsImages
 
 
 @view_config(route_name='upload_image', renderer='json', permission='edit')
@@ -60,26 +46,27 @@ def upload_image(request):
         try:
             im = Image.open(base_file_path)
             im.thumbnail(thumbnail_sizes[key_size], Image.BICUBIC)
-            im.save(os.path.join(path_to_images_now, '.'.join([random_file_name + '_' + key_size, 'jpg'])), 'JPEG', quality=70)
+            im.save(os.path.join(path_to_images_now, '.'.join([random_file_name + '_' + key_size, 'jpg'])), 'JPEG',
+                    quality=70)
         except IOError:
             print "cannot create thumbnail for '%s'" % base_file_path
 
     with transaction.manager:
         dbSession = DBSession()
-        photo = Photos()
-        photo.name = filename
-        photo.url = '/static/data/images/%s/%s.jpg' % (date_now, random_file_name)
-        photo.size = os.path.getsize(base_file_path)
-        photo.local = base_file_path
-        dbSession.add(photo)
+        image = Images()
+        image.name = filename
+        image.url = '/static/data/images/%s/%s.jpg' % (date_now, random_file_name)
+        image.size = os.path.getsize(base_file_path)
+        image.local = base_file_path
+        dbSession.add(image)
 
         if obj_type == 'card':
-            card_photo = CardsPhoto()
-            card_photo.photo = photo
-            card_photo.card = dbSession.query(Cards).filter_by(id=obj_id).one()
-            dbSession.add(card_photo)
+            card_image = CardsImages()
+            card_image.image = image
+            card_image.card = dbSession.query(Cards).filter_by(id=obj_id).one()
+            dbSession.add(card_image)
 
-        photo_json = photo.as_json_dict()
+        photo_json = image.as_json_dict()
 
     return photo_json
 
@@ -91,10 +78,10 @@ def remove_image(request):
 
     with transaction.manager:
         dbSession = DBSession()
-        dbSession.query(CardsPhoto).filter_by(photo_id=image_id).delete()
-        photo = dbSession.query(Photos).filter_by(id=image_id).one()
-        if photo.local and os.path.exists(photo.local):
-            os.remove(photo.local)
-        dbSession.delete(photo)
+        dbSession.query(CardsImages).filter_by(image_id=image_id).delete()
+        image = dbSession.query(Images).filter_by(id=image_id).one()
+        if image.local and os.path.exists(image.local):
+            os.remove(image.local)
+        dbSession.delete(image)
 
     return {'success': True}

@@ -1,19 +1,15 @@
 # encoding: utf-8
 
-import json
 import urllib
 import csv
 import os
 from random import random
-from urlparse import urlparse
-
 import tempfile
 import zipfile
 import shutil
 
 import osgeo.ogr as ogr
 import osgeo.osr as osr
-
 import transaction
 
 from pyramid.response import Response
@@ -21,19 +17,16 @@ from pyramid.view import view_config
 from pyramid.security import has_permission, ACLAllowed, authenticated_userid
 from pyramid.httpexceptions import HTTPInternalServerError
 
-from sqlalchemy.exc import DBAPIError
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.orm import joinedload
 
 from eco.models import (
     DBSession,
-    Cards, User, Person, Inforesources,
-    Taxon, TAXON_ID_QUERY, TAXON_TYPES
+    Cards, User, Taxon, TAXON_ID_QUERY, TAXON_TYPES
 )
-
-from eco.models.cards import CardsPhoto
-
+from eco.models.image import CardsImages
 from eco.utils.try_encode import try_encode
+
 
 @view_config(route_name='points_text', renderer='points.mak')
 def points_text(request):
@@ -242,6 +235,7 @@ def save_card(request):
         success = False
     return {'success': success}
 
+
 @view_config(route_name='new_card', renderer='json', permission='edit')
 def new_card(request):
     new_data = dict(request.POST)
@@ -271,11 +265,11 @@ def get_card_images(request):
     try:
         with transaction.manager:
             dbsession = DBSession()
-            photos = dbsession.query(CardsPhoto).filter_by(card_id=card_id).options(joinedload('photo'))
-            for photo in photos:
-                photo_json = photo.photo.as_json_dict()
-                photo_json['url'] = request.application_url + photo_json['url']
-                images_result.append(photo_json)
+            images = dbsession.query(CardsImages).filter_by(card_id=card_id).options(joinedload('image'))
+            for image in images:
+                image_json = image.image.as_json_dict()
+                image_json['url'] = request.application_url + image_json['url']
+                images_result.append(image_json)
     except:
         return HTTPInternalServerError()
 
