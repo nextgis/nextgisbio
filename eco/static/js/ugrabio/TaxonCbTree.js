@@ -17,6 +17,7 @@ define(['dojo/dom', 'dojo/on', 'dojo/topic', 'dojo/store/JsonRest', 'cbtree/Tree
             store: store,
             checkedRoot: true,
             checkedStrict: false,
+            sort: [{attribute:'name', descending:true}],
             iconAttr: "icon"
         });
 
