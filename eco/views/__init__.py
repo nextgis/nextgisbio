@@ -3,23 +3,20 @@
 import os
 import csv
 import tempfile
-import shutil
+import time
 
 from pyramid import security
 from pyramid.response import Response
 from pyramid.view import view_config
 from pyramid.security import has_permission, ACLAllowed, authenticated_userid
-
 from sqlalchemy.exc import DBAPIError
-
 
 from eco.models import (
     DBSession,
     User,
     table_by_name
 )
-from eco.models import MultipleResultsFound, NoResultFound
-
+from eco.models import NoResultFound
 from eco.utils.try_encode import try_encode
 import helpers
 
@@ -28,7 +25,8 @@ import helpers
 def home_view(request):
     return {
         'is_auth': security.authenticated_userid(request),
-        'is_admin': security.has_permission('admin', request.context, request)
+        'is_admin': security.has_permission('admin', request.context, request),
+        'random_int': int(time.time() * 1000)
     }
 
 

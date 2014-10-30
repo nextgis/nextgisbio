@@ -32,7 +32,7 @@
     <link rel="stylesheet"
           href="${request.static_url('eco:static/js/lib/dropzone/css/dropzone.css')}"/>
 
-    <link rel="stylesheet" type="text/css" href="${request.static_url('eco:static/css/main.css')}" media="screen">
+    <link rel="stylesheet" type="text/css" href="${request.static_url('eco:static/css/main.css')}?${random_int}" media="screen">
 
     <script type="text/javascript">
         window.ugrabio = {};
