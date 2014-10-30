@@ -83,7 +83,8 @@ define([
                         url: application_root + '/static/geojson/oopt.geojson',
                         format: new OpenLayers.Format.GeoJSON()
                     }),
-                    styleMap: ooptStyle
+                    styleMap: ooptStyle,
+                    visibility: false
                 }),
                 clusterStrategy = new OpenLayers.Strategy.Cluster({distance: 15});
 
