@@ -35,7 +35,7 @@ div.loader {
 }
 
 #leftCol {
-    width: 14em;
+    width: 10%;
 }
 
 .claro,
@@ -84,6 +84,14 @@ div.dijitTreeNode .dijitCheckBoxInput {
     padding: 2px 0 1px 0;
 }
 
+#taxonsTree {
+    position: absolute;
+    bottom: 0;
+    top: 35px;
+    right: 0;
+    left: 0;
+}
+
 div.olControlLayerSwitcher {
     top: 35px;
 }
@@ -126,9 +134,6 @@ div.keyAreaDialog div.dgrid.dgrid-grid {
     height: 96%;
     margin: 4px;
 }
-
-/* OpenLayers popup styles */
-
 
 /* Synonyms grid */
 #synonymsGrid {
