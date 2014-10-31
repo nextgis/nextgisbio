@@ -48,7 +48,7 @@ define('ugrabio/TaxonTree', [
 
             this._tree.placeAt(dom.byId('leftCol'));
 
-            var loadHandler = aspect.after(this._tree, '_expandNode', lang.hitch(this, function () {
+            var loadHandler = this._tree.on('load', lang.hitch(this, function () {
                 var query_string = {};
                 var query = window.location.search.substring(1);
                 var vars = query.split("&");
@@ -66,7 +66,7 @@ define('ugrabio/TaxonTree', [
                         query_string[pair[0]].push(pair[1]);
                     }
                 }
-                taxon_id = query_string.taxon_id
+                var taxon_id = query_string.taxon_id;
                 if (taxon_id && !isNaN(parseFloat(taxon_id)) && isFinite(taxon_id)) {
                     this.selectTaxon(taxon_id);
                 }
