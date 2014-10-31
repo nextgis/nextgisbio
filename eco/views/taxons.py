@@ -309,9 +309,11 @@ def taxon_type(request):
 
 @view_config(route_name='taxons_editor', renderer='taxons/editor.mako', permission='admin')
 def taxons_editor(request):
+    import time
     return {
         'is_auth': security.authenticated_userid(request),
-        'is_admin': security.has_permission('admin', request.context, request)
+        'is_admin': security.has_permission('admin', request.context, request),
+        'random_int': int(time.time() * 1000)
     }
 
 
