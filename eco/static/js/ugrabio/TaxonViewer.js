@@ -313,7 +313,7 @@ define('ugrabio/TaxonViewer', [
             }), lang.hitch(this, function (data) {
                 var errorData = data.response.data;
                 if (errorData.error && errorData.error === 'IntegrityError') {
-                    this._errorHandler('Таксон не может быть удален, так как содержит вложенные таксоны.');
+                    this._errorHandler('Таксон не может быть удален, так как содержит вложенные таксоны или синонимы.');
                 } else {
                     this._errorHandler();
                 }
