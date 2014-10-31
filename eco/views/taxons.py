@@ -382,18 +382,20 @@ def create_taxon(request):
 
 def update_taxon(request):
     new_data = dict(request.POST)
-    id = new_data['id']
+    taxon_id = new_data['id']
 
     with transaction.manager:
         dbsession = DBSession()
-        taxon = None
 
-        taxon = dbsession.query(Taxon).filter_by(id=id).one()
+        taxon = dbsession.query(Taxon).filter_by(id=taxon_id).one()
         for k, v in new_data.items():
-            if v == '': v = None
-            if hasattr(taxon, k): setattr(taxon, k, v)
+            if v == '':
+                v = None
+            if hasattr(taxon, k):
+                setattr(taxon, k, v)
+        taxon_json = taxon.as_json_dict()
 
-    return {'item': taxon.as_json_dict()}
+    return {'item': taxon_json}
 
 
 def delete_taxon(request):
