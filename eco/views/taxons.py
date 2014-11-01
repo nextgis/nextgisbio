@@ -352,7 +352,9 @@ def taxon_tree(request):
 def _taxon_to_json(taxon):
     taxon_json = taxon.as_json_dict()
 
-    if not taxon.is_last_taxon():
+    if taxon.is_last_taxon():
+        taxon_json['is_specie'] = True
+    else:
         taxon_json['children'] = True
 
     return taxon_json

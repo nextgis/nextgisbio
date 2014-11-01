@@ -38,12 +38,27 @@ define('ugrabio/TaxonTree', [
                 }
             });
 
+            dijit._TreeNode.prototype._setLabelAttr = {node: "labelNode", type: "innerHTML"};
+
+            var getTaxonLabel = function (item) {
+                if (item.path === '.') {
+                    return 'Все таксоны';
+                }
+                var author = item.author ? ' ' + item.author : '';
+                if (item.is_specie) {
+                    return '<b>' + item.name + '</b>' + author;
+                } else {
+                    return item.name + author
+                }
+            };
+
             this._tree = new Tree({
                 model: this._model,
                 persist: false,
                 onClick: function (item, node) {
                     topic.publish('taxon/selected', item, node);
-                }
+                },
+                getLabel: getTaxonLabel
             });
 
             this._tree.placeAt(dom.byId('leftCol'));
