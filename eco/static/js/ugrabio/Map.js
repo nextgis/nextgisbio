@@ -200,7 +200,7 @@ define([
                             xhr.get(application_root + '/cards/' + cardId, {handleAs: 'json'}).then(
                                 function (data) {
                                     var card = data.data,
-                                        dialogSettings = data.editable ? {_dialog: {submit: true}} : null;
+                                        dialogSettings = data.editable ? {_dialog: {submit: true}} : {};
                                     topic.publish('open/form', 'card', 'card' + kingdom, 'Карточка № ' + card.id, '/cards/save', card, dialogSettings);
                                 });
                         },

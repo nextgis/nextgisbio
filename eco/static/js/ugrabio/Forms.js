@@ -335,15 +335,18 @@ define([
                     title: 'Примечания',
                     style: 'width: 315px;'});
             },
-            pheno: function () {
-                return new JsonFilteringSelect({
-                    url: '/pheno_browse',
-                    name: 'pheno',
-                    queryExpr: '${0}',
-                    searchAttr: 'pheno',
-                    title: 'Фаза жизненного цикла',
-                    required: false,
-                    style: 'width: 315px;'});
+            pheno: {
+                params: ['type'],
+                action: function (type) {
+                    return new JsonFilteringSelect({
+                        url: '/pheno_browse?org_type=' + type,
+                        name: 'pheno',
+                        queryExpr: '${0}',
+                        searchAttr: 'pheno',
+                        title: 'Фаза жизненного цикла',
+                        required: false,
+                        style: 'width: 315px;'});
+                }
             },
             photo: function (type, values) {
                 return new PhotoGallery({
@@ -410,15 +413,18 @@ define([
                 return new NumberTextBox({name: 'males', title: 'Самцы',
                     style: 'width: 315px;'});
             },
-            footprint: function () {
-                return new JsonFilteringSelect({
-                    url: '/footprint_browse',
-                    name: 'footprint',
-                    queryExpr: '${0}',
-                    searchAttr: 'footprint',
-                    title: 'Следы жизнедеятельности',
-                    required: false,
-                    style: 'width: 315px;'});
+            footprint: {
+                params: ['type'],
+                action: function (type) {
+                    return new JsonFilteringSelect({
+                        url: '/footprint_browse?org_type=' + type,
+                        name: 'footprint',
+                        queryExpr: '${0}',
+                        searchAttr: 'footprint',
+                        title: 'Следы жизнедеятельности',
+                        required: false,
+                        style: 'width: 315px;'});
+                }
             },
             frequency: function () {
                 return new TextBox({name: 'frequency', title: 'Частота встречаемости',
@@ -428,15 +434,18 @@ define([
                 return new Textarea({name: 'habitat', title: 'Местообитание',
                     style: 'width: 315px;'});
             },
-            vitality: function () {
-                return new JsonFilteringSelect({
-                    url: '/vitality_browse',
-                    name: 'vitality',
-                    queryExpr: '${0}',
-                    searchAttr: 'vitality',
-                    title: 'Состояние популяции',
-                    required: false,
-                    style: 'width: 315px;'});
+            vitality: {
+                params: ['type'],
+                action: function (type) {
+                    return new JsonFilteringSelect({
+                        url: '/vitality_browse?org_type=' + type,
+                        name: 'vitality',
+                        queryExpr: '${0}',
+                        searchAttr: 'vitality',
+                        title: 'Состояние популяции',
+                        required: false,
+                        style: 'width: 315px;'});
+                }
             },
             unknown_age: function () {
                 return new NumberTextBox({name: 'unknown_age', title: 'Возраст неопределен',

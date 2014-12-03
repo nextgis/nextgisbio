@@ -55,10 +55,15 @@ def table_browse(request):
             success = False
     else:
         start, count = helpers.get_paging_params(request.params)
-        parsed_name = helpers.get_parsed_search_attr(request.params, tablename)
         filter_conditions = []
+
+        parsed_name = helpers.get_parsed_search_attr(request.params, tablename)
         if parsed_name:
             filter_conditions.append(getattr(table, tablename).ilike(parsed_name))
+
+        org_type = request.params['org_type'] if 'org_type' in request.params else None
+        if org_type and hasattr(table, 'org_type'):
+            filter_conditions.append(getattr(table, 'org_type') == org_type)
 
         try:
             if (start is not None) and (count is not None):
