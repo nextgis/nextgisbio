@@ -219,18 +219,14 @@ def table_view(request):
 
 @view_config(route_name='save_card', renderer='json', permission='edit')
 def save_card(request):
-    new_data = dict(request.POST)
-    id = new_data['id']
+    card_from_client = dict(request.POST)
+    id = card_from_client['id']
     success = True
     try:
         with transaction.manager:
             dbsession = DBSession()
             card = dbsession.query(Cards).filter_by(id=id).one()
-            for k, v in new_data.items():
-                if v == '':
-                    v = None
-                if hasattr(card, k):
-                    setattr(card, k, v)
+            _update_card_attributes(card, card_from_client)
     except:
         success = False
     return {'success': success}
@@ -238,23 +234,24 @@ def save_card(request):
 
 @view_config(route_name='new_card', renderer='json', permission='edit')
 def new_card(request):
-    new_data = dict(request.POST)
     success = True
-
     try:
         with transaction.manager:
             dbsession = DBSession()
             card = Cards()
-            for k, v in new_data.items():
-                if v == '':
-                    v = None
-                if hasattr(card, k):
-                    setattr(card, k, v)
-            dbsession.add(card)
+            dbsession.add(_update_card_attributes(card, dict(request.POST)))
     except:
         success = False
-
     return {'success': success}
+
+
+def _update_card_attributes(card, card_from_client):
+    for k, v in card_from_client.items():
+        if v == '':
+            v = None
+        if hasattr(card, k):
+            setattr(card, k, v)
+    return card
 
 
 @view_config(route_name='get_card_images', renderer='json')
