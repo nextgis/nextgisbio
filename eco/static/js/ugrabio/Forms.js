@@ -389,7 +389,7 @@ define([
                     name: 'time',
                     title: 'Время',
                     constraints: {
-                        timePattern: 'dd/mm/yy HH:mm:ss'
+                        timePattern: 'HH:mm'
                     },
                     style: 'width: 315px;'});
             },
