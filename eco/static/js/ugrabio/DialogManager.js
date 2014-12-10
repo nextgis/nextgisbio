@@ -16,15 +16,24 @@ define([
         var formTemplate = Forms.forms[formId],
             listElementsId = formTemplate.elements,
             formElements = [],
-            formElementsMap = {};
+            formElementsMap = {},
+            elementName,
+            mixedProperties = null;
 
-        array.forEach(listElementsId, function (elementName) {
+        array.forEach(listElementsId, function (elementItemSetting) {
+            if (typeof elementItemSetting === 'string') {
+                elementName = elementItemSetting;
+                mixedProperties = null;
+            } else if (typeof elementItemSetting === 'object') {
+                elementName = elementItemSetting.name;
+                mixedProperties = elementItemSetting.props;
+            }
+
             if (!Forms.elements[elementName]) {
                 console.log(elementName + ' element not found');
             } else {
                 var elementTemplate = Forms.elements[elementName],
                     element;
-
                 if (typeof elementTemplate === 'function') {
                     element = elementTemplate.call(this, type, values);
                     if (values && values[elementName]) {
@@ -36,7 +45,11 @@ define([
                 } else {
                     var params = [];
                     array.forEach(elementTemplate.params, function (paramName) {
-                        params.push(formTemplate[paramName]);
+                        if (paramName === 'props') {
+                            params.push(mixedProperties);
+                        } else {
+                            params.push(formTemplate[paramName]);
+                        }
                     });
                     element = elementTemplate.action.apply(undefined, params);
                     if (values && values[elementName]) {

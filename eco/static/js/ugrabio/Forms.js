@@ -1,4 +1,5 @@
 define([
+    'dojo/_base/lang',
     'dijit/form/Button',
     'dijit/form/TextBox',
     'dijit/form/NumberTextBox',
@@ -8,8 +9,7 @@ define([
     'ugrabio/CoordinatesPicker',
     'ugrabio/JsonFilteringSelect',
     'ugrabio/PhotoGallery'
-], function (Button, TextBox, NumberTextBox, Textarea, CheckBox, TimeTextBox, CoordinatesPicker, JsonFilteringSelect,
-             PhotoGallery) {
+], function (lang, Button, TextBox, NumberTextBox, Textarea, CheckBox, TimeTextBox, CoordinatesPicker, JsonFilteringSelect, PhotoGallery) {
 
     var getPersonJsonFilteringSelect = function (title, name, required) {
         return new JsonFilteringSelect({
@@ -106,49 +106,78 @@ define([
                     method: 'POST'
                 },
                 type: 'mammalia',
-                elements: ['id', 'species', 'original_name', 'inserter', 'observer', 'identifier','museum', 'location', 'lat', 'lon', 'coordinatesPicker', 'coord_type', 'year', 'month', 'day', 'time', 'photo', 'anthr_press', 'vitality', 'habitat', 'footprint', 'limit_fact', 'protection', 'notes', 'inforesources', 'publications', 'pheno', 'quantity', 'unknown_sex', 'males', 'females', 'unknown_age', 'ad', 'sad', 'juv', 'pull']
+                elements: ['id', 'species', 'original_name', 'inserter', 'observer', 'identifier', 'museum', 'location',
+                    {name: 'lat', props: {required: true}},
+                    {name: 'lon', props: {required: true}},
+                    'coordinatesPicker', 'coord_type', 'year', 'month', 'day', 'time', 'photo', 'anthr_press', 'vitality', 'habitat',
+                    'footprint', 'limit_fact', 'protection', 'notes', 'inforesources', 'publications', 'pheno', 'quantity', 'unknown_sex',
+                    'males', 'females', 'unknown_age', 'ad', 'sad', 'juv', 'pull']
             },
             'cardAves': {
                 form: {
                     method: 'POST'
                 },
                 type: 'aves',
-                elements: ['id', 'species', 'original_name', 'inserter', 'observer', 'identifier', 'museum', 'location', 'lat', 'lon', 'coordinatesPicker', 'coord_type', 'year', 'month', 'day', 'time', 'photo', 'anthr_press', 'vitality', 'footprint', 'habitat', 'limit_fact', 'protection', 'notes', 'inforesources', 'publications', 'pheno', 'quantity', 'unknown_sex', 'males', 'females', 'unknown_age', 'ad', 'sad', 'juv', 'pull', 'egs']
+                elements: ['id', 'species', 'original_name', 'inserter', 'observer', 'identifier', 'museum', 'location',
+                    {name: 'lat', props: {required: true}},
+                    {name: 'lon', props: {required: true}},
+                    'coordinatesPicker', 'coord_type', 'year', 'month', 'day', 'time', 'photo', 'anthr_press', 'vitality',
+                    'footprint', 'habitat', 'limit_fact', 'protection', 'notes', 'inforesources', 'publications', 'pheno',
+                    'quantity', 'unknown_sex', 'males', 'females', 'unknown_age', 'ad', 'sad', 'juv', 'pull', 'egs']
             },
             'cardAra': {
                 form: {
                     method: 'POST'
                 },
                 type: 'ara',
-                elements: ['id', 'species', 'original_name', 'inserter', 'observer', 'identifier', 'museum', 'location', 'lat', 'lon', 'coordinatesPicker', 'coord_type', 'year', 'month', 'day', 'time', 'photo', 'anthr_press', 'vitality', 'habitat', 'footprint', 'limit_fact', 'protection', 'notes', 'inforesources', 'publications', 'pheno', 'quantity', 'unknown_sex', 'males', 'females', 'unknown_age', 'ad', 'sad', 'juv', 'pull', 'egs']
+                elements: ['id', 'species', 'original_name', 'inserter', 'observer', 'identifier', 'museum', 'location',
+                    {name: 'lat', props: {required: true}},
+                    {name: 'lon', props: {required: true}},
+                    'coordinatesPicker', 'coord_type', 'year', 'month', 'day', 'time', 'photo', 'anthr_press', 'vitality',
+                    'habitat', 'footprint', 'limit_fact', 'protection', 'notes', 'inforesources', 'publications', 'pheno',
+                    'quantity', 'unknown_sex', 'males', 'females', 'unknown_age', 'ad', 'sad', 'juv', 'pull', 'egs']
             },
             'cardArthropoda': {
                 form: {
                     method: 'POST'
                 },
                 type: 'arthropoda',
-                elements: ['id', 'species', 'original_name', 'inserter', 'observer', 'identifier', 'museum', 'location', 'lat', 'lon', 'coordinatesPicker', 'coord_type', 'year', 'month', 'day', 'time', 'photo', 'substrat', 'anthr_press', 'vitality', 'habitat', 'footprint', 'limit_fact', 'protection', 'notes', 'inforesources', 'publications', 'pheno', 'quantity', 'unknown_sex', 'males', 'females', 'unknown_age', 'ad', 'sad', 'juv', 'pull', 'egs']
+                elements: ['id', 'species', 'original_name', 'inserter', 'observer', 'identifier', 'museum', 'location',
+                    {name: 'lat', props: {required: true}},
+                    {name: 'lon', props: {required: true}},
+                    'coordinatesPicker', 'coord_type', 'year', 'month', 'day', 'time', 'photo', 'substrat', 'anthr_press', 'vitality', 'habitat', 'footprint', 'limit_fact', 'protection', 'notes', 'inforesources', 'publications', 'pheno', 'quantity', 'unknown_sex', 'males', 'females', 'unknown_age', 'ad', 'sad', 'juv', 'pull', 'egs']
             },
             'cardMoss': {
                 form: {
                     method: 'POST'
                 },
                 type: 'moss',
-                elements: ['id', 'species', 'original_name', 'inserter', 'observer', 'identifier', 'museum', 'location', 'lat', 'lon', 'coordinatesPicker', 'coord_type', 'year', 'month', 'day', 'time', 'photo', 'anthr_press', 'vitality', 'habitat', 'substrat', 'limit_fact', 'protection', 'notes', 'inforesources', 'publications', 'pheno', 'abundance', 'area']
+                elements: ['id', 'species', 'original_name', 'inserter', 'observer', 'identifier', 'museum', 'location',
+                    {name: 'lat', props: {required: true}},
+                    {name: 'lon', props: {required: true}},
+                     'coordinatesPicker', 'coord_type', 'year', 'month', 'day', 'time', 'photo', 'anthr_press', 'vitality', 'habitat', 'substrat', 'limit_fact', 'protection', 'notes', 'inforesources', 'publications', 'pheno', 'abundance', 'area']
             },
             'cardPlantae': {
                 form: {
                     method: 'POST'
                 },
                 type: 'plantae',
-                elements: ['id', 'species', 'original_name', 'inserter', 'observer', 'identifier', 'museum', 'location', 'lat', 'lon', 'coordinatesPicker', 'coord_type', 'year', 'month', 'day', 'time', 'photo', 'substrat', 'anthr_press', 'vitality', 'habitat', 'limit_fact', 'protection', 'notes', 'inforesources', 'publications', 'pheno', 'quantity', 'abundance', 'area']
+                elements: ['id', 'species', 'original_name', 'inserter', 'observer', 'identifier', 'museum', 'location',
+                    {name: 'lat', props: {required: true}},
+                    {name: 'lon', props: {required: true}},
+                    'coordinatesPicker', 'coord_type', 'year', 'month', 'day', 'time', 'photo', 'substrat', 'anthr_press', 'vitality', 'habitat', 'limit_fact', 'protection', 'notes', 'inforesources', 'publications', 'pheno', 'quantity', 'abundance', 'area']
             },
             'cardLichenes': {
                 form: {
                     method: 'POST'
                 },
                 type: 'lichenes',
-                elements: ['id', 'species', 'original_name', 'inserter', 'observer', 'identifier', 'museum', 'location', 'lat', 'lon', 'coordinatesPicker', 'coord_type', 'year', 'month', 'day', 'time', 'photo', 'anthr_press', 'vitality', 'habitat', 'substrat', 'limit_fact', 'protection', 'notes', 'inforesources', 'publications', 'pheno', 'quantity', 'abundance', 'area']
+                elements: ['id', 'species', 'original_name', 'inserter', 'observer', 'identifier', 'museum', 'location',
+                    {name: 'lat', props: {required: true}},
+                    {name: 'lon', props: {required: true}},
+                    'coordinatesPicker', 'coord_type', 'year', 'month', 'day', 'time', 'photo', 'anthr_press', 'vitality',
+                    'habitat', 'substrat', 'limit_fact', 'protection', 'notes', 'inforesources', 'publications', 'pheno',
+                    'quantity', 'abundance', 'area']
             },
             'anMammalia': {
                 form: {
@@ -486,17 +515,32 @@ define([
                     required: true,
                     style: 'width: 315px;'});
             },
-            lat: function () {
-                return new NumberTextBox({name: 'lat', title: 'Широта',
-                    constraints: {pattern: '###0.#####'},
-                    required: true,
-                    style: 'width: 315px;'});
+            lat: {
+                params: ['props'],
+                action: function (props) {
+                    var settings = {
+                        name: 'lat',
+                        title: 'Широта',
+                        constraints: {pattern: '###0.#####'},
+                        required: false,
+                        style: 'width: 315px;'
+                    };
+                    lang.mixin(settings, props);
+                    return new NumberTextBox(settings);
+                }
             },
-            lon: function () {
-                return new NumberTextBox({name: 'lon', title: 'Долгота',
-                    constraints: {pattern: '###0.#####'},
-                    required: true,
-                    style: 'width: 315px;'});
+            lon: {
+                params: ['props'],
+                action: function (props) {
+                    var settings = {
+                        name: 'lon', title: 'Долгота',
+                        constraints: {pattern: '###0.#####'},
+                        required: false,
+                        style: 'width: 315px;'
+                    };
+                    lang.mixin(settings, props);
+                    return new NumberTextBox(settings);
+                }
             },
             coordinatesPicker: function () {
                 return new CoordinatesPicker({
