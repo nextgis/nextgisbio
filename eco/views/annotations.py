@@ -1,19 +1,14 @@
 # encoding: utf-8
 
-from pyramid.response import Response
-from pyramid.view import view_config
-from pyramid.security import authenticated_userid
-from pyramid.security import has_permission, ACLAllowed
-
-from sqlalchemy.exc import DBAPIError
-from sqlalchemy.orm.exc import NoResultFound
-
 import os
 import csv
 import urllib
 import tempfile
-import zipfile
-import shutil
+
+from pyramid.response import Response
+from pyramid.view import view_config
+from pyramid.security import has_permission, ACLAllowed
+import transaction
 
 from eco.models import (
     DBSession,
@@ -21,19 +16,26 @@ from eco.models import (
     Taxon, TAXON_ID_QUERY, TAXON_TYPES,
     Squares
 )
-
 from eco.utils.try_encode import try_encode
+from . import table_view
 
-@view_config(route_name='save_anlist', renderer='json', permission='edit')
+@view_config(route_name='annotation', request_method='GET', renderer='json')
+def get_anlist(request):
+    request.matchdict['id'] = request.matchdict['id']
+    request.matchdict['table'] = 'annotation'
+    return table_view(request)
+
+
+@view_config(route_name='annotation', request_method='POST', renderer='json', permission='edit')
 def save_anlist(request):
     dbsession = DBSession()
     
     new_data = dict(request.POST)
-    id = new_data['id']
+    annotation_id = request.matchdict['id']
     
     success = True
     try:
-        anlist = dbsession.query(Annotation).filter_by(id=id).one()
+        anlist = dbsession.query(Annotation).filter_by(id=annotation_id).one()
         for k,v in new_data.items():
             if v == '': v = None
             if hasattr(anlist, k): setattr(anlist, k, v)
@@ -42,9 +44,9 @@ def save_anlist(request):
         success = False
     return {'success': success}
 
-@view_config(route_name='new_anlist', renderer='json', permission='edit')
+
+@view_config(route_name='annotation', request_method='PUT',  renderer='json', permission='edit')
 def new_anlist(request):
-    logged_in = authenticated_userid(request)
     new_data = dict(request.POST)
     success = True
 
@@ -57,6 +59,20 @@ def new_anlist(request):
                 if v == '': v = None
                 if hasattr(anlist, k): setattr(anlist, k, v)
             dbsession.add(anlist)
+    except:
+        success = False
+    return {'success': success}
+
+
+@view_config(route_name='annotation', request_method='DELETE', renderer='json', permission='edit')
+def delete_anlist(request):
+    annotation_id = request.matchdict['id']
+    success = True
+    try:
+        with transaction.manager:
+            dbsession = DBSession()
+            annotation = dbsession.query(Annotation).filter_by(id=annotation_id).one()
+            dbsession.delete(annotation)
     except:
         success = False
     return {'success': success}

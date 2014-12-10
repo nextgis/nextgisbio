@@ -85,7 +85,7 @@ def points_text(request):
 
 @view_config(route_name='cards_download', renderer='string', permission='edit')
 def cards_download(request):
-    format = id=request.matchdict['format']
+    format = request.matchdict['format']
 
     if not format in ['csv', 'shp']:
         return Response()
@@ -185,9 +185,8 @@ def cards_download(request):
             content_disposition="attachment; filename=%s" % (resname, ), body=data)
 
 
-
 # Выдать данные по конкретной карточке в формате json
-@view_config(route_name='cards_view', renderer='json', permission='view')
+@view_config(route_name='card', renderer='json', permission='view')
 def table_view(request):
     can_i_edit = has_permission('edit', request.context, request)
     can_i_edit = isinstance(can_i_edit, ACLAllowed)
@@ -217,22 +216,22 @@ def table_view(request):
     return {'data': result, 'editable': is_editable, 'success': True}
 
 
-@view_config(route_name='save_card', renderer='json', permission='edit')
+@view_config(route_name='card', request_method='POST', renderer='json', permission='edit')
 def save_card(request):
     card_from_client = dict(request.POST)
-    id = card_from_client['id']
+    card_id = request.matchdict['id']
     success = True
     try:
         with transaction.manager:
             dbsession = DBSession()
-            card = dbsession.query(Cards).filter_by(id=id).one()
+            card = dbsession.query(Cards).filter_by(id=card_id).one()
             _update_card_attributes(card, card_from_client)
     except:
         success = False
     return {'success': success}
 
 
-@view_config(route_name='new_card', renderer='json', permission='edit')
+@view_config(route_name='card', request_method='PUT', renderer='json', permission='edit')
 def new_card(request):
     success = True
     try:
@@ -252,6 +251,20 @@ def _update_card_attributes(card, card_from_client):
         if hasattr(card, k):
             setattr(card, k, v)
     return card
+
+
+@view_config(route_name='card', request_method='DELETE', renderer='json', permission='edit')
+def delete_card(request):
+    card_id = request.matchdict['id']
+    success = True
+    try:
+        with transaction.manager:
+            dbsession = DBSession()
+            card = dbsession.query(Cards).filter_by(id=card_id).one()
+            dbsession.delete(card)
+    except:
+        success = False
+    return {'success': success}
 
 
 @view_config(route_name='get_card_images', renderer='json')

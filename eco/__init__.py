@@ -73,6 +73,9 @@ def main(global_config, **settings):
     config.add_route('save_card',           '/cards/save',         factory=RootFactory)
     # Карточка наблюдений в формате json
     config.add_route('cards_view',          '/cards/{id}',              factory=RootFactory)
+
+    config.add_route('card',          '/card/{id}',              factory=RootFactory)
+
     config.add_route('get_card_images', '/card/{id}/images', factory=RootFactory)
 
     # Аннотированные списки в квадрате № id, с описанем определенного таксона:
@@ -83,7 +86,8 @@ def main(global_config, **settings):
     config.add_route('new_anlist',          '/annotation/new',          factory=RootFactory)
     # Сохранить анн. список после редактирования
     config.add_route('save_anlist',         '/annotation/save',    factory=RootFactory)
-    
+
+    config.add_route('annotation',         '/annotation/{id}',    factory=RootFactory)
 
     # Квадраты и ключевые участки
     config.add_route('squares_text',        '/squares_text/',           factory=RootFactory)
