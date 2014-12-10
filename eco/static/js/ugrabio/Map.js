@@ -197,11 +197,11 @@ define([
                             }
                             kingdom = kingdom.charAt(0).toUpperCase() + kingdom.slice(1);
 
-                            xhr.get(application_root + '/cards/' + cardId, {handleAs: 'json'}).then(
+                            xhr.get(application_root + '/card/' + cardId, {handleAs: 'json'}).then(
                                 function (data) {
                                     var card = data.data,
                                         dialogSettings = data.editable ? {_dialog: {submit: true}} : {};
-                                    topic.publish('open/form', 'card', 'card' + kingdom, 'Карточка № ' + card.id, '/cards/save', card, dialogSettings);
+                                    topic.publish('open/form', 'card', 'card' + kingdom, 'Карточка № ' + card.id, 'card', card, dialogSettings);
                                 });
                         },
                         function (error) {
@@ -302,7 +302,7 @@ define([
                                                 function (data) {
                                                     var annotation = data.data,
                                                         dialogSettings = data.editable ? {_dialog: {submit: true}} : null;
-                                                    topic.publish('open/form', 'an', 'an' + kingdom, 'Аннотированный список № ' + annotation.id, '/annotation/save', annotation, dialogSettings);
+                                                    topic.publish('open/form', 'an', 'an' + kingdom, 'Аннотированный список № ' + annotation.id, 'annotation', annotation, dialogSettings);
                                                 });
                                         },
                                         function (error) {
@@ -395,7 +395,7 @@ define([
                                         function (data) {
                                             var annotation = data.data,
                                                 dialogSettings = data.editable ? {_dialog: {submit: true}} : null;
-                                            topic.publish('open/form', 'an', 'an' + kingdom, 'Аннотированный список № ' + annotation.id, '/annotation/save', annotation, dialogSettings);
+                                            topic.publish('open/form', 'an', 'an' + kingdom, 'Аннотированный список № ' + annotation.id, 'annotation', annotation, dialogSettings);
                                         });
                                 },
                                 function (error) {

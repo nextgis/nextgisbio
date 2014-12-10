@@ -32,13 +32,13 @@ define([
             },
             'Карточки наблюдений': {
                 items: [
-                    {label: 'Млекопитающие', action: 'open/form', params: ['card', 'cardMammalia', 'Млекопитающие: создать карточку', '/cards/new']},
-                    {label: 'Птицы', action: 'open/form', params: ['card', 'cardAves', 'Птицы: создать карточку', '/cards/new']},
-                    {label: 'Рептилии, амфибии, рыбы', action: 'open/form', params: ['card', 'cardAra', 'Рептилии, амфибии, рыбы: создать карточку', '/cards/new']},
-                    {label: 'Членистоногие', action: 'open/form', params: ['card', 'cardArthropoda', 'Членистоногие: создать карточку', '/cards/new']},
-                    {label: 'Мхи', action: 'open/form', params: ['card', 'cardMoss', 'Мхи: создать карточку', '/cards/new']},
-                    {label: 'Сосудистые растения', action: 'open/form', params: ['card', 'cardPlantae', 'Сосудистые растения: создать карточку', '/cards/new']},
-                    {label: 'Грибы, лишайники', action: 'open/form', params: ['card', 'cardLichenes', 'Грибы, лишайники: создать карточку', '/cards/new']},
+                    {label: 'Млекопитающие', action: 'open/form', params: ['card', 'cardMammalia', 'Млекопитающие: создать карточку', 'card']},
+                    {label: 'Птицы', action: 'open/form', params: ['card', 'cardAves', 'Птицы: создать карточку', 'card']},
+                    {label: 'Рептилии, амфибии, рыбы', action: 'open/form', params: ['card', 'cardAra', 'Рептилии, амфибии, рыбы: создать карточку', 'card']},
+                    {label: 'Членистоногие', action: 'open/form', params: ['card', 'cardArthropoda', 'Членистоногие: создать карточку', 'card']},
+                    {label: 'Мхи', action: 'open/form', params: ['card', 'cardMoss', 'Мхи: создать карточку', 'card']},
+                    {label: 'Сосудистые растения', action: 'open/form', params: ['card', 'cardPlantae', 'Сосудистые растения: создать карточку', 'card']},
+                    {label: 'Грибы, лишайники', action: 'open/form', params: ['card', 'cardLichenes', 'Грибы, лишайники: создать карточку', 'card']},
                     'separator',
                     {label: 'Экспорт в csv', action: 'open/window/taxon_list', params: ['/cards_download/csv/']},
                     {label: 'Экспорт в shp', action: 'open/window/taxon_list', params: ['/cards_download/shp/']}
@@ -46,13 +46,13 @@ define([
             },
             'Аннотированные списки': {
                 items: [
-                    {label: 'Млекопитающие', action: 'open/form', params: ['an', 'anMammalia', 'Млекопитающие: создать список', '/annotation/new']},
-                    {label: 'Птицы', action: 'open/form', params: ['an', 'anAves', 'Птицы: создать список', '/annotation/new']},
-                    {label: 'Рептилии, амфибии, рыбы', action: 'open/form', params: ['an', 'anAra', 'Рептилии, амфибии, рыбы: создать список', '/annotation/new']},
-                    {label: 'Членистоногие', action: 'open/form', params: ['an', 'anArthropoda', 'Членистоногие: создать список', '/annotation/new']},
-                    {label: 'Мхи', action: 'open/form', params: ['an', 'anMoss', 'Мхи: создать список', '/annotation/new']},
-                    {label: 'Сосудистые растения', action: 'open/form', params: ['an', 'anPlantae', 'Сосудистые растения: создать список', '/annotation/new']},
-                    {label: 'Грибы, лишайники', action: 'open/form', params: ['an', 'anLichenes', 'Грибы, лишайники: создать список', '/annotation/new']},
+                    {label: 'Млекопитающие', action: 'open/form', params: ['an', 'anMammalia', 'Млекопитающие: создать список', 'annotation']},
+                    {label: 'Птицы', action: 'open/form', params: ['an', 'anAves', 'Птицы: создать список', 'annotation']},
+                    {label: 'Рептилии, амфибии, рыбы', action: 'open/form', params: ['an', 'anAra', 'Рептилии, амфибии, рыбы: создать список', 'annotation']},
+                    {label: 'Членистоногие', action: 'open/form', params: ['an', 'anArthropoda', 'Членистоногие: создать список', 'annotation']},
+                    {label: 'Мхи', action: 'open/form', params: ['an', 'anMoss', 'Мхи: создать список', 'annotation']},
+                    {label: 'Сосудистые растения', action: 'open/form', params: ['an', 'anPlantae', 'Сосудистые растения: создать список', 'annotation']},
+                    {label: 'Грибы, лишайники', action: 'open/form', params: ['an', 'anLichenes', 'Грибы, лишайники: создать список', 'annotation']},
                     'separator',
                     {label: 'Экспорт в csv', action: 'open/window/taxon_list', params: ['/anns_download/csv/']}
                 ]
@@ -106,7 +106,7 @@ define([
                     method: 'POST'
                 },
                 type: 'mammalia',
-                elements: ['id', 'species', 'original_name', 'inserter', 'observer', 'identifier', 'museum', 'location', 'lat', 'lon', 'coordinatesPicker', 'coord_type', 'year', 'month', 'day', 'time', 'photo', 'anthr_press', 'vitality', 'habitat', 'footprint', 'limit_fact', 'protection', 'notes', 'inforesources', 'publications', 'pheno', 'quantity', 'unknown_sex', 'males', 'females', 'unknown_age', 'ad', 'sad', 'juv', 'pull']
+                elements: ['id', 'species', 'original_name', 'inserter', 'observer', 'identifier','museum', 'location', 'lat', 'lon', 'coordinatesPicker', 'coord_type', 'year', 'month', 'day', 'time', 'photo', 'anthr_press', 'vitality', 'habitat', 'footprint', 'limit_fact', 'protection', 'notes', 'inforesources', 'publications', 'pheno', 'quantity', 'unknown_sex', 'males', 'females', 'unknown_age', 'ad', 'sad', 'juv', 'pull']
             },
             'cardAves': {
                 form: {

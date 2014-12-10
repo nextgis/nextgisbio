@@ -90,19 +90,52 @@ define([
                     style: 'margin: 10px 0 5px 5px;',
                     onClick: function () {
                         if (form.validate()) {
-                            var action = application_root + form.action,
-                                json_form = domForm.toObject(form.domNode),
+                            var json_form = domForm.toObject(form.domNode),
+                                action = application_root + '/' + form.action,
                                 dialog = dialog;
-                            xhr.post(action, {
-                                data: json_form,
-                                handleAs: 'json'
-                            }).then(function (data) {
-                                alert('Данные успешно обновлены!');
-                                dialog.close();
-                            }, function (error) {
-                                alert('Извините, произошла ошибка, попробуйте еще раз.');
-                            });
+
+                            if (json_form.id) {
+                                action = action + '/' + json_form.id;
+                                xhr.post(action, {
+                                    data: json_form,
+                                    handleAs: 'json'
+                                }).then(function (data) {
+                                    alert('Данные успешно обновлены!');
+                                    dialog.close();
+                                }, function (error) {
+                                    alert('Извините, произошла ошибка, попробуйте еще раз.');
+                                });
+                            } else {
+                                action = action + '/' + 'new';
+                                xhr.put(action, {
+                                    data: json_form,
+                                    handleAs: 'json'
+                                }).then(function (data) {
+                                    alert('Данные успешно обновлены!');
+                                    dialog.close();
+                                }, function (error) {
+                                    alert('Извините, произошла ошибка, попробуйте еще раз.');
+                                });
+                            }
                         }
+                    }
+                }).placeAt(this._form.containerNode);
+                new Button({
+                    label: 'Удалить',
+                    style: 'margin: 10px 0 5px 5px;',
+                    onClick: function () {
+                        var json_form = domForm.toObject(form.domNode),
+                            action = application_root + '/' + form.action + '/' + json_form.id,
+                            dialog = dialog;
+                        xhr.del(action, {
+                            data: json_form,
+                            handleAs: 'json'
+                        }).then(function (data) {
+                            alert('Объект успешно удален!');
+                            dialog.close();
+                        }, function (error) {
+                            alert('Извините, произошла ошибка, попробуйте еще раз.');
+                        });
                     }
                 }).placeAt(this._form.containerNode);
             }
