@@ -16,6 +16,7 @@ from eco.models import (
     User,
     table_by_name
 )
+from eco.models.red_books import RedBook
 from eco.models import NoResultFound
 from eco.utils.try_encode import try_encode
 import helpers
@@ -23,10 +24,22 @@ import helpers
 
 @view_config(route_name='home', renderer='main.mako', permission='view')
 def home_view(request):
+    session = DBSession()
+    red_books = session.query(RedBook).all()
+    session.close()
+
+    if 'red_book' in request.GET:
+        red_book_selected_id = int(request.GET['red_book'])
+    else:
+        red_book_selected_id = -1
+
+
     return {
         'is_auth': security.authenticated_userid(request),
         'is_admin': security.has_permission('admin', request.context, request),
-        'random_int': int(time.time() * 1000)
+        'random_int': int(time.time() * 1000),
+        'red_books': red_books,
+        'red_book_selected_id': red_book_selected_id
     }
 
 

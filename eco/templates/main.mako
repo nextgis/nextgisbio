@@ -50,7 +50,7 @@
         dojoConfig = {
             async: true,
             debug: true,
-            cacheBust: true,
+##            cacheBust: true,
             parseOnLoad: true,
             baseUrl: "${request.static_url('eco:static/js/')}",
             locale: "ru-ru",
@@ -79,6 +79,7 @@
 
     <%block name='inlineRequireAmd'>
         <script>
+            a = 5;
             require(['ugrabio/Forms', 'ugrabio/Menu', 'ugrabio/TaxonSearcher', 'ugrabio/TaxonCbTree',
                 'dojox/data/QueryReadStore', 'dojo/dom', 'dojo/parser', 'dojo/store/JsonRest',
                 'dijit/layout/BorderContainer', 'dijit/layout/ContentPane',
@@ -87,6 +88,7 @@
                 'ugrabio/Loader', 'ugrabio/Map', 'ugrabio/Dialog', 'ugrabio/DialogManager',
                 'ugrabio/WindowManager', 'dojo/domReady!'],
                     function (Forms, Menu, TaxonSearcher, TaxonCbTree) {
+                        a = TaxonCbTree;
                         new Menu(Forms.menuMap, 'menu');
                         new TaxonSearcher(TaxonCbTree);
                     });
@@ -134,8 +136,8 @@
     <%block name='leftPanel'>
         <div id="leftCol" class="edgePanel" data-dojo-type="dijit.layout.ContentPane"
              data-dojo-props="region: 'left', splitter: true">
-            <div class="clearTree">
-                <a href="javascript:void(0)">Снять выделение</a>
+                <a class="filter" style="padding-right: 15px;" href="javascript:void(0)">Фильтр</a>
+                <a class="clear" href="javascript:void(0)">Снять выделение</a>
             </div>
         </div>
     </%block>
@@ -157,6 +159,28 @@
         </table>
         <div class="dijitDialogPaneActionBar">
             <button data-dojo-type="dijit/form/Button" type="submit">Вход</button>
+        </div>
+    </form>
+</div>
+
+<div data-dojo-type="dijit/Dialog" id="filterDialog" title="Фильтры">
+    <form method="get" action="/">
+        <input name="taxons" type="hidden" value=""/>
+        <table class="dijitDialogPaneContentArea">
+            <tr>
+                <td><label for="red_book">Красная книга:</label></td>
+                <td>
+                    <select id="filter_red_book" name="red_book" data-dojo-type="dijit/form/Select">
+                        <option value="-1" ${'selected="selected"' if red_book_selected_id == -1 else ''}>Не выбран</option>
+                        % for red_book in red_books:
+                            <option value="${red_book.id}" ${'selected="selected"' if red_book_selected_id == red_book.id else ''}>${red_book.name}</option>
+                        % endfor
+                    </select>
+                </td>
+            </tr>
+        </table>
+        <div class="dijitDialogPaneActionBar">
+            <button data-dojo-type="dijit/form/Button" type="submit">Применить фильтр</button>
         </div>
     </form>
 </div>
