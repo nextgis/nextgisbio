@@ -118,6 +118,5 @@ define('ugrabio/TaxonTree', [
             }
         }
     });
-
     return TaxonTree;
 });

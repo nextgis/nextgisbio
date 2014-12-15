@@ -43,6 +43,12 @@ def points_text(request):
     except KeyError:
         taxons = ''
 
+    red_book_id = None
+    if 'red_book' in request.params:
+        red_book_id = int(request.params['red_book'])
+        if red_book_id == -1:
+            red_book_id = None
+
     can_i_edit = has_permission('edit', request.context, request)
     can_i_edit = isinstance(can_i_edit, ACLAllowed)
 
@@ -61,9 +67,10 @@ def points_text(request):
             subquery = TAXON_ID_QUERY % (", ".join([ str(num) for num in taxon_id]), TAXON_TYPES[len(TAXON_TYPES)-1])
             qs = """
             SELECT cards.id,cards.species,cards.lat,cards.lon, taxon.name FROM cards  
-            INNER JOIN
-                taxon
-                ON cards.species = taxon.id """ +  ' AND cards.species IN (' +  subquery +');'
+            INNER JOIN taxon ON cards.species = taxon.id
+            INNER JOIN red_books_species ON cards.species = red_books_species.specie_id WHERE """\
+                 + ((' red_books_species.red_book_id = ' + str(red_book_id) + ' AND ') if red_book_id else '') \
+                 + ' cards.species IN (' +  subquery +');'
             cards = dbsession.query(Cards, Taxon).from_statement(qs).all()
 
         points = []

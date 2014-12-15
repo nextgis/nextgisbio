@@ -1,8 +1,9 @@
-define(['dojo/dom', 'dojo/on', 'dojo/topic', 'dojo/store/JsonRest', 'cbtree/Tree', 'cbtree/model/FileStoreModel',
-    'cbtree/store/FileStore', 'cbtree/store/Eventable', 'dojo/store/Observable', 'cbtree/extensions/TreeStyling', 'cbtree/store/Hierarchy',
-    'cbtree/model/TreeStoreModel', 'dojo/_base/event', 'dojo/aspect', 'dojo/dom-attr', 'dijit/Tree',
-    'dojo/request/xhr', 'dojo/query', 'dojo/domReady!'],
-    function (dom, on, topic, JsonRest, cbTree, FileStoreModel, FileStore, Eventable, Observable, TreeStyling, Hierarchy, TreeStoreModel, event, aspect, attr, Tree, xhr, query) {
+define(['dojo/dom', 'dojo/on', 'dojo/topic', 'dojo/store/JsonRest', 'dojo/_base/array', 'cbtree/Tree', 'cbtree/model/FileStoreModel',
+        'cbtree/store/FileStore', 'cbtree/store/Eventable', 'dojo/store/Observable', 'cbtree/extensions/TreeStyling', 'cbtree/store/Hierarchy',
+        'cbtree/model/TreeStoreModel', 'dojo/_base/event', 'dojo/aspect', 'dojo/dom-attr', 'dijit/Tree',
+        'dojo/request/xhr', 'dojo/query', 'dijit/registry',
+        'ugrabio/Filter', 'ugrabio/QueryString', 'dojo/domReady!'],
+    function (dom, on, topic, JsonRest, array, cbTree, FileStoreModel, FileStore, Eventable, Observable, TreeStyling, Hierarchy, TreeStoreModel, event, aspect, attr, Tree, xhr, query, registry, Filter, QueryString) {
 
         // for supporting html label of node
         Tree._TreeNode.prototype._setLabelAttr = {node: "labelNode", type: "innerHTML"};
@@ -17,7 +18,9 @@ define(['dojo/dom', 'dojo/on', 'dojo/topic', 'dojo/store/JsonRest', 'cbtree/Tree
             store: store,
             checkedRoot: true,
             checkedStrict: false,
-            sort: [{attribute:'name', descending:true}],
+            sort: [
+                {attribute: 'name', descending: true}
+            ],
             iconAttr: "icon"
         });
 
@@ -43,6 +46,33 @@ define(['dojo/dom', 'dojo/on', 'dojo/topic', 'dojo/store/JsonRest', 'cbtree/Tree
         });
 
         taxonsTree.placeAt(dom.byId('leftCol'));
+
+
+//            var loadHandler = taxonsTree.on('load', lang.hitch(this, function () {
+//                var query_string = {};
+//                var query = window.location.search.substring(1);
+//                var vars = query.split("&");
+//                for (var i = 0; i < vars.length; i++) {
+//                    var pair = vars[i].split("=");
+//                    // If first entry with this name
+//                    if (typeof query_string[pair[0]] === "undefined") {
+//                        query_string[pair[0]] = pair[1];
+//                        // If second entry with this name
+//                    } else if (typeof query_string[pair[0]] === "string") {
+//                        var arr = [ query_string[pair[0]], pair[1] ];
+//                        query_string[pair[0]] = arr;
+//                        // If third or later entry with this name
+//                    } else {
+//                        query_string[pair[0]].push(pair[1]);
+//                    }
+//                }
+//                var taxon_id = query_string.taxon_id;
+//                if (taxon_id && !isNaN(parseFloat(taxon_id)) && isFinite(taxon_id)) {
+//                    this.selectTaxon(taxon_id);
+//                }
+//                loadHandler.remove();
+//            }));
+
         taxonsTree.startup();
 
         var onTaxonSelectedChanged = function () {
@@ -119,7 +149,7 @@ define(['dojo/dom', 'dojo/on', 'dojo/topic', 'dojo/store/JsonRest', 'cbtree/Tree
             });
         };
 
-        on(query('#leftCol div.clearTree a'), 'click', function () {
+        on(query('#leftCol a.clear'), 'click', function () {
             for (var nodeId in nodesChecked) {
                 if (nodesChecked.hasOwnProperty(nodeId)) {
                     nodesChecked[nodeId].set('checked', false);
@@ -128,6 +158,32 @@ define(['dojo/dom', 'dojo/on', 'dojo/topic', 'dojo/store/JsonRest', 'cbtree/Tree
             }
             taxonsTree.collapseAll();
             onTaxonSelectedChanged();
+        });
+
+        on(query('#leftCol a.filter'), 'click', function () {
+            var filterDialog = registry.byId('filterDialog'),
+                selectedTaxonsId = [];
+
+            for (var nodeId in nodesChecked) {
+                if (nodesChecked.hasOwnProperty(nodeId)) {
+                    selectedTaxonsId.push(parseInt(nodeId, 10));
+                }
+            }
+
+            attr.set(query('input[name=taxons]', filterDialog.domNode)[0], 'value',
+                selectedTaxonsId.join(','));
+
+            filterDialog.show();
+        });
+
+        taxonsTree.on('load', function () {
+            var parameters = (new QueryString).getParameters();
+            if (parameters['taxons']) {
+                var taxons_selected = decodeURIComponent(parameters['taxons']).split(',');
+                for (var count = taxons_selected.length, i = 0; i < count; i++) {
+                    taxonsTree.selectTaxon(taxons_selected[i]);
+                }
+            }
         });
 
         return taxonsTree;

@@ -1,6 +1,7 @@
 define([
     'dojo/_base/declare',
     'dojo/_base/window',
+    'dojo/_base/lang',
     'dojo/dom-construct',
     'dojo/ready',
     'dojo/topic',
@@ -8,14 +9,14 @@ define([
     'dojo/dom-attr',
     'dojo/on',
     'dojo/request/xhr',
-    'ugrabio/Dialog',
     'dojo/store/Memory',
     'dgrid/OnDemandGrid',
     'dgrid/extensions/ColumnHider',
-    'dojo/_base/lang',
+    'ugrabio/Dialog',
+    'ugrabio/Filter',
     'dojo/domReady!'
-], function (declare, win, domConstruct, ready, topic, query, domAttr, on, xhr, Dialog, Memory, OnDemandGrid, ColumnHider, lang) {
-
+], function (declare, win, lang, domConstruct, ready, topic, query, domAttr, on, xhr, Memory, OnDemandGrid,
+             ColumnHider, Dialog, Filter) {
     var map = declare('ugrabio/Map', [], {
         constructor: function () {
             var taxon_nodes = [],
@@ -95,7 +96,7 @@ define([
                     clusterStrategy
                 ],
                 protocol: new OpenLayers.Protocol.HTTP({
-                    url: application_root + '/points_text/?nodes=' + taxon_nodes,
+                    url: application_root + '/points_text/?nodes=' + taxon_nodes + '&' + Filter.getAsQueryString(),
                     format: new OpenLayers.Format.Text()
                 }),
                 styleMap: new OpenLayers.StyleMap({
@@ -428,7 +429,7 @@ define([
                 cardsLayer.destroyFeatures();
                 cardsLayer.refresh({
                     force: true,
-                    url: application_root + '/points_text/?nodes=' + taxon_nodes
+                    url: application_root + '/points_text/?nodes=' + taxon_nodes  + '&' + Filter.getAsQueryString()
                 });
 
                 arealLayer.destroyFeatures();
