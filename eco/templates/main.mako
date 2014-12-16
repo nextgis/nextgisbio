@@ -164,7 +164,7 @@
 </div>
 
 <div data-dojo-type="dijit/Dialog" id="filterDialog" title="Фильтры">
-    <form method="get" action="/">
+    <form method="get" action="${request.application_url | json.dumps, n}">
         <input name="taxons" type="hidden" value=""/>
         <table class="dijitDialogPaneContentArea">
             <tr>
