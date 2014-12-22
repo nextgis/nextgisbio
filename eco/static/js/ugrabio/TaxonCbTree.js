@@ -1,9 +1,12 @@
-define(['dojo/dom', 'dojo/on', 'dojo/topic', 'dojo/store/JsonRest', 'dojo/_base/array', 'cbtree/Tree', 'cbtree/model/FileStoreModel',
+define(['dojo/dom', 'dojo/on', 'dojo/topic', 'dojo/store/JsonRest', 'dojo/_base/array', 'dojo/Deferred', 'dojo/promise/all',
+        'cbtree/Tree', 'cbtree/model/FileStoreModel',
         'cbtree/store/FileStore', 'cbtree/store/Eventable', 'dojo/store/Observable', 'cbtree/extensions/TreeStyling', 'cbtree/store/Hierarchy',
         'cbtree/model/TreeStoreModel', 'dojo/_base/event', 'dojo/aspect', 'dojo/dom-attr', 'dijit/Tree',
         'dojo/request/xhr', 'dojo/query', 'dijit/registry',
         'ugrabio/Filter', 'ugrabio/QueryString', 'dojo/domReady!'],
-    function (dom, on, topic, JsonRest, array, cbTree, FileStoreModel, FileStore, Eventable, Observable, TreeStyling, Hierarchy, TreeStoreModel, event, aspect, attr, Tree, xhr, query, registry, Filter, QueryString) {
+    function (dom, on, topic, JsonRest, array, Deferred, all,
+              cbTree, FileStoreModel, FileStore, Eventable, Observable, TreeStyling, Hierarchy,
+              TreeStoreModel, event, aspect, attr, Tree, xhr, query, registry, Filter, QueryString) {
 
         // for supporting html label of node
         Tree._TreeNode.prototype._setLabelAttr = {node: "labelNode", type: "innerHTML"};
@@ -42,36 +45,11 @@ define(['dojo/dom', 'dojo/on', 'dojo/topic', 'dojo/store/JsonRest', 'dojo/_base/
             branchIcons: true,
             nodeIcons: true,
             id: 'taxonsTree',
-            getLabel: getTaxonLabel
+            getLabel: getTaxonLabel,
+            publishChangedEvent: false
         });
 
         taxonsTree.placeAt(dom.byId('leftCol'));
-
-
-//            var loadHandler = taxonsTree.on('load', lang.hitch(this, function () {
-//                var query_string = {};
-//                var query = window.location.search.substring(1);
-//                var vars = query.split("&");
-//                for (var i = 0; i < vars.length; i++) {
-//                    var pair = vars[i].split("=");
-//                    // If first entry with this name
-//                    if (typeof query_string[pair[0]] === "undefined") {
-//                        query_string[pair[0]] = pair[1];
-//                        // If second entry with this name
-//                    } else if (typeof query_string[pair[0]] === "string") {
-//                        var arr = [ query_string[pair[0]], pair[1] ];
-//                        query_string[pair[0]] = arr;
-//                        // If third or later entry with this name
-//                    } else {
-//                        query_string[pair[0]].push(pair[1]);
-//                    }
-//                }
-//                var taxon_id = query_string.taxon_id;
-//                if (taxon_id && !isNaN(parseFloat(taxon_id)) && isFinite(taxon_id)) {
-//                    this.selectTaxon(taxon_id);
-//                }
-//                loadHandler.remove();
-//            }));
 
         taxonsTree.startup();
 
@@ -88,7 +66,10 @@ define(['dojo/dom', 'dojo/on', 'dojo/topic', 'dojo/store/JsonRest', 'dojo/_base/
                 }
                 ids.push(id);
             }
-            topic.publish('taxon/selected/changed', ids);
+
+            if (taxonsTree.publishChangedEvent) {
+                topic.publish('taxon/selected/changed', ids);
+            }
         };
 
         var nodesChecked = {};
@@ -119,7 +100,7 @@ define(['dojo/dom', 'dojo/on', 'dojo/topic', 'dojo/store/JsonRest', 'dojo/_base/
             }
         });
 
-        taxonsTree._expandBranchByHierarchy = function (hierarchy, hierarchyDepth, levelIndex) {
+        taxonsTree._expandBranchByHierarchy = function (hierarchy, hierarchyDepth, levelIndex, deferred) {
             var tree = this,
                 pathToNode,
                 node;
@@ -129,24 +110,29 @@ define(['dojo/dom', 'dojo/on', 'dojo/topic', 'dojo/store/JsonRest', 'dojo/_base/
 
             if (levelIndex != hierarchyDepth) {
                 tree._expandNode(node).then(function () {
-                    tree._expandBranchByHierarchy(hierarchy, hierarchyDepth, levelIndex + 1);
+                    tree._expandBranchByHierarchy(hierarchy, hierarchyDepth, levelIndex + 1, deferred);
                 });
             } else {
                 tree.focusNode(node);
                 node.set('checked', true);
                 nodesChecked[node.item.id] = node;
+                if (deferred) deferred.resolve();
                 onTaxonSelectedChanged();
             }
         };
 
-        taxonsTree.selectTaxon = function (taxonId) {
+        taxonsTree.selectTaxon = function (taxonId, isDefered) {
             var tree = this,
                 getPath = xhr(application_root + '/taxon/parent_path/' + taxonId, {
                     handleAs: 'json'
-                });
+                }),
+                deferred = isDefered ? new Deferred() : false;
+
             getPath.then(function (data) {
-                tree._expandBranchByHierarchy(data.path, data.path.length, 1);
+                tree._expandBranchByHierarchy(data.path, data.path.length, 1, deferred);
             });
+
+            return deferred.promise;
         };
 
         on(query('#leftCol a.clear'), 'click', function () {
@@ -177,12 +163,20 @@ define(['dojo/dom', 'dojo/on', 'dojo/topic', 'dojo/store/JsonRest', 'dojo/_base/
         });
 
         taxonsTree.on('load', function () {
-            var parameters = (new QueryString).getParameters();
+            var parameters = (new QueryString).getParameters(),
+                deferreds = [];
             if (parameters['taxons']) {
                 var taxons_selected = decodeURIComponent(parameters['taxons']).split(',');
                 for (var count = taxons_selected.length, i = 0; i < count; i++) {
-                    taxonsTree.selectTaxon(taxons_selected[i]);
+                    deferreds.push(taxonsTree.selectTaxon(taxons_selected[i], true));
                 }
+
+                all(deferreds).then(function (results) {
+                    taxonsTree.publishChangedEvent = true;
+                    onTaxonSelectedChanged();
+                });
+            } else {
+                taxonsTree.publishChangedEvent = true;
             }
         });
 

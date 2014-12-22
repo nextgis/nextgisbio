@@ -68,7 +68,7 @@ def points_text(request):
             qs = """
             SELECT cards.id,cards.species,cards.lat,cards.lon, taxon.name FROM cards  
             INNER JOIN taxon ON cards.species = taxon.id
-            INNER JOIN red_books_species ON cards.species = red_books_species.specie_id WHERE """\
+            %s WHERE """ % ('INNER JOIN red_books_species ON cards.species = red_books_species.specie_id' if red_book_id else '')\
                  + ((' red_books_species.red_book_id = ' + str(red_book_id) + ' AND ') if red_book_id else '') \
                  + ' cards.species IN (' +  subquery +');'
             cards = dbsession.query(Cards, Taxon).from_statement(qs).all()
@@ -240,15 +240,11 @@ def save_card(request):
 
 @view_config(route_name='card', request_method='PUT', renderer='json', permission='edit')
 def new_card(request):
-    success = True
-    try:
-        with transaction.manager:
-            dbsession = DBSession()
-            card = Cards()
-            dbsession.add(_update_card_attributes(card, dict(request.POST)))
-    except:
-        success = False
-    return {'success': success}
+    with transaction.manager:
+        dbsession = DBSession()
+        card = Cards()
+        dbsession.add(_update_card_attributes(card, dict(request.POST)))
+    return {}
 
 
 def _update_card_attributes(card, card_from_client):
