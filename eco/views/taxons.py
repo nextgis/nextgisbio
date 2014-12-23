@@ -307,16 +307,6 @@ def taxon_type(request):
     return types
 
 
-@view_config(route_name='taxons_editor', renderer='taxons/editor.mako', permission='admin')
-def taxons_editor(request):
-    import time
-    return {
-        'is_auth': security.authenticated_userid(request),
-        'is_admin': security.has_permission('admin', request.context, request),
-        'random_int': int(time.time() * 1000)
-    }
-
-
 @view_config(route_name='get_taxon_tree_childrens', renderer='json')
 def taxon_tree(request):
     taxon_parent_id = request.matchdict['taxon_parent_id']

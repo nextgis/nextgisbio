@@ -24,22 +24,35 @@ import helpers
 
 @view_config(route_name='home', renderer='main.mako', permission='view')
 def home_view(request):
-    session = DBSession()
-    red_books = session.query(RedBook).all()
-    session.close()
-
     if 'red_book' in request.GET:
         red_book_selected_id = int(request.GET['red_book'])
     else:
         red_book_selected_id = -1
-
-
     return {
         'is_auth': security.authenticated_userid(request),
         'is_admin': security.has_permission('admin', request.context, request),
         'random_int': int(time.time() * 1000),
-        'red_books': red_books,
+        'red_books': _get_red_books,
         'red_book_selected_id': red_book_selected_id
+    }
+
+
+def _get_red_books():
+    session = DBSession()
+    red_books = session.query(RedBook).all()
+    session.close()
+    return red_books
+
+
+@view_config(route_name='taxons_editor', renderer='taxons/editor.mako', permission='admin')
+def taxons_editor(request):
+    import time
+    return {
+        'is_auth': security.authenticated_userid(request),
+        'is_admin': security.has_permission('admin', request.context, request),
+        'random_int': int(time.time() * 1000),
+        'red_books': [],
+        'red_book_selected_id': None
     }
 
 
