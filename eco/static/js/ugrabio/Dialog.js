@@ -63,6 +63,10 @@ define([
             }
         },
 
+        _getDialog: function () {
+            return this._dialog;
+        },
+
         _buildForm: function (elements, formSettings) {
             this._form = new Form(formSettings);
 
@@ -84,7 +88,7 @@ define([
             // todo: create user determining system
             if (this.dialogSettings && this.dialogSettings['submit']) {
                 var form = this._form,
-                    dialog = this._dialog;
+                    theDialog = this;
                 new Button({
                     label: 'Сохранить',
                     style: 'margin: 10px 0 5px 5px;',
@@ -92,7 +96,7 @@ define([
                         if (form.validate()) {
                             var json_form = domForm.toObject(form.domNode),
                                 action = application_root + '/' + form.action,
-                                dialog = dialog;
+                                dialog = theDialog._getDialog();
 
                             if (json_form.id) {
                                 action = action + '/' + json_form.id;
@@ -126,7 +130,7 @@ define([
                     onClick: function () {
                         var json_form = domForm.toObject(form.domNode),
                             action = application_root + '/' + form.action + '/' + json_form.id,
-                            dialog = dialog;
+                            dialog = theDialog._getDialog();
                         xhr.del(action, {
                             data: json_form,
                             handleAs: 'json'
