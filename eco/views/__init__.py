@@ -32,7 +32,7 @@ def home_view(request):
         'is_auth': security.authenticated_userid(request),
         'is_admin': security.has_permission('admin', request.context, request),
         'random_int': int(time.time() * 1000),
-        'red_books': _get_red_books,
+        'red_books': _get_red_books(),
         'red_book_selected_id': red_book_selected_id
     }
 
