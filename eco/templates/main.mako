@@ -95,8 +95,8 @@
                         'ugrabio/WindowManager',  'dojo/domReady!'],
                     function (Forms, Menu, TaxonSearcher, TaxonCbTree, TaxonJsTree) {
                         new Menu(Forms.menuMap, 'menu');
-                        new TaxonSearcher(TaxonCbTree);
-                        new TaxonJsTree();
+                        new TaxonSearcher();
+                        new TaxonJsTree('#taxonJsTree');
                     });
         </script>
     </%block>

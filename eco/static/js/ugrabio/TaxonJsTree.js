@@ -8,9 +8,9 @@ define('ugrabio/TaxonJsTree', [
     return declare([], {
         $taxonJsTree: null,
 
-        constructor: function () {
+        constructor: function (domSelector) {
             var context = this;
-            this.$taxonJsTree = jQuery('#taxonJsTree');
+            this.$taxonJsTree = jQuery(domSelector);
             var c = this.$taxonJsTree.jstree({
                 'core': {
                     'themes': {
