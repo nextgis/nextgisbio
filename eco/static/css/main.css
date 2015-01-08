@@ -163,3 +163,36 @@ div.dropzone-dialog div.dijitDialogPaneContent {
     height: 100%;
     background-color: #ffffff;
 }
+
+/* jsTree taxon icons */
+#taxonJsTree i.jstree-themeicon {
+    background-image: url(../img/taxon-types.png);
+}
+
+#taxonJsTree i.jstree-icon.Kingdom {
+    background-position: -7px -7px;
+}
+
+#taxonJsTree i.jstree-icon.Phylum {
+    background-position: -39px -7px;
+}
+
+#taxonJsTree i.jstree-icon.Class {
+    background-position: -71px -7px;
+}
+
+#taxonJsTree i.jstree-icon.Order {
+    background-position: -103px -7px;
+}
+
+#taxonJsTree i.jstree-icon.Family {
+    background-position: -135px -7px;
+}
+
+#taxonJsTree i.jstree-icon.Genus {
+    background-position: -167px -7px;
+}
+
+#taxonJsTree i.jstree-icon.Species {
+    background-position: -199px -7px;
+}
