@@ -134,6 +134,42 @@ def direct_child(request):
     return rows
 
 
+@view_config(route_name='get_child_taxons_by_parent', renderer='json')
+def get_child_taxons_by_parent(request):
+    parent_taxon_id = request.params['id']
+    is_root_node_requsted = parent_taxon_id == '#'
+
+    if is_root_node_requsted:
+        parent_taxon_id = None
+    else:
+        parent_taxon_id = int(parent_taxon_id)
+
+    dbsession = DBSession()
+    children_taxons = dbsession.query(Taxon).filter_by(parent_id=parent_taxon_id).order_by(Taxon.name).all()
+    dbsession.close()
+
+    children_taxons_json = []
+    for taxon in children_taxons:
+        children_taxons_json.append(_taxon_to_jsTree_item(taxon))
+
+    return children_taxons_json
+
+
+def _taxon_to_jsTree_item(taxon):
+    is_specie = taxon.is_last_taxon()
+    jsTree_item = {
+        'id': taxon.id,
+        'text': taxon.name,
+        'children': not is_specie,
+        'icon': taxon.taxon_type
+    }
+
+    if is_specie and taxon.author:
+        jsTree_item['is_specie'] = True
+        jsTree_item['author'] = taxon.author
+
+    return jsTree_item
+
 # Выдать данные из таблиц taxon,synonym в формате json согласно фильтру
 @view_config(route_name='taxon_filter', renderer='json')
 def taxon_filter(request):

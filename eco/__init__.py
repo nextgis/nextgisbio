@@ -48,6 +48,7 @@ def main(global_config, **settings):
     config.add_route('taxon_cbtree', '/cbtree/taxons', factory=RootFactory)
     config.add_route('get_taxon_tree_childrens', '/tree/taxons/{taxon_parent_id}', factory=RootFactory)
     config.add_route('taxon_tree', '/tree/taxons/', factory=RootFactory)
+    config.add_route('get_child_taxons_by_parent', '/taxon/child', factory=RootFactory)
     config.add_route('get_taxon', '/taxon/{id}', factory=RootFactory)
 
     config.add_route('get_synonyms', 'taxons/synonyms/{taxon_id}/', factory=RootFactory)
