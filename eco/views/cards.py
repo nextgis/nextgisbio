@@ -54,15 +54,11 @@ def points_text(request):
 
     if taxons:
         taxons = urllib.unquote(taxons)
-        taxons = taxons.split(',')
+        taxon_id = taxons.split(',')
 
-        if "root" in taxons:
+        if '#' in taxons:
             cards = dbsession.query(Cards, Taxon).join(Taxon).all()
         else:
-            taxon_id = []
-            for taxon in taxons:
-                t, id = taxon.split('_')
-                taxon_id.append(id)
             # Получим список видов-потомков выбранных таксонов и связанных с ними карточек
             subquery = TAXON_ID_QUERY % (", ".join([ str(num) for num in taxon_id]), TAXON_TYPES[len(TAXON_TYPES)-1])
             qs = """

@@ -38,21 +38,15 @@ def _get_squares_by_taxonlist(taxons, geomtype='geojson'):
     assert geomtype in ['geojson', 'wkt']
     dbsession = DBSession()
     
-    if "root" in taxons:
+    if '#' in taxons:
         if geomtype == 'geojson':
             all = dbsession.query(Squares.id, sqlalchemy.func.st_asgeojson(Squares.geom.RAW)).all()
         else:
             all = dbsession.query(Squares.id, sqlalchemy.func.st_astext(Squares.geom.RAW)).all()
 
     else:
-        # Получим список видов-потомков выбранных таксонов
-        taxon_id = []
-        for taxon in taxons:
-            t, id = taxon.split('_')
-            taxon_id.append(id)
-        
         # Выбираем ключевые участки, где встречен таксон, а по ним --- id квадратов, которые приходятся на эти участки:
-        subquery = TAXON_ID_QUERY % (", ".join([ str(num) for num in taxon_id]), TAXON_TYPES[len(TAXON_TYPES)-1])
+        subquery = TAXON_ID_QUERY % (", ".join([ str(num) for num in taxons]), TAXON_TYPES[len(TAXON_TYPES)-1])
         
         qs = """ SELECT DISTINCT square_id from square_karea_association WHERE square_karea_association.key_area_id in
         (SELECT DISTINCT key_area.id FROM annotation   
