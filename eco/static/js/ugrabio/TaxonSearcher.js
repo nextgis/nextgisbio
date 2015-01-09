@@ -1,13 +1,14 @@
 define('ugrabio/TaxonSearcher', [
     'dojo/_base/declare',
+    'dojo/topic',
     'dijit/form/ComboBox',
     'dojox/data/QueryReadStore'
-], function (declare, ComboBox, QueryReadStore) {
-    var TaxonSearcher = declare('TaxonSearcher', [], {
+], function (declare, topic, ComboBox, QueryReadStore) {
+    return declare('TaxonSearcher', [], {
         _store: null,
         _comboBox: null,
 
-        constructor: function (Tree) {
+        constructor: function () {
             this._store = new QueryReadStore({
                 url: application_root + '/taxon/filter'
             });
@@ -25,10 +26,8 @@ define('ugrabio/TaxonSearcher', [
             }, "search");
 
             this._comboBox.watch('item', function (what, oldVal, newVal) {
-                Tree.selectTaxon(newVal.i.id);
+                topic.publish('taxon/select', newVal.i.id);
             });
         }
     });
-
-    return TaxonSearcher;
 });
