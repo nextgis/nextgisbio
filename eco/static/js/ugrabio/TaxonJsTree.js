@@ -50,6 +50,10 @@ define('ugrabio/TaxonJsTree', [
             topic.subscribe('taxon/select', lang.hitch(this, function () {
                 this.selectTaxonNode(arguments[0]);
             }));
+
+            jQuery('#leftCol a.clear').on('click', function () {
+                $tree.jstree('deselect_all');
+            });
         },
 
         specieNodeTemplate: specieTreeNodeTemplate,
