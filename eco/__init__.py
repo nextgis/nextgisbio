@@ -43,7 +43,7 @@ def main(global_config, **settings):
     config.add_route('taxon_filter', '/taxon/filter', factory=RootFactory)
     config.add_route('species_name', '/species', factory=RootFactory)
     config.add_route('taxon_direct_child', '/taxon/direct_child',      factory=RootFactory)
-    config.add_route('taxon_parent_path', '/taxon/parent_path/{id}',  factory=RootFactory)
+    config.add_route('get_taxon_path', '/taxon/path/{id}',  factory=RootFactory)
     config.add_route('taxon_type', '/taxon/type/{id}',       factory=RootFactory)
     config.add_route('taxon_cbtree', '/cbtree/taxons', factory=RootFactory)
     config.add_route('get_taxon_tree_childrens', '/tree/taxons/{taxon_parent_id}', factory=RootFactory)
