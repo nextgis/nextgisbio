@@ -22,9 +22,9 @@ requires = [
     'Pillow'
     ]
 
-setup(name='eco',
-      version='0.9',
-      description='eco',
+setup(name='nextgisbio',
+      version='0.10',
+      description='nextgisbio',
       long_description=README + '\n\n' +  CHANGES,
       classifiers=[
         "Programming Language :: Python",
@@ -39,13 +39,13 @@ setup(name='eco',
       packages=find_packages(),
       include_package_data=True,
       zip_safe=False,
-      test_suite='eco',
+      test_suite='nextgisbio',
       install_requires=requires,
       entry_points="""\
       [paste.app_factory]
-      main = eco:main
+      main = nextgisbio:main
       [console_scripts]
-      initialize_eco_db = eco.scripts.initializedb:main
+      initialize_eco_db = nextgisbio.scripts.initializedb:main
       """,
       )
 
