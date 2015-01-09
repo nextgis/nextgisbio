@@ -142,10 +142,12 @@
     <%block name='leftPanel'>
         <div>
             <div id="leftCol" class="edgePanel" data-dojo-type="dijit.layout.ContentPane"
-                 data-dojo-props="region: 'left', splitter: true">
+                 data-dojo-props="region: 'left', splitter: true, minSize: 200">
                 <a class="filter" style="padding-right: 15px;" href="javascript:void(0)">Фильтр</a>
                 <a class="clear" href="javascript:void(0)">Снять выделение</a>
-                <div id="taxonJsTree"></div>
+                <div class="tree-wrapper">
+                    <div id="taxonJsTree"></div>
+                </div>
             </div>
         </div>
     </%block>

@@ -36,6 +36,7 @@ div.loader {
 
 #leftCol {
     width: 10%;
+    overflow: hidden !important;
 }
 
 .claro,
@@ -162,6 +163,15 @@ div.dropzone-dialog div.dijitDialogPaneContent {
     width: 100%;
     height: 100%;
     background-color: #ffffff;
+}
+
+/* jsTree */
+div.tree-wrapper {
+    position: absolute;
+    top: 33px;
+    bottom: 5px;
+    width: 93%;
+    overflow: auto;
 }
 
 /* jsTree taxon icons */
