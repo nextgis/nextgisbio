@@ -35,18 +35,21 @@ define('ugrabio/TaxonJsTree', [
                 },
                 'plugins': ['wholerow', 'checkbox']
             });
+            this._bindEvents($tree);
+        },
 
-            $tree.on('changed.jstree', function (e, data) {
+        _bindEvents: function ($tree) {
+            $tree.on('changed.jstree', function () {
                 topic.publish('taxon/selected/changed', $tree.jstree('get_top_selected'));
             });
 
-            $tree.on('loaded.jstree', function (e, data) {
+            $tree.on('loaded.jstree', function () {
                 $tree.jstree('open_node', 'root');
             });
 
-            topic.subscribe('taxon/select', function () {
-                context.selectTaxonNode(arguments[0]);
-            });
+            topic.subscribe('taxon/select', lang.hitch(this, function () {
+                this.selectTaxonNode(arguments[0]);
+            }));
         },
 
         specieNodeTemplate: specieTreeNodeTemplate,
