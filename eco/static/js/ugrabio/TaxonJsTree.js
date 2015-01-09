@@ -84,24 +84,31 @@ define('ugrabio/TaxonJsTree', [
 
         _expandBranchByHierarchy: function (hierarchyPathArray, hierarchyDepth, deferred) {
             var tree = this.$taxonJsTree,
-                currentNodeId = hierarchyPathArray[0],
-                node;
+                node = tree.jstree('get_node', hierarchyPathArray[0]);
 
-            tree.jstree('load_node', currentNodeId, lang.hitch(this, function (data) {
-                hierarchyPathArray.splice(0, 1);
-                hierarchyDepth--;
-
-                if (hierarchyDepth > 1) {
-                    this._expandBranchByHierarchy(hierarchyPathArray, hierarchyDepth, deferred);
-                } else {
-                    node = tree.jstree('get_node', hierarchyPathArray[0]);
-                    if (!node.state.selected) {
-                        tree.jstree('select_node', node);
-                    }
-                    this._focusToNode(node);
-                    deferred.resolve();
+            if (hierarchyDepth === 1) {
+                if (!node.state.selected) {
+                    tree.jstree('select_node', node);
                 }
-            }));
+                this._focusToNode(node);
+                deferred.resolve();
+                return true;
+            }
+
+            if (node.state.loaded) {
+                hierarchyDepth = this._decreaseHierarchyArray(hierarchyPathArray, hierarchyDepth);
+                this._expandBranchByHierarchy(hierarchyPathArray, hierarchyDepth, deferred);
+            } else {
+                tree.jstree('load_node', node.id, lang.hitch(this, function (data) {
+                    hierarchyDepth = this._decreaseHierarchyArray(hierarchyPathArray, hierarchyDepth);
+                    this._expandBranchByHierarchy(hierarchyPathArray, hierarchyDepth, deferred);
+                }));
+            }
+        },
+
+        _decreaseHierarchyArray: function (hierarchyPathArray, hierarchyDepth) {
+            hierarchyPathArray.splice(0, 1);
+            return hierarchyDepth - 1;
         },
 
         _focusToNode: function (node) {
