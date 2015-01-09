@@ -112,9 +112,23 @@ define('ugrabio/TaxonJsTree', [
         },
 
         _focusToNode: function (node) {
-            // from https://github.com/vakata/jstree/issues/519
-            var tree = this.$taxonJsTree;
-            tree.scrollTop = jQuery(node).offset().top - jQuery(tree).offset().top / 2;
+            var $tree = this.$taxonJsTree,
+                $treeOffsetTop = $tree.offset().top,
+                scrollToTop,
+                $treeContainer = $tree.parent(),
+                $node = jQuery('#' + node.id),
+                $nodeOffsetTop = $node.offset().top,
+                abs = Math.abs;
+
+            if ($treeOffsetTop < 0 && $nodeOffsetTop > 0) {
+                scrollToTop = abs($treeOffsetTop) + $nodeOffsetTop;
+            } else if ($treeOffsetTop > 0 && $nodeOffsetTop > 0) {
+                scrollToTop = $nodeOffsetTop - $treeOffsetTop;
+            } else if ($treeOffsetTop < 0 && $nodeOffsetTop < 0) {
+                scrollToTop = abs($treeOffsetTop) - abs($nodeOffsetTop);
+            }
+
+            $treeContainer.scrollTop(scrollToTop - $treeContainer.height() / 2);
         }
     });
 });
