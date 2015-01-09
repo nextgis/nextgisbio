@@ -1,4 +1,4 @@
-define('ngbio/TaxonJsTree', [
+define('ngbio/TaxonHomeTree', [
     'dojo/_base/declare',
     'dojo/_base/lang',
     'dojo/topic',

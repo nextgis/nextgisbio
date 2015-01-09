@@ -85,18 +85,17 @@
 
     <%block name='inlineRequireAmd'>
         <script>
-            require(['ngbio/Forms', 'ngbio/Menu', 'ngbio/TaxonSearcher', 'ngbio/TaxonCbTree',
-                        'ngbio/TaxonJsTree',
+            require(['ngbio/Forms', 'ngbio/Menu', 'ngbio/TaxonSearcher', 'ngbio/TaxonHomeTree',
                         'dojox/data/QueryReadStore', 'dojo/dom', 'dojo/parser', 'dojo/store/JsonRest',
                         'dijit/layout/BorderContainer', 'dijit/layout/ContentPane',
                         'dijit/Dialog', 'dijit/form/TextBox', 'dijit/form/Button',
                         'dijit/form/ValidationTextBox', 'dojo/topic', 'dojo/domReady!',
                         'ngbio/Loader', 'ngbio/Map', 'ngbio/Dialog', 'ngbio/DialogManager',
                         'ngbio/WindowManager',  'dojo/domReady!'],
-                    function (Forms, Menu, TaxonSearcher, TaxonCbTree, TaxonJsTree) {
+                    function (Forms, Menu, TaxonSearcher, TaxonHomeTree) {
                         new Menu(Forms.menuMap, 'menu');
                         new TaxonSearcher();
-                        new TaxonJsTree('#taxonJsTree');
+                        new TaxonHomeTree('#taxonJsTree');
                     });
         </script>
     </%block>
