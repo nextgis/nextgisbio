@@ -38,12 +38,12 @@
           media="screen">
 
     <script type="text/javascript">
-        window.ugrabio = {};
+        window.ngbio = {};
             %if is_auth:
-                window.ugrabio.is_auth = true;
+                window.ngbio.is_auth = true;
             %endif
             %if is_admin:
-                window.ugrabio.mode = 'admin';
+                window.ngbio.mode = 'admin';
             %endif
     </script>
 
@@ -61,7 +61,7 @@
                 {name: 'dojo', location: 'lib/dojo-release-1.9.1/dojo'},
                 {name: 'dijit', location: 'lib/dojo-release-1.9.1/dijit'},
                 {name: 'dojox', location: 'lib/dojo-release-1.9.1/dojox'},
-                {name: 'ugrabio', location: 'ugrabio'},
+                {name: 'ngbio', location: 'ngbio'},
                 {name: 'cbtree', location: 'lib/cbtree-v0.9.4-0'},
                 {name: 'dgrid', location: 'lib/dgrid'},
                 {name: 'put-selector', location: 'lib/put-selector'},
@@ -85,14 +85,14 @@
 
     <%block name='inlineRequireAmd'>
         <script>
-            require(['ugrabio/Forms', 'ugrabio/Menu', 'ugrabio/TaxonSearcher', 'ugrabio/TaxonCbTree',
-                        'ugrabio/TaxonJsTree',
+            require(['ngbio/Forms', 'ngbio/Menu', 'ngbio/TaxonSearcher', 'ngbio/TaxonCbTree',
+                        'ngbio/TaxonJsTree',
                         'dojox/data/QueryReadStore', 'dojo/dom', 'dojo/parser', 'dojo/store/JsonRest',
                         'dijit/layout/BorderContainer', 'dijit/layout/ContentPane',
                         'dijit/Dialog', 'dijit/form/TextBox', 'dijit/form/Button',
                         'dijit/form/ValidationTextBox', 'dojo/topic', 'dojo/domReady!',
-                        'ugrabio/Loader', 'ugrabio/Map', 'ugrabio/Dialog', 'ugrabio/DialogManager',
-                        'ugrabio/WindowManager',  'dojo/domReady!'],
+                        'ngbio/Loader', 'ngbio/Map', 'ngbio/Dialog', 'ngbio/DialogManager',
+                        'ngbio/WindowManager',  'dojo/domReady!'],
                     function (Forms, Menu, TaxonSearcher, TaxonCbTree, TaxonJsTree) {
                         new Menu(Forms.menuMap, 'menu');
                         new TaxonSearcher();

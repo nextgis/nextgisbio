@@ -3,7 +3,7 @@ define(['dojo/dom', 'dojo/on', 'dojo/topic', 'dojo/store/JsonRest', 'dojo/_base/
         'cbtree/store/FileStore', 'cbtree/store/Eventable', 'dojo/store/Observable', 'cbtree/extensions/TreeStyling', 'cbtree/store/Hierarchy',
         'cbtree/model/TreeStoreModel', 'dojo/_base/event', 'dojo/aspect', 'dojo/dom-attr', 'dijit/Tree',
         'dojo/request/xhr', 'dojo/query', 'dijit/registry',
-        'ugrabio/Filter', 'ugrabio/QueryString', 'dojo/domReady!'],
+        'ngbio/Filter', 'ngbio/QueryString', 'dojo/domReady!'],
     function (dom, on, topic, JsonRest, array, Deferred, all,
               cbTree, FileStoreModel, FileStore, Eventable, Observable, TreeStyling, Hierarchy,
               TreeStoreModel, event, aspect, attr, Tree, xhr, query, registry, Filter, QueryString) {

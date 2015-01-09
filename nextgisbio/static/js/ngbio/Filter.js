@@ -1,6 +1,6 @@
 define([
         'dojo/_base/declare',
-        'ugrabio/QueryString'
+        'ngbio/QueryString'
     ], function (declare, QueryString) {
 
         var _filter = null;

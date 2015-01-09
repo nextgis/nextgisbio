@@ -1,4 +1,4 @@
-define('ugrabio/Menu', [
+define('ngbio/Menu', [
     'dojo/_base/array',
     'dojo/on',
     'dojo/topic',
@@ -10,8 +10,8 @@ define('ugrabio/Menu', [
     'dijit/MenuItem',
     'dijit/MenuSeparator',
     'dijit/DropDownMenu',
-    'ugrabio/Forms',
-    'ugrabio/Dialog',
+    'ngbio/Forms',
+    'ngbio/Dialog',
     'dojo/domReady!'
 ], function (array, on, topic, declare, _WidgetBase, MenuBar, PopupMenuBarItem, Menu, MenuItem, MenuSeparator, DropDownMenu, Forms, Dialog) {
 

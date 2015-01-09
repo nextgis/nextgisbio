@@ -34,7 +34,7 @@ define([
             }
 
             if (!this.dialogSettings['submit'] || typeof this.dialogSettings['submit'] === 'undefined') {
-                if (window.ugrabio.is_auth) {
+                if (window.ngbio.is_auth) {
                     this.dialogSettings['submit'] = true;
                 }
             }

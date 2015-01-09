@@ -6,9 +6,9 @@ define([
     'dijit/form/Textarea',
     'dijit/form/CheckBox',
     'dijit/form/TimeTextBox',
-    'ugrabio/CoordinatesPicker',
-    'ugrabio/JsonFilteringSelect',
-    'ugrabio/PhotoGallery'
+    'ngbio/CoordinatesPicker',
+    'ngbio/JsonFilteringSelect',
+    'ngbio/PhotoGallery'
 ], function (lang, Button, TextBox, NumberTextBox, Textarea, CheckBox, TimeTextBox, CoordinatesPicker, JsonFilteringSelect, PhotoGallery) {
 
     var getPersonJsonFilteringSelect = function (title, name, required) {
@@ -28,7 +28,7 @@ define([
     var model = {
         menuMap: {
             validate: function () {
-                return ugrabio.is_auth;
+                return ngbio.is_auth;
             },
             'Карточки наблюдений': {
                 items: [
@@ -92,7 +92,7 @@ define([
             },
             'Администратор': {
                 validate: function () {
-                    return ugrabio.mode && ugrabio.mode === 'admin'
+                    return ngbio.mode && ngbio.mode === 'admin'
                 },
                 items: [
                     {label: 'Редактор таксонов', action: 'open/link/self', params: ['/taxons/editor']}

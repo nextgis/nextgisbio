@@ -2,14 +2,14 @@
 
 <%block name='inlineRequireAmd'>
     <script>
-        require(['ugrabio/Forms', 'ugrabio/TaxonSearcher', 'ugrabio/TaxonTree',
-            'ugrabio/TaxonEditorManager', 'ugrabio/TaxonViewer',
+        require(['ngbio/Forms', 'ngbio/TaxonSearcher', 'ngbio/TaxonTree',
+            'ngbio/TaxonEditorManager', 'ngbio/TaxonViewer',
             'dojox/data/QueryReadStore', 'dojo/dom', 'dojo/parser', 'dojo/store/JsonRest',
             'dijit/layout/BorderContainer', 'dijit/layout/ContentPane',
             'dijit/Dialog', 'dijit/form/TextBox', 'dijit/form/Button',
             'dijit/form/ValidationTextBox', 'dojo/topic', 'dojo/domReady!',
-            'ugrabio/Loader', 'ugrabio/Dialog', 'ugrabio/DialogManager',
-            'ugrabio/WindowManager', 'dojo/domReady!'],
+            'ngbio/Loader', 'ngbio/Dialog', 'ngbio/DialogManager',
+            'ngbio/WindowManager', 'dojo/domReady!'],
                 function (Forms, TaxonSearcher, TaxonTree, TaxonEditorManager) {
                     var tree = new TaxonTree();
                     new TaxonSearcher(tree);

@@ -1,4 +1,4 @@
-define('ugrabio/TaxonSearcher', [
+define('ngbio/TaxonSearcher', [
     'dojo/_base/declare',
     'dojo/topic',
     'dijit/form/ComboBox',

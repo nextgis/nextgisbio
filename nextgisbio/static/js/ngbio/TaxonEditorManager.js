@@ -1,4 +1,4 @@
-define('ugrabio/TaxonEditorManager', [
+define('ngbio/TaxonEditorManager', [
     'dojo/_base/declare',
     'dojo/_base/lang',
     'dojo/_base/window',
@@ -9,7 +9,7 @@ define('ugrabio/TaxonEditorManager', [
     'dojo/hash',
     'dojo/io-query',
     'dojox/widget/Standby',
-    'ugrabio/TaxonViewer'
+    'ngbio/TaxonViewer'
 ], function (declare, lang, win, dom, domConstruct, xhr, topic, hash, ioQuery, Standby, TaxonViewer) {
     return declare('TaxonEditorManager', [], {
         _taxonViewer: null,

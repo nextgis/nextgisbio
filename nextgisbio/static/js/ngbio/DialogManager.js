@@ -8,8 +8,8 @@ define([
     'dijit/Menu',
     'dijit/MenuItem',
     'dijit/DropDownMenu',
-    'ugrabio/Forms',
-    'ugrabio/Dialog',
+    'ngbio/Forms',
+    'ngbio/Dialog',
     'dojo/domReady!'
 ], function (declare, array, on, topic, MenuBar, PopupMenuBarItem, Menu, MenuItem, DropDownMenu, Forms, Dialog) {
     topic.subscribe('open/form', function (type, formId, title, action, values, elementsSettings) {

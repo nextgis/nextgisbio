@@ -1,4 +1,4 @@
-define('ugrabio/RedBookSearcher', [
+define('ngbio/RedBookSearcher', [
     'dojo/_base/declare',
     'dijit/form/ComboBox',
     'dojox/data/QueryReadStore'

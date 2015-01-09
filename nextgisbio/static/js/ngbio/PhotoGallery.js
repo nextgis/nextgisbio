@@ -23,7 +23,7 @@ define([
         _skipNodeCache: true,
         templateString: templatePhotoGallery,
         constructor: function (kwArgs) {
-            this.auth = window.ugrabio.is_auth;
+            this.auth = window.ngbio.is_auth;
             lang.mixin(this, kwArgs);
         },
 

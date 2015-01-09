@@ -1,4 +1,4 @@
-define('ugrabio/TaxonTree', [
+define('ngbio/TaxonTree', [
     'dojo/_base/declare',
     'dojo/_base/lang',
     'dojo/aspect',

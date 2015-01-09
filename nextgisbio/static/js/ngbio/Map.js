@@ -12,12 +12,12 @@ define([
     'dojo/store/Memory',
     'dgrid/OnDemandGrid',
     'dgrid/extensions/ColumnHider',
-    'ugrabio/Dialog',
-    'ugrabio/Filter',
+    'ngbio/Dialog',
+    'ngbio/Filter',
     'dojo/domReady!'
 ], function (declare, win, lang, domConstruct, ready, topic, query, domAttr, on, xhr, Memory, OnDemandGrid,
              ColumnHider, Dialog, Filter) {
-    var map = declare('ugrabio/Map', [], {
+    var map = declare('ngbio/Map', [], {
         constructor: function () {
             var taxon_nodes = [],
                 defaultPointStyle = new OpenLayers.Style(
@@ -590,13 +590,13 @@ define([
     });
 
     ready(function () {
-        if (!window.ugrabio.map) {
-            window.ugrabio.map = new map();
+        if (!window.ngbio.map) {
+            window.ngbio.map = new map();
         }
     });
 
-    if (window.ugrabio.map) {
-        return window.ugrabio.map;
+    if (window.ngbio.map) {
+        return window.ngbio.map;
     } else {
         return null;
     }

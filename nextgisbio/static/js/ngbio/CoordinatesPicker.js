@@ -7,7 +7,7 @@ define([
     return declare([ToggleButton], {
         onChange: function (value) {
             if (!this._dialog) return false;
-            var Map = window.ugrabio.map;
+            var Map = window.ngbio.map;
 
             var latTextBox = this._dialog.elementsMap['lat'],
                 lonTextBox = this._dialog.elementsMap['lon'];
@@ -35,7 +35,7 @@ define([
 
         destroy: function () {
             this.inherited(arguments);
-            window.ugrabio.map.coordinatesPickerOff(this.id);
+            window.ngbio.map.coordinatesPickerOff(this.id);
         }
     });
 })

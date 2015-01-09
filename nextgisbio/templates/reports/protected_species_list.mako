@@ -2,7 +2,7 @@
 
 <%block name='inlineRequireAmd'>
     <script>
-        require(['ugrabio/RedBookSearcher',
+        require(['ngbio/RedBookSearcher',
             'dojo/store/Memory',
             'dojo/store/JsonRest',
             'dojo/store/Cache',
@@ -10,7 +10,7 @@
             'dgrid/OnDemandGrid',
             'dojo/dom-construct',
             'dojo/parser',
-            'ugrabio/Loader',
+            'ngbio/Loader',
             'dijit/layout/BorderContainer',
             'dijit/layout/ContentPane',
             'dojo/domReady!'],

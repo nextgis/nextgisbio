@@ -1,4 +1,4 @@
-define('ugrabio/TaxonViewer', [
+define('ngbio/TaxonViewer', [
     'dojo/_base/declare',
     'dojo/_base/lang',
     'dojo/_base/array',

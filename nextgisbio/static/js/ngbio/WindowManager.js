@@ -5,7 +5,7 @@ define([
     'dojo/domReady!'
 ], function (array, on, topic) {
 
-    if (!ugrabio.is_auth) {
+    if (!ngbio.is_auth) {
         return false;
     }
 
