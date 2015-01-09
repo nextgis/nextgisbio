@@ -152,7 +152,13 @@ def get_child_taxons_by_parent(request):
     for taxon in children_taxons:
         children_taxons_json.append(_taxon_to_jsTree_item(taxon))
 
-    return children_taxons_json
+    if is_root_node_requsted:
+        result = _get_root_jsTree_item()
+        result['children'] = children_taxons_json
+    else:
+        result = children_taxons_json
+
+    return result
 
 
 def _taxon_to_jsTree_item(taxon):
@@ -169,6 +175,16 @@ def _taxon_to_jsTree_item(taxon):
         jsTree_item['author'] = taxon.author
 
     return jsTree_item
+
+
+def _get_root_jsTree_item():
+    return {
+        'id': 'root',
+        'text': u'Все таксоны',
+        'children': True,
+        'icon': 'Kingdom'
+    }
+
 
 # Выдать данные из таблиц taxon,synonym в формате json согласно фильтру
 @view_config(route_name='taxon_filter', renderer='json')
@@ -278,8 +294,8 @@ def species_filter(request):
     }
 
 
-@view_config(route_name='taxon_parent_path', renderer='json')
-def parent_path(request):
+@view_config(route_name='get_taxon_path', renderer='json')
+def get_taxon_path(request):
     taxon_id = request.matchdict['id']
 
     taxons = Taxon.parent_taxons(taxon_id)
