@@ -163,6 +163,7 @@ def get_child_taxons_by_parent(request):
 
 def _taxon_to_jsTree_item(taxon):
     is_specie = taxon.is_last_taxon()
+
     jsTree_item = {
         'id': taxon.id,
         'text': taxon.name,
