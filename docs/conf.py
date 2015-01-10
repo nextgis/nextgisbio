@@ -40,7 +40,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'NextGIS Bio'
+project = u'NextGIS Bio Docs'
 copyright = u'2015, NextGIS'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -165,7 +165,7 @@ html_static_path = ['_static']
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'NextGISBiodoc'
+htmlhelp_basename = 'NextGISBioDoc'
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -214,8 +214,8 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'nextgisbio', u'NextGIS Bio Documentation',
-     [u'NextGIS team'], 1)
+    ('index', 'nextgisbio', u'NextGIS Bio Doc',
+     [u'NextGIS'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -229,7 +229,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
   ('index', 'NextGISBio', u'NextGIS Bio Documentation',
-   u'NextGIS team', 'NextGISBio', 'One line description of project.',
+   u'NextGIS', 'NextGISBio', 'One line description of project.',
    'Miscellaneous'),
 ]
 
