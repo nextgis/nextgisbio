@@ -12,6 +12,7 @@ div.nav-arrows a {
     width: 48px;
     height: 48px;
     background-image: url(nextgis-sprite.png);
+    display: inline-block;
 }
 
 div.nav-arrows a.prev {
