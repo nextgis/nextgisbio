@@ -8,6 +8,7 @@ NextGIS Bio Docs
    :numbered:
 
    topics/intro/intro
+   topics/ui-user/intro
 
 Indices and tables
 ==================
