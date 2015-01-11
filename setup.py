@@ -17,9 +17,10 @@ requires = [
     'waitress',
     'psycopg2',
     'GeoAlchemy',
-    #'GDAL',
+    # 'pygdal==1.10.1',
     'shapely',
-    'Pillow'
+    'Pillow',
+    'sphinx'
     ]
 
 setup(name='nextgisbio',
