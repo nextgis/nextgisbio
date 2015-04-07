@@ -137,6 +137,7 @@ def direct_child(request):
 @view_config(route_name='get_child_taxons_by_parent', renderer='json')
 def get_child_taxons_by_parent(request):
     parent_taxon_id = request.params['id']
+    is_full_data = ('isFullData' in request.params) and request.params['isFullData'] == 'true'
     is_root_node_requsted = parent_taxon_id == '#'
 
     if is_root_node_requsted:
@@ -150,7 +151,7 @@ def get_child_taxons_by_parent(request):
 
     children_taxons_json = []
     for taxon in children_taxons:
-        children_taxons_json.append(_taxon_to_jsTree_item(taxon))
+        children_taxons_json.append(_taxon_to_jsTree_item(taxon, is_full_data))
 
     if is_root_node_requsted:
         result = _get_root_jsTree_item()
@@ -161,7 +162,7 @@ def get_child_taxons_by_parent(request):
     return result
 
 
-def _taxon_to_jsTree_item(taxon):
+def _taxon_to_jsTree_item(taxon, is_full_data):
     is_specie = taxon.is_last_taxon()
 
     jsTree_item = {
@@ -174,6 +175,9 @@ def _taxon_to_jsTree_item(taxon):
     if is_specie and taxon.author:
         jsTree_item['is_specie'] = True
         jsTree_item['author'] = taxon.author
+
+    if is_full_data:
+        jsTree_item['taxon_item'] = _taxon_to_json(taxon)
 
     return jsTree_item
 

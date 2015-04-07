@@ -26,7 +26,7 @@ define([
             itemsSelected = tree.model.store.query({checked: true}),
             taxonsId = [];
 
-        taxonsId = []
+        taxonsId = [];
         array.forEach(itemsSelected, function (item) {
             taxonsId.push('taxon_' + item.id);
         });

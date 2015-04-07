@@ -14,14 +14,13 @@ define('ngbio/TaxonEditorManager', [
     return declare('TaxonEditorManager', [], {
         _taxonViewer: null,
 
-        constructor: function (tree, taxonViewerId) {
-            this._tree = tree;
+        constructor: function (taxonViewerId) {
             this._taxonViewerId = taxonViewerId ? taxonViewerId : 'TaxonViewer';
             this._bindEvents();
         },
 
         _bindEvents: function () {
-            topic.subscribe('taxon/selected', lang.hitch(this, function (taxonItem, node) {
+            topic.subscribe('taxon/selected', lang.hitch(this, function (taxonItem) {
                 this._buildTaxonViewer(taxonItem);
             }));
         },
