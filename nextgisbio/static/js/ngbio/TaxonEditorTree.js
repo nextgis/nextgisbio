@@ -21,7 +21,7 @@ define('ngbio/TaxonEditorTree', [
                         'variant': 'small'
                     },
                     'data': {
-                        'url': '/taxon/child',
+                        'url': application_root + '/taxon/child',
                         'data': function (node) {
                             return {
                                 'id': node.id,
