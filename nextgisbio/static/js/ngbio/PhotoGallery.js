@@ -13,11 +13,10 @@ define([
     'dijit/Dialog',
     'mustache/mustache',
     'dropzone/dropzone',
-    'jssor/jssor',
-    'jssor/jssor.slider',
     'dojo/text!./templates/PhotoGallery.html',
     'dojo/text!./templates/PhotoGalleryPhotos.html'
-], function (declare, array, lang, html, query, domStyle, on, xhr, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, Dialog, mustache, dropzone, jssor, jssorSlider, templatePhotoGallery, templateImages) {
+], function (declare, array, lang, html, query, domStyle, on, xhr, _WidgetBase, _TemplatedMixin,
+             _WidgetsInTemplateMixin, Dialog, mustache, dropzone, templatePhotoGallery, templateImages) {
     return declare('PhotoGallery', [_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
         widgetsInTemplate: false,
         _skipNodeCache: true,
@@ -123,7 +122,7 @@ define([
                 title: 'Добавить фотографии',
                 content: '<div class="dropzone-dialog"></div>',
                 style: 'width: 80%; height: 80%;',
-                class: 'dropzone-dialog',
+                'class': 'dropzone-dialog',
                 hide: lang.hitch(this, function () {
                     dropzoneDialog.destroy();
                     if (this._changedDropzone) {

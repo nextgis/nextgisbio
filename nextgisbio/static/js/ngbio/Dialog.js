@@ -19,7 +19,6 @@ define([
     'dijit/form/Button',
     'dojo/NodeList-traverse',
     'dojo/NodeList-dom'
-
 ], function (declare, array, lang, win, dom, domStyle, domClass, domConstruct, domForm, query, xhr, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, FloatingPane, Form, TableContainer, Button) {
 
     var id_counter = 0;
@@ -58,8 +57,8 @@ define([
                 style: this.style
             }, floatingDiv);
 
-            if (this.class) {
-                domClass.add(this._dialog.domNode, this.class);
+            if (this['class']) {
+                domClass.add(this._dialog.domNode, this['class']);
             }
         },
 

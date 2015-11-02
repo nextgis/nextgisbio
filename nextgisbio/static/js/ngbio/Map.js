@@ -274,11 +274,12 @@ define([
                                     store: store
                                 });
 
-                                new Dialog({
+                                var dialog = new Dialog({
                                     title: 'Списки ключевого участка &laquo;' + keyName + '&raquo;',
                                     content: grid,
-                                    class: 'keyAreaDialog'
-                                }).show();
+                                    'class': 'keyAreaDialog'
+                                });
+                                dialog.show();
 
                                 grid.startup();
 
