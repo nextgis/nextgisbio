@@ -105,10 +105,12 @@ class RedBook(Base, JsonifyMixin):
         redbook_species_db = dbsession.query(RedBook, RedBookSpecies, Taxon)\
             .join(RedBookSpecies, RedBook.id == RedBookSpecies.red_book_id)\
             .join(Taxon, RedBookSpecies.specie_id == Taxon.id)\
+            .order_by(RedBook.id, RedBookSpecies.specie_id)\
             .all()
         dbsession.close()
 
-        attribute_names = ['region', 'orig_name', 'lat_name', 'author', 'population', 'status', 'univ_status', 'year', 'bibl']
+        attribute_names = ['region', 'orig_name', 'lat_name', 'author', 'population', 'status', 'univ_status', 'year',
+                           'bibl']
 
         objects_for_dump = [
             [

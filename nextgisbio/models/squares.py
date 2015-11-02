@@ -28,7 +28,7 @@ square_keyarea_association = Table('square_karea_association', Base.metadata,
 
 class Squares(Base, JsonifyMixin):
     __tablename__ = 'square'
-    id = Column(Integer, Sequence('square_id_seq', start=100000), primary_key=True)
+    id = Column(Integer, Sequence('square_id_seq', start=1), primary_key=True)
     key_areas = relationship('Key_area', secondary=square_keyarea_association, backref='squares')
     geom = GeometryColumn(Polygon(dimension=2, srid=3857))
     
@@ -44,7 +44,6 @@ class Squares(Base, JsonifyMixin):
         import transaction
         with transaction.manager:
             dbsession = DBSession()
-
             ogrData = ogr.Open(shp_filename)
             layer = ogrData.GetLayer(0)
             sq = layer.GetNextFeature()
@@ -59,12 +58,12 @@ class Squares(Base, JsonifyMixin):
             dbsession.flush()
 
             reader = csv.reader(open(associations_filename), delimiter='\t')
-            row = reader.next() # пропускаем заголовки
+            reader.next()
             records = [line for line in reader]
 
             for id, key_area_id in records:
                 # Определим ключевоq уч-к по его id
-                key_a = dbsession.query(Key_area).filter_by(id = key_area_id).one()
+                key_a = dbsession.query(Key_area).filter_by(id=key_area_id).one()
                 # Определим полигон по его id
                 square = dbsession.query(Squares).filter_by(id=id).one()
                 square.key_areas.append(key_a)
@@ -74,7 +73,7 @@ class Squares(Base, JsonifyMixin):
         from nextgisbio.utils.dump_to_file import dump
         fieldnames = ['square_id', 'key_area_id']
 
-        squares_from_db = DBSession().query(Squares).join(Squares.key_areas).all()
+        squares_from_db = DBSession().query(Squares).join(Squares.key_areas).order_by(Squares.id).all()
 
         squares = []
         for square in squares_from_db:

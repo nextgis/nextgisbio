@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import csv
-import sys
 import hashlib
 
-from sqlalchemy import Column, Enum, Integer, Unicode, ForeignKey
+from sqlalchemy import Column, Enum, Integer, Unicode, ForeignKey, Sequence
 from sqlalchemy.orm import relationship
 
 from nextgisbio.models import Base, DBSession
@@ -15,7 +14,7 @@ USER_ACL_ROLES = dict(user='user', editor='editor', admin='admin')
 
 class User(Base, JsonifyMixin):
     __tablename__ = 'user'
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, Sequence('users_id_seq', start=1), primary_key=True)
     login = Column(Unicode(40), nullable=False, unique=True)
     password = Column(Unicode(40), nullable=False)
     role = Column(Enum(*USER_ACL_ROLES, native_enum=False), nullable=False)
@@ -35,13 +34,12 @@ class User(Base, JsonifyMixin):
         with transaction.manager:
             dbsession = DBSession()
             reader = csv.reader(open(users_csv_file_path), delimiter='\t')
-            row = reader.next() # пропускаем заголовки
+            reader.next()
             records = [line for line in reader]
 
             for row in records:
                 (id, login, password, person_id, role) = [None if x == '' else x for x in row]
                 user = User(
-                    id=id,
                     login=login,
                     password=User.password_hash(password),
                     role=role,
@@ -53,4 +51,4 @@ class User(Base, JsonifyMixin):
     def export_to_file(filename):
         from nextgisbio.utils.dump_to_file import dump
         fieldnames = ['id', 'login', 'password', 'person_id', 'role']
-        dump(filename, fieldnames, DBSession().query(User).all())
+        dump(filename, fieldnames, DBSession().query(User).order_by(User.id).all())

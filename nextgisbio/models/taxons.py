@@ -59,7 +59,7 @@ class Taxon(Base, JsonifyMixin):
         UniqueConstraint('old_id', 'taxon_type'),
     )
 
-    id = Column(Integer, Sequence('taxon_id_seq', start=100025), primary_key=True)
+    id = Column(Integer, Sequence('taxon_id_seq', start=1), primary_key=True)
     parent_id = Column(Integer, ForeignKey('taxon.id'), nullable=True, index=True)
     old_id = Column(Integer)  # id таксона в таблице-источнике (MS ACCESS)
 
@@ -136,10 +136,9 @@ class Taxon(Base, JsonifyMixin):
             row = reader.next()  # пропускаем заголовки
             records = [line for line in reader]
             for row in records:
-                id, parent_id, old_id, taxon_type, name, russian_name, author, source = [None if x == '' else x for x in
-                                                                                         row]
+                id, parent_id, old_id, taxon_type, name, russian_name, author, source =\
+                    [None if x == '' else x for x in row]
                 taxon = Taxon(
-                    id=id,
                     parent_id=parent_id,
                     old_id=old_id,
                     taxon_type=taxon_type,
@@ -243,7 +242,7 @@ class Synonym(Base, JsonifyMixin):
     """
     __tablename__ = 'synonym'
 
-    id = Column(Integer, Sequence('synonym_id_seq', start=100025), primary_key=True)
+    id = Column(Integer, Sequence('synonym_id_seq', start=1), primary_key=True)
     species_id = Column(Integer, ForeignKey('taxon.id'), nullable=False)
     synonym = Column(String, nullable=False)
     author = Column(String)
@@ -260,14 +259,13 @@ class Synonym(Base, JsonifyMixin):
         import transaction
         with transaction.manager:
             dbsession = DBSession()
-
             reader = csv.reader(open(filename), delimiter='\t')
-            row = reader.next()  # пропускаем заголовки
+            reader.next()
             records = [line for line in reader]
 
             for row in records:
                 id, species_id, synonym, author, source = [None if x == '' else x for x in row]
-                synonym = Synonym(id=id, species_id=species_id, synonym=synonym, author=author, source=source)
+                synonym = Synonym(species_id=species_id, synonym=synonym, author=author, source=source)
                 dbsession.add(synonym)
 
     @staticmethod
@@ -281,7 +279,7 @@ class Synonym(Base, JsonifyMixin):
             'author',
             'source'
         ]
-        dump(filename, fieldnames, DBSession().query(Synonym).all())
+        dump(filename, fieldnames, DBSession().query(Synonym).order_by(Synonym.id).all())
 
     def __repr__(self):
         return "<Synonym('%s')>" % (self.synonym, )

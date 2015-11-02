@@ -19,7 +19,7 @@ class Cards(Base, JsonifyMixin):
     Карточки
     '''
     __tablename__ = 'cards'
-    id = Column(Integer, Sequence('cards_id_seq', start=100000), primary_key=True)
+    id = Column(Integer, Sequence('cards_id_seq', start=1), primary_key=True)
     species = Column(Integer, ForeignKey('taxon.id'), nullable=False)
     inserter = Column(Integer, ForeignKey('person.id'))
     observer = Column(Integer, ForeignKey('person.id'))
@@ -167,7 +167,6 @@ class Cards(Base, JsonifyMixin):
             result.append(row)
         return result
 
-
     @staticmethod
     def add_from_file(filename):
         '''
@@ -197,7 +196,6 @@ class Cards(Base, JsonifyMixin):
                     location, lon, lat, coord_type
                 ) = [None if x == '' else x for x in row]
                 card = Cards(
-                    id=id,
                     species=species,
                     inserter=inserter,
                     observer=observer,
@@ -300,6 +298,6 @@ class Cards(Base, JsonifyMixin):
                       card.lon,
                       card.lat,
                       card.coord_type] for card in
-                     dbsession.query(Cards).all()]
+                     dbsession.query(Cards).order_by(Cards.id).all()]
             dbsession.close()
             writer.writerows(cards)

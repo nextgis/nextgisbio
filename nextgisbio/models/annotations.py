@@ -17,7 +17,7 @@ class Annotation(Base, JsonifyMixin):
     '''
     __tablename__ = 'annotation'
 
-    id = Column(Integer, Sequence('annotation_id_seq', start=100000), primary_key=True)
+    id = Column(Integer, Sequence('annotation_id_seq', start=1), primary_key=True)
     species = Column(Integer, ForeignKey('taxon.id'), nullable=False)
     species_link = relationship('Taxon')
     key_area = Column(Integer, ForeignKey('key_area.id'), nullable=False) # ключевой участок
@@ -73,7 +73,6 @@ class Annotation(Base, JsonifyMixin):
                     infosourse, year, month, day, exposure
                 ) = [None if x == '' else x for x in row]
                 ann = Annotation(
-                    id=id,
                     species=species,
                     inserter=inserter,
                     key_area=key_area,
@@ -108,7 +107,8 @@ class Annotation(Base, JsonifyMixin):
                 ann.original_name, ann.location, ann.lon, ann.lat,
                 ann.biotop, ann.difference, ann.substrat, ann.status,
                 ann.frequency, ann.quantity, ann.annotation,
-                ann.infosourse, ann.year, ann.month, ann.day, ann.exposure] for ann in dbsession.query(Annotation).all()]
+                ann.infosourse, ann.year, ann.month, ann.day, ann.exposure] for ann in
+                           dbsession.query(Annotation).order_by(Annotation.id).all()]
 
             writer.writerows(annotations)
 

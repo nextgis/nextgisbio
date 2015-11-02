@@ -12,6 +12,7 @@ from nextgisbio.utils.jsonify import JsonifyMixin
 from nextgisbio.models import DBSession
 from nextgisbio.utils import csv_utf
 
+
 class Images(Base, JsonifyMixin):
     __tablename__ = 'images'
 
@@ -36,8 +37,7 @@ class Images(Base, JsonifyMixin):
                       image.description,
                       image.url,
                       image.local,
-                      image.size
-                      ] for image in session.query(Images).all()]
+                      image.size] for image in session.query(Images).order_by(Images.id).all()]
             session.close()
             writer.writerows(images)
 
@@ -52,7 +52,7 @@ class Images(Base, JsonifyMixin):
 
             for row in records:
                 id_image, name, description, url, local, size = [None if x == '' else x for x in row]
-                image = Images(id=id_image, name=name, description=description, url=url, local=local, size=size)
+                image = Images(name=name, description=description, url=url, local=local, size=size)
                 session.add(image)
 
 
@@ -74,7 +74,8 @@ class CardsImages(Base, JsonifyMixin):
             session = DBSession()
             images = [[cards_image.card_id,
                       cards_image.image_id
-                      ] for cards_image in session.query(CardsImages).all()]
+                      ] for cards_image in session.query(CardsImages)
+                            .order_by(CardsImages.card_id, CardsImages.image_id).all()]
             session.close()
             writer.writerows(images)
 
