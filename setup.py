@@ -47,6 +47,7 @@ setup(name='nextgisbio',
       main = nextgisbio:main
       [console_scripts]
       initialize_eco_db = nextgisbio.scripts.initializedb:main
+      dump_eco_db = nextgisbio.scripts.dump:main
       """,
       )
 

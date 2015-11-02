@@ -66,10 +66,10 @@ def usage(argv):
     sys.exit(1)
 
 
-if __name__ == '__main__':
-    if len(sys.argv) != 2:
-        usage(sys.argv)
-    config_uri = sys.argv[1]
+def main(argv=sys.argv):
+    if len(argv) != 2:
+        usage(argv)
+    config_uri = argv[1]
     setup_logging(config_uri)
     settings = get_appsettings(config_uri)
     engine = engine_from_config(settings, 'sqlalchemy.')
