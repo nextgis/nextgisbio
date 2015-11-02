@@ -6,22 +6,56 @@ html, body {
     padding: 0;
 }
 
-body div.loader {
+#loader {
     display: none;
-}
-
-body.loading div.loader {
-    display: block;
-}
-
-div.loader {
     position: absolute;
     height: 100%;
     width: 100%;
     background-color: white;
-    text-align: center;
     z-index: 9999;
+    font-size: 2vw;
+}
+
+body.loading #loader {
+    display: block;
+}
+
+#loader div.wrapper {
+    display: block;
+    margin: 0 auto;
+    text-align: center;
     padding-top: 10px;
+    width: 300px;
+}
+
+#loader img {
+    width: 100%;
+}
+
+#loader .meter {
+    /*display: none;*/
+    /*position: absolute;*/
+    /*top: 30px;*/
+    /*right: 3px;*/
+    background: transparent;
+    z-index: 99999;
+    font-size: 13px;
+    border: 1px solid rgb(218, 231, 231);
+}
+
+#loader .meter {
+    height: 6px;
+    width: 300px;
+    position: relative;
+}
+
+#loader .meter > span {
+    display: block;
+    height: 100%;
+    width: 0;
+    background: rgb(23, 111, 193) linear-gradient(to top, rgb(23, 111, 193), rgb(138, 182, 216));
+    position: relative;
+    overflow: hidden;
 }
 
 #map {

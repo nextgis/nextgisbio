@@ -36,73 +36,15 @@
 
     <link rel="stylesheet" type="text/css" href="${request.static_url('nextgisbio:static/css/main.css')}?${random_int}"
           media="screen">
-
-    <script type="text/javascript">
-        window.ngbio = {};
-            %if is_auth:
-                window.ngbio.is_auth = true;
-            %endif
-            %if is_admin:
-                window.ngbio.mode = 'admin';
-            %endif
-    </script>
-
-    <script type="text/javascript">
-        var application_root = ${request.application_url | json.dumps, n};
-
-        dojoConfig = {
-            async: true,
-            debug: true,
-##            cacheBust: true,
-            parseOnLoad: true,
-            baseUrl: "${request.static_url('nextgisbio:static/js/')}",
-            locale: "ru-ru",
-            packages: [
-                {name: 'dojo', location: 'lib/dojo-release-1.9.1/dojo'},
-                {name: 'dijit', location: 'lib/dojo-release-1.9.1/dijit'},
-                {name: 'dojox', location: 'lib/dojo-release-1.9.1/dojox'},
-                {name: 'ngbio', location: 'ngbio'},
-                {name: 'cbtree', location: 'lib/cbtree-v0.9.4-0'},
-                {name: 'dgrid', location: 'lib/dgrid'},
-                {name: 'put-selector', location: 'lib/put-selector'},
-                {name: 'xstyle', location: 'lib/xstyle'},
-                {name: 'mustache', location: 'lib/mustache'},
-                {name: 'jssor', location: 'lib/jssor'},
-                {name: 'dropzone', location: 'lib/dropzone'},
-                {name: 'jstree', location: 'lib/jstree-3.0.9'}
-            ]
-        };
-    </script>
-    <script type="text/javascript" src="${request.static_url('nextgisbio:static/js/lib/dojo-release-1.9.1/dojo/dojo.js')}"></script>
-    <script type="text/javascript" src="${request.static_url('nextgisbio:static/js/lib/jquery-1.11.2/jquery.js')}"></script>
-
-
-    ##    <script src="http://maps.google.com/maps/api/js?v=3.6&amp;sensor=false"></script>
-
-    <script src="https://maps.google.com/maps/api/js?sensor=false"></script>
-
-    <script src="${request.static_url('nextgisbio:static/js/lib/openlayers/OpenLayers.js')}" type="text/javascript"></script>
-
-    <%block name='inlineRequireAmd'>
-        <script>
-            require(['ngbio/Forms', 'ngbio/Menu', 'ngbio/TaxonSearcher', 'ngbio/TaxonHomeTree',
-                        'dojox/data/QueryReadStore', 'dojo/dom', 'dojo/parser', 'dojo/store/JsonRest',
-                        'dijit/layout/BorderContainer', 'dijit/layout/ContentPane',
-                        'dijit/Dialog', 'dijit/form/TextBox', 'dijit/form/Button',
-                        'dijit/form/ValidationTextBox', 'dojo/topic', 'dojo/domReady!',
-                        'ngbio/Loader', 'ngbio/Map', 'ngbio/Dialog', 'ngbio/DialogManager',
-                        'ngbio/WindowManager',  'dojo/domReady!'],
-                    function (Forms, Menu, TaxonSearcher, TaxonHomeTree) {
-                        new Menu(Forms.menuMap, 'menu');
-                        new TaxonSearcher();
-                        new TaxonHomeTree('#taxonJsTree');
-                    });
-        </script>
-    </%block>
 </head>
 <body class="claro loading">
-<div class="loader">
-    <p>Инициализация ГИС...</p>
+<div id="loader">
+    <div class="wrapper">
+        <img src="${request.static_url('nextgisbio:static/img/nextgisbio-logo.svg')}"/>
+        <div id="LayersLoadingIndicator" class="meter" title="">
+            <span id="loaderIndicator" style="width: 0;"></span>
+        </div>
+    </div>
 </div>
 <div id="appLayout" class="demoLayout" data-dojo-type="dijit.layout.BorderContainer"
      data-dojo-props="design: 'headline'">
@@ -196,4 +138,97 @@
 </div>
 
 </body>
+
+    <script type="text/javascript">
+        window.ngbio = {};
+            %if is_auth:
+                window.ngbio.is_auth = true;
+            %endif
+            %if is_admin:
+                window.ngbio.mode = 'admin';
+            %endif
+    </script>
+
+    <script type="text/javascript">
+        var application_root = ${request.application_url | json.dumps, n};
+
+        dojoConfig = {
+            async: true,
+            debug: true,
+##            cacheBust: true,
+            parseOnLoad: true,
+            baseUrl: "${request.static_url('nextgisbio:static/js/')}",
+            locale: "ru-ru",
+            packages: [
+                {name: 'dojo', location: 'lib/dojo-release-1.9.1/dojo'},
+                {name: 'dijit', location: 'lib/dojo-release-1.9.1/dijit'},
+                {name: 'dojox', location: 'lib/dojo-release-1.9.1/dojox'},
+                {name: 'ngbio', location: 'ngbio'},
+                {name: 'cbtree', location: 'lib/cbtree-v0.9.4-0'},
+                {name: 'dgrid', location: 'lib/dgrid'},
+                {name: 'put-selector', location: 'lib/put-selector'},
+                {name: 'xstyle', location: 'lib/xstyle'},
+                {name: 'mustache', location: 'lib/mustache'},
+                {name: 'jssor', location: 'lib/jssor'},
+                {name: 'dropzone', location: 'lib/dropzone'},
+                {name: 'jstree', location: 'lib/jstree-3.0.9'}
+            ]
+        };
+    </script>
+    <script type="text/javascript" src="${request.static_url('nextgisbio:static/js/lib/dojo-release-1.9.1/dojo/dojo.js')}"></script>
+    <script type="text/javascript" src="${request.static_url('nextgisbio:static/js/lib/jquery-1.11.2/jquery.js')}"></script>
+
+
+    ##    <script src="http://maps.google.com/maps/api/js?v=3.6&amp;sensor=false"></script>
+
+    <script src="https://maps.google.com/maps/api/js?sensor=false"></script>
+
+    <script src="${request.static_url('nextgisbio:static/js/lib/openlayers/OpenLayers.js')}" type="text/javascript"></script>
+
+    <%block name='inlineRequireAmd'>
+        <script>
+            require(['ngbio/Forms', 'ngbio/Menu', 'ngbio/TaxonSearcher', 'ngbio/TaxonHomeTree',
+                        'dojox/data/QueryReadStore', 'dojo/dom', 'dojo/parser', 'dojo/store/JsonRest',
+                        'dijit/layout/BorderContainer', 'dijit/layout/ContentPane',
+                        'dijit/Dialog', 'dijit/form/TextBox', 'dijit/form/Button',
+                        'dijit/form/ValidationTextBox', 'dojo/topic', 'dojo/domReady!',
+                        'ngbio/Loader', 'ngbio/Map', 'ngbio/Dialog', 'ngbio/DialogManager',
+                        'ngbio/WindowManager',  'dojo/domReady!'],
+                    function (Forms, Menu, TaxonSearcher, TaxonHomeTree) {
+                        new Menu(Forms.menuMap, 'menu');
+                        new TaxonSearcher();
+                        new TaxonHomeTree('#taxonJsTree');
+                    });
+        </script>
+
+        <script>
+            document.ngbioLoader = {
+                htmlLoaderIndicator: null,
+                init: function () {
+                    this.htmlLoaderIndicator = document.getElementById('loaderIndicator');
+                    return this;
+                },
+                interval: null,
+                start: function () {
+                    var context = this;
+                    if (!this.htmlLoaderIndicator) return false;
+                    if (!this.interval) {
+                        this.interval = setInterval(function () {
+                            context.start();
+                        }, 500);
+                    }
+                    var oldWidth = parseInt(this.htmlLoaderIndicator.style.width.split('%')[0], 10);
+                    if (oldWidth < 70) {
+                        this.htmlLoaderIndicator.style.width = (oldWidth + 5) + '%';
+                    }
+                },
+                stop: function () {
+                    clearInterval(this.interval);
+                    this.interval = null;
+                }
+            };
+            document.ngbioLoader.init().start();
+        </script>
+    </%block>
+
 </html>
