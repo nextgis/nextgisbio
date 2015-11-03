@@ -45,7 +45,6 @@ class Annotation(Base, JsonifyMixin):
     day = Column(Integer)
     exposure = Column(Integer) # Длительность экспозиции
 
-
     @staticmethod
     def add_from_file(filename):
         '''

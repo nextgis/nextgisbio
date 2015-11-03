@@ -147,7 +147,7 @@ class Museum(Base, JsonifyMixin):
     def __repr__(self):
         return "<Museum('%s') >" % (self.museum, )
 
-        
+
 class Coord_type(Base, JsonifyMixin):
     '''
     Тип координат
@@ -347,7 +347,8 @@ class Pheno(Base, JsonifyMixin):
     pheno = Column(String, nullable=False, unique=True)
     description = Column(String)
     org_type = Column(Enum(*ORG_TYPES, native_enum=False))
-    @staticmethod        
+
+    @staticmethod
     def add_from_file(filename):
         '''
         Добавить данные в таблицу из файла с разделителями filename.
