@@ -29,7 +29,7 @@ class User(Base, JsonifyMixin):
         return u"%s" % self.display_name
 
     @staticmethod
-    def add_from_file(users_csv_file_path):
+    def add_from_file(users_csv_file_path, md5_pass):
         import transaction
         with transaction.manager:
             dbsession = DBSession()
@@ -41,7 +41,7 @@ class User(Base, JsonifyMixin):
                 (id, login, password, person_id, role) = [None if x == '' else x for x in row]
                 user = User(
                     login=login,
-                    password=User.password_hash(password),
+                    password=password if md5_pass else User.password_hash(password),
                     role=role,
                     person_id=person_id
                 )

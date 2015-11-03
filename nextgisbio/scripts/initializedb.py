@@ -30,13 +30,17 @@ def usage(argv):
 
 
 def main(argv=sys.argv):
-    if len(argv) != 2:
+    if len(argv) != 2 and len(argv) != 3:
         usage(argv)
     config_uri = argv[1]
     setup_logging(config_uri)
     settings = get_appsettings(config_uri)
     engine = engine_from_config(settings, 'sqlalchemy.')
     DBSession.configure(bind=engine)
+
+    md5_pass = False
+    if len(argv) == 3 and argv[2] == '--md5-pass':
+        md5_pass = True
 
     Base.metadata.drop_all(engine)
     Base.metadata.create_all(engine)
@@ -106,7 +110,7 @@ def main(argv=sys.argv):
 
     # Пользователи
     users_file = 'nextgisbio/initial_data/csv/user.csv'
-    User.add_from_file(users_file)
+    User.add_from_file(users_file, md5_pass)
 
     red_books_csv = 'nextgisbio/initial_data/csv/redbooks.csv'
     RedBook.import_from_csv(red_books_csv)
