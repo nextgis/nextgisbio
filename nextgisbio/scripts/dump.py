@@ -5,6 +5,8 @@ import sys
 
 import time
 
+import id_verificator
+
 import transaction
 from sqlalchemy import engine_from_config
 from pyramid.paster import (
@@ -58,20 +60,24 @@ def dump_data():
         Images.export_to_file(get_path_name('images.csv'))
         CardsImages.export_to_file(get_path_name('cards_images.csv'))
 
+    return dir_name
+
 
 def usage(argv):
     cmd = os.path.basename(argv[0])
-    print('usage: %s <config_uri>\n'
+    print('usage: %s <config_uri> --make-id-start-0\n'
           '(example: "%s development.ini")' % (cmd, cmd))
     sys.exit(1)
 
 
 def main(argv=sys.argv):
-    if len(argv) != 2:
+    if len(argv) != 2 and len(argv) != 3:
         usage(argv)
     config_uri = argv[1]
     setup_logging(config_uri)
     settings = get_appsettings(config_uri)
     engine = engine_from_config(settings, 'sqlalchemy.')
     DBSession.configure(bind=engine)
-    dump_data()
+    dir_name = dump_data()
+    if len(argv) == 3 and argv[2] == '--make-id-start-0':
+        id_verificator.start(dir_name)
