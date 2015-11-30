@@ -22,16 +22,15 @@ define([
     });
 
     topic.subscribe('open/window/taxon_list', function (url) {
-        var tree = dijit.byId('taxonsTree'),
-            itemsSelected = tree.model.store.query({checked: true}),
+        var itemsSelectedId = jQuery('#taxonJsTree').jstree('get_selected'),
             taxonsId = [];
 
         taxonsId = [];
-        array.forEach(itemsSelected, function (item) {
-            taxonsId.push('taxon_' + item.id);
+        array.forEach(itemsSelectedId, function (id) {
+            taxonsId.push('taxon_' + id);
         });
 
-        url = application_root + url + '?nodes=' + taxonsId.join(',');
+        url = application_root + url + '?taxon_list=' + taxonsId.join(',');
         openWindow(url);
     });
 });
