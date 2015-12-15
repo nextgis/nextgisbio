@@ -39,7 +39,6 @@ def main(global_config, **settings):
     config.add_route('login', '/login', factory=RootFactory)
     config.add_route('logout', '/logout', factory=RootFactory)
 
-
     config.add_route('taxon_filter', '/taxon/filter', factory=RootFactory)
     config.add_route('species_name', '/species', factory=RootFactory)
     config.add_route('taxon_direct_child', '/taxon/direct_child',      factory=RootFactory)
@@ -61,8 +60,7 @@ def main(global_config, **settings):
 
     # Фильтр видов по его типу, подстроки названия и (если указан) id
     config.add_route('species_filter',    '/species/{type}/{id:[0-9]*}',       factory=RootFactory)
-    
-    
+
     # Карточки наблюдений, где был описан определенный таксон:
     config.add_route('points_text',         '/points_text/',            factory=RootFactory)
 
@@ -107,6 +105,9 @@ def main(global_config, **settings):
 
     config.add_route('upload_image', '/images/upload/{type}/{id}', factory=RootFactory)
     config.add_route('remove_image', '/images/remove/{type}/{image_id}', factory=RootFactory)
+
+    config.add_route('users_manager', '/users/manager', factory=RootFactory)
+    config.add_route('get_users', '/users/', factory=RootFactory)
 
     # Справочники:
     config.add_route('person_name',         '/person_name',             factory=RootFactory)
