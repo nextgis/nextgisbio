@@ -13,7 +13,8 @@ define('ngbio/Menu', [
     'ngbio/Forms',
     'ngbio/Dialog',
     'dojo/domReady!'
-], function (array, on, topic, declare, _WidgetBase, MenuBar, PopupMenuBarItem, Menu, MenuItem, MenuSeparator, DropDownMenu, Forms, Dialog) {
+], function (array, on, topic, declare, _WidgetBase, MenuBar, PopupMenuBarItem, Menu, MenuItem, MenuSeparator,
+             DropDownMenu, Forms, Dialog) {
 
     var Menu = declare('Menu', [], {
         _menuBar: null,

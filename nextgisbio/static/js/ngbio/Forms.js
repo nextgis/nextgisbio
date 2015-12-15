@@ -95,7 +95,8 @@ define([
                     return ngbio.mode && ngbio.mode === 'admin'
                 },
                 items: [
-                    {label: 'Редактор таксонов', action: 'open/link/self', params: ['/taxons/editor']}
+                    {label: 'Редактор таксонов', action: 'open/link/self', params: ['/taxons/editor']},
+                    {label: 'Редактор пользователей', action: 'open/link/self', params: ['/users/manager']}
                 ]
             }
         },
