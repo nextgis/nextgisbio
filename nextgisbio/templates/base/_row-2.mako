@@ -49,10 +49,6 @@
          style="width: 100%;">
         <%block name="content"></%block>
     </div>
-
-
-</div>
-
 </div>
 </body>
 
@@ -91,6 +87,8 @@
                     });
         </script>
     </%block>
+
+    <%block name='js'></%block>
 
     <%include file="../components/_ngbio_loader.mako"></%include>
 
