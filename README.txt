@@ -6,3 +6,7 @@
 
 Подробная документация по системе доступна по адресу:
 https://docs.google.com/document/d/1Z1eTs5nUtXrICHdMpC23q7JmAOwcCbVMHCihtvLdwrs/edit
+
+License
+-------------
+This program is licensed under GNU GPL v2 or any later version
