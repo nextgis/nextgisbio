@@ -5,9 +5,19 @@ NextGIS BIO
 
 NextGIS Bio is a server based GIS application to biodiversity monitoring.
 
+Used program components:
+
+1. Server side
+  * Python
+  * Pyramid
+  * PostgreSQL with PostGIS
+2. Client side:
+  * Dojo
+  * Openlayers
+
 Documentation
 -------------
-Documentation is available [online](http://docs.nextgis.ru/docs_ngbio/source/toc.html).
+Documentation is available [online in Russian](http://docs.nextgis.ru/docs_ngbio/source/toc.html).
 
 License
 -------------
