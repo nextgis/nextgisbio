@@ -19,6 +19,7 @@ from nextgisbio.models import (
 from nextgisbio.utils.try_encode import try_encode
 from . import table_view
 
+
 @view_config(route_name='annotation', request_method='GET', renderer='json')
 def get_anlist(request):
     request.matchdict['id'] = request.matchdict['id']
@@ -126,7 +127,8 @@ def anns_download(request):
 
     return Response(content_type="application/octet-stream", 
             content_disposition="attachment; filename=%s" % (resname, ), body=data)
-        
+
+
 @view_config(route_name='anns_text', renderer='json')
 def anns_text(request):
     # Есть querystring, содержащее строку вида 'nodes=taxon_id1,taxon_id2').
