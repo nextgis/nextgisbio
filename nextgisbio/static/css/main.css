@@ -240,3 +240,7 @@ div.tree-wrapper {
 #taxonJsTree i.jstree-icon.Species {
     background-position: -199px -7px;
 }
+
+div.search-row {
+    margin: 5px 0;
+}
