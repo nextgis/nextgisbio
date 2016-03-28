@@ -62,16 +62,19 @@
         %endif
 </script>
 
+<script src="${request.static_url('nextgisbio:static/js/lib/jquery-1.12.2/jquery-1.12.2.js')}"
+        type="text/javascript"></script>
+<script src="${request.static_url('nextgisbio:static/js/lib/jquery-ui-1.11.4/jquery-ui.js')}"
+        type="text/javascript"></script>
+<script src="${request.static_url('nextgisbio:static/js/lib/jstree-3.0.9/jstree.js')}"
+        type="text/javascript"></script>
+
     <%include file="../components/_dojo_config.mako"/>
+
+    <%include file="../components/_ngbio_loader.mako"></%include>
 
 <script type="text/javascript"
         src="${request.static_url('nextgisbio:static/js/lib/dojo-release-1.9.1/dojo/dojo.js')}"></script>
-<script type="text/javascript" src="${request.static_url('nextgisbio:static/js/lib/jquery-1.11.2/jquery.js')}"></script>
-
-<script src="https://maps.google.com/maps/api/js?sensor=false"></script>
-
-<script src="${request.static_url('nextgisbio:static/js/lib/openlayers/OpenLayers.js')}"
-        type="text/javascript"></script>
 
     <%block name='initJs'>
         <script>
@@ -79,17 +82,13 @@
                         'dojox/data/QueryReadStore', 'dojo/dom', 'dojo/parser', 'dojo/store/JsonRest',
                         'dijit/layout/BorderContainer', 'dijit/layout/ContentPane',
                         'dijit/Dialog', 'dijit/form/TextBox', 'dijit/form/Button',
-                        'dijit/form/ValidationTextBox', 'dojo/topic', 'dojo/domReady!',
-                        'ngbio/Loader', 'ngbio/Map', 'ngbio/Dialog', 'ngbio/DialogManager',
+                        'dijit/form/ValidationTextBox', 'dojo/topic',
+                        'ngbio/Loader', 'ngbio/Dialog', 'ngbio/DialogManager',
                         'ngbio/WindowManager', 'dojo/domReady!'],
                     function (Forms, Menu, TaxonSearcher, TaxonHomeTree) {
-
                     });
         </script>
     </%block>
 
     <%block name='js'></%block>
-
-    <%include file="../components/_ngbio_loader.mako"></%include>
-
 </html>

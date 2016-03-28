@@ -4,10 +4,9 @@ define('ngbio/TaxonHomeTree', [
     'dojo/topic',
     'dojo/Deferred',
     'dojo/request/xhr',
-    'jstree/jstree',
     'dojo/text!./templates/SpecieTreeNodeTemplate.html',
     'mustache/mustache'
-], function (declare, lang, topic, Deferred, xhr, jstree, specieTreeNodeTemplate, mustache) {
+], function (declare, lang, topic, Deferred, xhr, specieTreeNodeTemplate, mustache) {
     return declare([], {
         $taxonJsTree: null,
 

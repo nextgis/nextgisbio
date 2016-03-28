@@ -17,6 +17,7 @@
             {name: 'dijit', location: 'lib/dojo-release-1.9.1/dijit'},
             {name: 'dojox', location: 'lib/dojo-release-1.9.1/dojox'},
             {name: 'ngbio', location: 'ngbio'},
+            {name: 'lib', location: 'lib'},
             {name: 'cbtree', location: 'lib/cbtree-v0.9.4-0'},
             {name: 'dgrid', location: 'lib/dgrid'},
             {name: 'put-selector', location: 'lib/put-selector'},

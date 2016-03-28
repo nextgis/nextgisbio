@@ -170,16 +170,15 @@
                 {name: 'xstyle', location: 'lib/xstyle'},
                 {name: 'mustache', location: 'lib/mustache'},
                 {name: 'jssor', location: 'lib/jssor'},
-                {name: 'dropzone', location: 'lib/dropzone'},
-                {name: 'jstree', location: 'lib/jstree-3.0.9'}
+                {name: 'dropzone', location: 'lib/dropzone'}
             ]
         };
     </script>
+
+    <script type="text/javascript" src="${request.static_url('nextgisbio:static/js/lib/jquery-1.12.2/jquery-1.12.2.js')}"></script>
+    <script src="${request.static_url('nextgisbio:static/js/lib/jstree-3.0.9/jstree.js')}"
+        type="text/javascript"></script>
     <script type="text/javascript" src="${request.static_url('nextgisbio:static/js/lib/dojo-release-1.9.1/dojo/dojo.js')}"></script>
-    <script type="text/javascript" src="${request.static_url('nextgisbio:static/js/lib/jquery-1.11.2/jquery.js')}"></script>
-
-
-    ##    <script src="http://maps.google.com/maps/api/js?v=3.6&amp;sensor=false"></script>
 
     <script src="https://maps.google.com/maps/api/js?sensor=false"></script>
 
