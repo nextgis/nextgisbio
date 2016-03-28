@@ -3,7 +3,7 @@ NextGIS BIO
 
 ![ui](http://docs.nextgis.ru/_images/bio_common.png)
 
-NextGIS Bio is a server based GIS application to biodiversity monitoring.
+NextGIS Bio is a server based GIS application to biodiversity accounting.
 
 Used program components:
 
