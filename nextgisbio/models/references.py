@@ -2,9 +2,8 @@
 
 import csv
 
-from sqlalchemy import Column, Integer, String, Float, Boolean, Enum
-from sqlalchemy import ForeignKey, Sequence
-
+from sqlalchemy import Column, Integer, String, Float, Boolean, Enum, ForeignKey, Sequence
+from sqlalchemy.orm import relationship
 
 from nextgisbio.models import DBSession, Base, ORG_TYPES
 from nextgisbio.utils.jsonify import JsonifyMixin
@@ -29,6 +28,7 @@ class Person(Base, JsonifyMixin):
     email = Column(String)
     phone = Column(String)
     address = Column(String)
+    user = relationship('User', uselist=False, back_populates="person")
     
     @staticmethod        
     def add_from_file(filename):
