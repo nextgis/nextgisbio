@@ -106,14 +106,21 @@ def main(global_config, **settings):
     config.add_route('upload_image', '/images/upload/{type}/{id}', factory=RootFactory)
     config.add_route('remove_image', '/images/remove/{type}/{image_id}', factory=RootFactory)
 
-    config.add_route('users_manager', '/users/manager', factory=RootFactory)
+    config.add_route('persons_manager', '/persons/manager', factory=RootFactory)
+    config.add_route('persons_manager_get_users', '/persons/manager/users', factory=RootFactory)
+
     config.add_route('get_users', '/users/', factory=RootFactory)
 
     # Справочники:
     config.add_route('person_name',         '/person_name',             factory=RootFactory)
     # Инфоресурсы
     config.add_route('inforesources_name',  'inforesources_name',       factory=RootFactory)
-    
+
+    # jtable specific views
+    config.add_route('table_browse_jtable', '{table}/jtable', factory=RootFactory)
+    config.add_route('table_save_jtable', '{table}/jtable/save', factory=RootFactory)
+    config.add_route('table_delete_jtable', '{table}/jtable/delete', factory=RootFactory)
+
     # Выдать данные из таблицы в формате json
     config.add_route('table_browse',        '{table}_browse',           factory=RootFactory)
 
