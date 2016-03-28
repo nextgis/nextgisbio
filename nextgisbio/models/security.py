@@ -3,7 +3,7 @@
 import csv
 import hashlib
 
-from sqlalchemy import Column, Enum, Integer, Unicode, ForeignKey, Sequence
+from sqlalchemy import Column, Enum, Integer, Unicode, ForeignKey, Sequence, Boolean
 from sqlalchemy.orm import relationship
 
 from nextgisbio.models import Base, DBSession
@@ -19,7 +19,8 @@ class User(Base, JsonifyMixin):
     password = Column(Unicode(40), nullable=False)
     role = Column(Enum(*USER_ACL_ROLES, native_enum=False), nullable=False)
     person = relationship('Person')
-    person_id = Column(Integer, ForeignKey('person.id'))
+    person_id = Column(Integer, ForeignKey('person.id'), unique=True)
+    active = Column(Boolean)
 
     @classmethod
     def password_hash(cls, password):
@@ -43,7 +44,8 @@ class User(Base, JsonifyMixin):
                     login=login,
                     password=password if md5_pass else User.password_hash(password),
                     role=role,
-                    person_id=person_id
+                    person_id=person_id,
+                    active=True
                 )
                 dbsession.add(user)
 
