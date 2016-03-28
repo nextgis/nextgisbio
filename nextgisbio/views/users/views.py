@@ -1,36 +1,41 @@
 # encoding: utf-8
 
-import json
-import transaction
-import itertools
-
-from pyramid.response import Response
-from pyramid.view import view_config
 from pyramid import security
-
-from sqlalchemy.exc import DBAPIError, IntegrityError
-from sqlalchemy.orm.exc import NoResultFound
+from pyramid.view import view_config
+from sqlalchemy.orm import joinedload
 
 from nextgisbio.models import (
-    DBSession,
-    Cards,
-    Taxon, Synonym, TAXON_TYPES, TAXON_ALL_QUERY, TAXON_ID_QUERY
-    )
-
-from nextgisbio.models import MAMMALIA, AVES, PLANTAE, ARA, ARTHROPODA, MOSS, LICHENES
+    DBSession, User
+)
 
 
-@view_config(route_name='users_manager', renderer='users/manager.mako')
+@view_config(route_name='persons_manager', renderer='users/persons.mako')
 def users_manager(request):
-    if 'red_book' in request.GET:
-        red_book_selected_id = int(request.GET['red_book'])
-    else:
-        red_book_selected_id = -1
+    session = DBSession()
     return {
-        'title': u'Редактор пользователей',
+        'title': u'Управление пользователями',
+        'users': session.query(User).options(joinedload('person')).all(),
         'is_auth': security.authenticated_userid(request),
-        'is_admin': security.has_permission('admin', request.context, request),
-        'random_int': '',
-        'red_books': '',
-        'red_book_selected_id': red_book_selected_id
+        'is_admin': security.has_permission('admin', request.context, request)
+    }
+
+
+@view_config(route_name='persons_manager_get_users', renderer='json')
+def persons_manager_get_users(request):
+    session = DBSession()
+    users = session.query(User) \
+        .filter(~User.person.has()) \
+        .all()
+    users_json = [{
+        'DisplayText': 'Не присвоен',
+        'Value': -1
+    }]
+    for user in users:
+        users_json.append({
+            'DisplayText': user.login,
+            'Value': user.id
+        })
+    return {
+        'Result': 'OK',
+        'Options': users_json
     }
