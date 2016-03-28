@@ -96,7 +96,7 @@ define([
                 },
                 items: [
                     {label: 'Редактор таксонов', action: 'open/link/self', params: ['/taxons/editor']},
-                    {label: 'Редактор пользователей', action: 'open/link/self', params: ['/users/manager']}
+                    {label: 'Редактор пользователей', action: 'open/link/self', params: ['/persons/manager']}
                 ]
             }
         },
