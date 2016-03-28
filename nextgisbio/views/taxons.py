@@ -308,6 +308,7 @@ def get_taxon_path(request):
 
     return {'success': True, 'path': path}
 
+
 # Выборка видов из БД
 @view_config(route_name='species_name', renderer='json')
 def species_name(request):
@@ -348,6 +349,7 @@ def species_name(request):
             result = {'success': False, 'msg': 'Ошибка подключения к БД'}
 
     return {'data': rows, 'success': True, 'totalCount': len(rows)}
+
 
 # тип таксона по его id
 @view_config(route_name='taxon_type', renderer='json')
