@@ -155,6 +155,7 @@ def table_view(request):
     dbsession.close()
     return result
 
+
 # Выдать данные из таблицы в формате csv
 @view_config(route_name='table_download', renderer='string', permission='admin')
 def table_download(request):
