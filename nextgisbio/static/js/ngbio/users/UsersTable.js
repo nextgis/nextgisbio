@@ -83,6 +83,19 @@ define([
                         title: 'Специализация',
                         width: '14%'
                     }
+                },
+                formCreated: function (event, data) {
+                    data.form.find('input[name="person_name"]').addClass('validate[required]');
+                    data.form.find('input[name="user_login"]').addClass('validate[required]');
+                    data.form.find('input[name="user_password"]').addClass('validate[required]');
+                    data.form.validationEngine();
+                },
+                formSubmitting: function (event, data) {
+                    return data.form.validationEngine('validate');
+                },
+                formClosed: function (event, data) {
+                    data.form.validationEngine('hide');
+                    data.form.validationEngine('detach');
                 }
             });
 
