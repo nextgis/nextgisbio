@@ -107,7 +107,10 @@ def main(global_config, **settings):
     config.add_route('remove_image', '/images/remove/{type}/{image_id}', factory=RootFactory)
 
     config.add_route('persons_manager', '/persons/manager', factory=RootFactory)
-    config.add_route('persons_manager_get_users', '/persons/manager/users', factory=RootFactory)
+    config.add_route('persons_jtable_browse', '/persons/manager/jtable/list', factory=RootFactory)
+    config.add_route('persons_jtable_save', '/persons/manager/jtable/save', factory=RootFactory)
+    config.add_route('persons_jtable_delete', '/persons/manager/jtable/delete', factory=RootFactory)
+    config.add_route('persons_get_users_options', '/persons/manager/options/users', factory=RootFactory)
 
     config.add_route('get_users', '/users/', factory=RootFactory)
 

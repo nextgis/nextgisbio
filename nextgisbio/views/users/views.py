@@ -18,24 +18,3 @@ def users_manager(request):
         'is_auth': security.authenticated_userid(request),
         'is_admin': security.has_permission('admin', request.context, request)
     }
-
-
-@view_config(route_name='persons_manager_get_users', renderer='json')
-def persons_manager_get_users(request):
-    session = DBSession()
-    users = session.query(User) \
-        .filter(~User.person.has()) \
-        .all()
-    users_json = [{
-        'DisplayText': 'Не присвоен',
-        'Value': -1
-    }]
-    for user in users:
-        users_json.append({
-            'DisplayText': user.login,
-            'Value': user.id
-        })
-    return {
-        'Result': 'OK',
-        'Options': users_json
-    }
