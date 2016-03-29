@@ -11,7 +11,7 @@
     <h1>${title}</h1>
     <div class="search-row">
         <input id="searchText" type="text"/>
-        <input id="search" data-search="name,speciality,organization" type="button" name="Найти" value="Найти"/>
+        <input id="search" data-search="person_name,person_speciality,person_organization" type="button" name="Найти" value="Найти"/>
     </div>
     <div data-dojo-type="ngbio/users/UsersTable" id="usersTable"></div>
 </%block>

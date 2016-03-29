@@ -24,52 +24,68 @@ define([
                 sorting: true,
                 defaultSorting: 'Name ASC',
                 actions: {
-                    listAction: application_root + '/person/jtable',
-                    createAction: application_root + '/person/jtable/save',
-                    updateAction: application_root + '/person/jtable/save',
-                    deleteAction: application_root + '/person/jtable/delete'
+                    listAction: application_root + '/persons/manager/jtable/list',
+                    createAction: application_root + '/persons/manager/jtable/save',
+                    updateAction: application_root + '/persons/manager/jtable/save',
+                    deleteAction: application_root + '/persons/manager/jtable/delete'
                 },
                 fields: {
-                    id: {
+                    person_id: {
                         key: true,
                         list: false
                     },
-                    name: {
+                    person_name: {
                         title: 'ФИО',
                         width: '16%'
                     },
-                    user: {
+                    user_login: {
                         title: 'Логин',
-                        options: application_root + '/persons/manager/users',
+                        width: '16%'
+                    },
+                    user_role: {
+                        title: 'Роль',
+                        width: '16%',
+                        options: {'editor': 'Редактор', 'admin': 'Администратор', 'user': 'Пользователь'}
+                    },
+                    user_password: {
+                        title: 'Пароль',
+                        width: '16%',
+                        type: 'password',
                         list: false
                     },
-                    degree: {
+                    user_active: {
+                        title: 'Активный',
+                        width: '16%',
+                        type: 'checkbox',
+                        values: {'false': 'Неактивный', 'true': 'Активный'}
+                    },
+                    person_degree: {
                         title: 'Степень',
                         width: '14%'
                     },
-                    organization: {
+                    person_organization: {
                         title: 'Организация',
                         width: '14%'
                     },
-                    email: {
+                    person_email: {
                         title: 'E-mail',
                         width: '14%'
                     },
-                    phone: {
+                    person_phone: {
                         title: 'Тел.',
                         width: '14%'
                     },
-                    address: {
+                    person_address: {
                         title: 'Адрес',
                         width: '14%'
                     },
-                    speciality: {
+                    person_speciality: {
                         title: 'Специализация',
                         width: '14%'
                     }
                 }
-            })
-            ;
+            });
+
             $(this.domNode).jtable('load');
 
             on(dom.byId('search'), 'click', lang.hitch(this, function (e) {
