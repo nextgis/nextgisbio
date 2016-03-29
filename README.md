@@ -13,6 +13,9 @@ Used program components:
   * PostgreSQL with PostGIS
 2. Client side:
   * Dojo
+  * jQuery, jQuery UI
+  * jTable
+  * jTree
   * Openlayers
 
 Documentation
