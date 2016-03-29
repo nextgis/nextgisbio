@@ -7,15 +7,20 @@ class JsonifyMixin:
     def __init__(self):
         pass
 
-    def as_json_dict(self, **init):
-        d = dict()
+    def as_json_dict(self, prefix, **init):
+        json_dict = dict()
         for c in self.__table__.columns:
-            v = getattr(self, c.name)
+            column_name = c.name
+            v = getattr(self, column_name)
             if isinstance(v, datetime.datetime):
                 v = v.isoformat()
-            d[c.name] = v
+            if prefix:
+                column_name = '{}{}'.format(prefix, column_name)
+            json_dict[column_name] = v
         
         for k, v in init.items():
-            d[k] = v
+            if prefix:
+                k = '{}{}'.format(prefix, k)
+            json_dict[k] = v
                  
-        return d
+        return json_dict
