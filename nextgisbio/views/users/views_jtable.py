@@ -107,6 +107,11 @@ def table_item_save(request):
         if table_name == 'user':
             setattr(user, field, request.POST[attr])
 
+    if 'user_active' in request.POST and request.POST['user_active']:
+        user.active = True
+    else:
+        user.active = False
+
     session.add(person)
 
     try:
