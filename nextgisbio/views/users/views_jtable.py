@@ -142,15 +142,15 @@ def table_item_save(request):
 @view_config(route_name='persons_jtable_delete', renderer='json')
 def table_delete_jtable(request):
     session = DBSession()
-    table, table_name = helpers.get_table_by_name(request)
 
-    if ('id' in request.POST) and request.POST['id'].isdigit():
-        item_id = int(request.POST['id'])
-        item = session.query(table).get(item_id)
+    if ('person_id' in request.POST) and request.POST['person_id'].isdigit():
+        person_id = int(request.POST['person_id'])
+        person = session.query(Person).options(joinedload('user')).get(person_id)
     else:
         raise Exception('Deleting item: id is not applied')
 
-    session.delete(item)
+    session.delete(person)
+    session.delete(person.user)
     transaction.commit()
     session.close()
 
