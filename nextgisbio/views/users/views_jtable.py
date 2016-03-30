@@ -112,6 +112,9 @@ def table_item_save(request):
     else:
         user.active = False
 
+    if 'user_password' in request.POST and request.POST['user_password']:
+        user.password = User.password_hash(request.POST['user_password'])
+
     session.add(person)
 
     try:
