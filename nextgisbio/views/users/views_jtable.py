@@ -4,7 +4,7 @@ import transaction
 from pyramid.view import view_config
 from sqlalchemy import or_, asc, desc
 from sqlalchemy.orm import joinedload
-from sqlalchemy.exc import DBAPIError
+from sqlalchemy.exc import DBAPIError, IntegrityError
 
 from nextgisbio.models import (
     DBSession, User, Person, table_by_name
@@ -108,7 +108,15 @@ def table_item_save(request):
             setattr(user, field, request.POST[attr])
 
     session.add(person)
-    transaction.commit()
+
+    try:
+        transaction.commit()
+    except IntegrityError:
+        transaction.abort()
+        return {
+            'Result': 'Error',
+            'Message': u'Такой логин уже присутствует в системе'
+        }
 
     person_json = person.as_json_dict('person_')
     user_json = user.as_json_dict('user_')
