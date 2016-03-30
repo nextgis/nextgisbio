@@ -13,6 +13,7 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from nextgisbio.models import User, DBSession
 
+
 @view_config(route_name='login', renderer='login.mak')
 @view_config(context=HTTPForbidden, renderer='login.mak')
 def login(request):
@@ -34,7 +35,9 @@ def login(request):
 
         try:
             dbsession = DBSession()
-            user = dbsession.query(User).filter_by(login=login, password=User.password_hash(password)).one()
+            user = dbsession.query(User)\
+                .filter_by(login=login, password=User.password_hash(password), active=True)\
+                .one()
             dbsession.close()
             headers = remember(request, user.id)
             return HTTPFound(location=next_url, headers=headers)
