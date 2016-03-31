@@ -204,7 +204,6 @@ def table_view(request):
     except NoResultFound:
         result = {'success': False, 'msg': 'Результатов, соответствующих запросу, не найдено'}
 
-
     if not can_i_edit:
         # обнулим координаты перед показом
         result['lat'] = 0
