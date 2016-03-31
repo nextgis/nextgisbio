@@ -7,7 +7,7 @@ class JsonifyMixin:
     def __init__(self):
         pass
 
-    def as_json_dict(self, prefix, **init):
+    def as_json_dict(self, prefix=None, **init):
         json_dict = dict()
         for c in self.__table__.columns:
             column_name = c.name
