@@ -147,18 +147,18 @@ def anns_text(request):
     key_areas = ", ".join(key_areas)
     
     try:
-        taxons = request.params['nodes']
+        taxons_id = request.params['nodes']
     except KeyError:
-        taxons = ''
+        taxons_id = ''
         
     can_i_edit = has_permission('edit', request.context, request)
     can_i_edit = isinstance(can_i_edit, ACLAllowed)
     
-    if taxons:
-        taxons = urllib.unquote(taxons)
-        taxons = taxons.split(',')
+    if taxons_id:
+        taxons_id = urllib.unquote(taxons_id)
+        taxons_id = taxons_id.split(',')
         
-        if "root" in taxons:
+        if "root" in taxons_id:
             anns = dbsession.query(Annotation,Taxon).join(Taxon).all()
             qs = """
             SELECT annotation.id,annotation.species, taxon.name FROM annotation  
@@ -167,12 +167,8 @@ def anns_text(request):
                 ON annotation.species = taxon.id """ + ' AND annotation.key_area IN ( %s ) ;' % (key_areas, )
             anns = dbsession.query(Annotation, Taxon).from_statement(qs).all()
         else:
-            taxon_id = []
-            for taxon in taxons:
-                t, id = taxon.split('_')
-                taxon_id.append(id)
             # Получим список видов-потомков выбранных таксонов и связанных с ними аннотаций из ключевых участков квадрата id
-            subquery = TAXON_ID_QUERY % (", ".join([ str(num) for num in taxon_id]), TAXON_TYPES[len(TAXON_TYPES)-1])
+            subquery = TAXON_ID_QUERY % (", ".join([ str(num) for num in taxons_id]), TAXON_TYPES[len(TAXON_TYPES)-1])
             qs = """
             SELECT annotation.id,annotation.species, taxon.name FROM annotation  
             INNER JOIN

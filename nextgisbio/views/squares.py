@@ -63,6 +63,7 @@ def _get_squares_by_taxonlist(taxons, geomtype='geojson'):
     dbsession.close()
     return all
 
+
 @view_config(route_name='squares_text', renderer='squares.mak')
 def squares_text(request):
     dbsession = DBSession()
@@ -74,6 +75,7 @@ def squares_text(request):
     dbsession.close()
     return {'squares' : squares}
 
+
 @view_config(route_name='square', renderer='json')
 def square(request):
     dbsession = DBSession()
@@ -83,7 +85,8 @@ def square(request):
 
     dbsession.close()
     return {'id': square.id, 'key_areas': key_areas }
-    
+
+
 @view_config(route_name='areal_text', renderer='squares.mak')
 def areal_text(request):
     # См. отображение. карточек наблюдений. Тут аналогично.
@@ -113,6 +116,7 @@ def areal_text(request):
     else:
         squares = {}
     return {'squares': squares}
+
 
 @view_config(route_name='areal_download',  permission='edit')
 def areal_download(request):
