@@ -94,16 +94,16 @@ def cards_download(request):
         return Response()
 
     try:
-        #taxon_list -- список, аналогичный querystring в points_text
+        # taxon_list -- список, аналогичный querystring в points_text
         # (taxon_id1,taxon_id2)
         taxons = request.params['taxon_list']
-        if taxons == 'root':
-            taxon_list = None
-        elif taxons != '':
+        if taxons != '':
             taxons = urllib.unquote(taxons)
             taxons = taxons.split(',')
             taxons = [t.split('_') for t in taxons]
-            taxon_list = [id for (t,id) in taxons]
+            taxon_list = [id for (t, id) in taxons]
+            if any('root' in s for s in taxon_list):
+                taxon_list = None
         else:
             taxon_list = None
     except KeyError:
@@ -150,8 +150,8 @@ def cards_download(request):
                     print "Creating Name field failed.\n"
 
             #Заполним данными
-            lon_idx, lat_idx = 37, 38 # номера полей lat,lon в cards
-            for row in  cards[1:]: # пропустили загловки
+            lon_idx, lat_idx = 36, 37 # номера полей lat,lon в cards
+            for row in cards[1:]: # пропустили загловки
                 row = [try_encode(v, 'cp1251') for v in row]
                 x = row[lon_idx]
                 y = row[lat_idx]

@@ -76,12 +76,7 @@ class Cards(Base, JsonifyMixin):
         '''
 
         dbsession = DBSession()
-        if taxon_list:  # выдать карточки-потомки определенных таксонов
-            species = Taxon.species_by_taxon(taxon_list)
-            species_id = [t['id'] for t in species]
-        else:  # выдать все карточки
-            species = dbsession.query(Taxon).all()
-            species_id = [t.id for t in species if t.is_last_taxon()]
+
         qs = '''
             SELECT
                 cards.id, 
@@ -150,9 +145,14 @@ class Cards(Base, JsonifyMixin):
                 inforesources ON cards.inforesources = inforesources.id
             LEFT OUTER JOIN 
                 coord_type ON cards.coord_type = coord_type.id
-            WHERE
-                cards.species IN (%s)
-        ''' % ", ".join([str(num) for num in species_id])
+        '''
+
+        if taxon_list:
+            species = Taxon.species_by_taxon(taxon_list)
+            species_id = [t['id'] for t in species]
+            qs_where = ' WHERE cards.species IN (%s)' % ", ".join([str(num) for num in species_id])
+            qs += qs_where
+
         cards = dbsession.query(Cards).from_statement(qs).all()
         dbsession.close()
 
