@@ -1,0 +1,27 @@
+id	pheno	description	org_type
+1	беременная особь		mammalia
+2	вегетация		plantae
+3	весенняя миграция		aves
+4	взрослая особь		mammalia
+5	гнездование		aves
+6	гнездование (предположительно)		aves
+7	зимнее пребывание		aves
+8	имаго		arthropoda
+9	куколка		arthropoda
+10	лактация		mammalia
+11	линька		aves
+12	личинка		arthropoda
+13	массовый лет		arthropoda
+14	негнездовое пребывание		aves
+15	отлет		aves
+16	плодоношение		plantae
+17	послегнездовая миграция		aves
+18	рожавшая самка		mammalia
+19	сеголеток		mammalia
+20	спороношение		plantae
+21	стадия развития ПТ		lichenes
+22	статус не определен		aves
+23	токование		aves
+24	цветение		plantae
+25	яйцо		arthropoda
+26	яловая самка	Половозрелая самка не давшая приплода в течение года	mammalia
