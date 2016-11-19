@@ -5,10 +5,9 @@ define('ngbio/TaxonEditorTree', [
     'dojo/Deferred',
     'dojo/request/xhr',
     'dojo/io-query',
-    'jstree/jstree',
     'dojo/text!./templates/SpecieTreeNodeTemplate.html',
     'mustache/mustache'
-], function (declare, lang, topic, Deferred, xhr, ioQuery, jstree, specieTreeNodeTemplate, mustache) {
+], function (declare, lang, topic, Deferred, xhr, ioQuery, specieTreeNodeTemplate, mustache) {
     return declare('TaxonEditorTree', [], {
         $taxonJsTree: null,
 
