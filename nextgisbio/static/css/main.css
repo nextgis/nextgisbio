@@ -75,8 +75,7 @@ body.loading #loader {
 
 .claro,
 div.dojoxFloatingPane textarea,
-#map div.olPopup
- {
+#map div.olPopup {
     font-family: arial, tahoma, helvetica, sans-serif;
 }
 
@@ -243,4 +242,72 @@ div.tree-wrapper {
 
 div.search-row {
     margin: 5px 0;
+}
+
+#formFilter {
+    width: 50%;
+    min-width: 380px;
+}
+
+#formFilter fieldset {
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    border: 1px solid #C2C2C2;
+    box-shadow: 1px 1px 4px #EBEBEB;
+    -moz-box-shadow: 1px 1px 4px #EBEBEB;
+    -webkit-box-shadow: 1px 1px 4px #EBEBEB;
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    padding: 5px;
+}
+
+#formFilter div.filter-row {
+    margin-top: 3px;
+}
+
+#formFilter input.dojo-button {
+    cursor: pointer;
+    border: 1px solid #759dc0;
+    padding: 2px 4px 4px 4px;
+    color: #000000;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
+    -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
+    background-color: #bcd8f4;
+    background-repeat: repeat-x;
+    background-image: -moz-linear-gradient(#ffffff 0px, rgba(255, 255, 255, 0) 3px, rgba(255, 255, 255, 0.75) 100%);
+    background-image: -webkit-linear-gradient(#ffffff 0px, rgba(255, 255, 255, 0) 3px, rgba(255, 255, 255, 0.75) 100%);
+    background-image: -o-linear-gradient(#ffffff 0px, rgba(255, 255, 255, 0) 3px, rgba(255, 255, 255, 0.75) 100%);
+    background-image: linear-gradient(#ffffff 0px, rgba(255, 255, 255, 0) 3px, rgba(255, 255, 255, 0.75) 100%);
+}
+
+#formFilter input.dojo-button:hover {
+    background-color: #86bdf2;
+    color: #000000;
+    -webkit-transition-duration: 0.2s;
+    -moz-transition-duration: 0.2s;
+    transition-duration: 0.2s;
+}
+
+
+#formFilter label {
+    display: inline-block;
+    width: 150px;
+}
+
+#formFilter input[type=text],
+#formFilter select {
+    width: 150px;
+}
+
+#formFilter input[type=text][data-datepicker] {
+    width: 80px;
+}
+
+#cardsTable {
+    margin-top: 15px;
 }

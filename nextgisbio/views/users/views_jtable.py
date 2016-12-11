@@ -29,7 +29,7 @@ def persons_jtable_browse(request):
             .join(User) \
             .filter(or_(*filter_conditions)) \
             .order_by(sorting) \
-            .slice(start, start+count) \
+            .slice(start, start + count) \
             .all()
         rows_count = session.query(Person) \
             .filter(*filter_conditions) \
@@ -162,18 +162,24 @@ def table_delete_jtable(request):
 @view_config(route_name='persons_get_users_options', renderer='json')
 def persons_get_users_options(request):
     session = DBSession()
+
     users = session.query(User) \
         .filter(~User.person.has()) \
         .all()
+
+    session.close()
+
     users_json = [{
         'DisplayText': 'Не присвоен',
         'Value': -1
     }]
+
     for user in users:
         users_json.append({
             'DisplayText': user.login,
             'Value': user.id
         })
+
     return {
         'Result': 'OK',
         'Options': users_json

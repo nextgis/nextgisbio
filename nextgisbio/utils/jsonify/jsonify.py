@@ -13,7 +13,7 @@ class JsonifyMixin:
             column_name = c.name
             v = getattr(self, column_name)
             if isinstance(v, datetime.datetime):
-                v = v.isoformat()
+                v = v.strftime('%Y-%m-%d %H:%M:%S')
             if prefix:
                 column_name = '{}{}'.format(prefix, column_name)
             json_dict[column_name] = v

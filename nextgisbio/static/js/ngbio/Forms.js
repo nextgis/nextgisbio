@@ -87,7 +87,9 @@ define([
             },
             'Отчеты': {
                 items: [
-                    {label: 'Охраняемые виды', action: 'open/link/self', params: ['/reports/protected_species_list']}
+                    {label: 'Таблица карточек', action: 'open/link/self', params: ['/cards/table/']},
+                    {label: 'Охраняемые виды', action: 'open/link/self', params: ['/reports/protected_species_list']},
+                    {label: 'Внесение карточек', action: 'open/link/self', params: ['/reports/cards_by_user/']}
                 ]
             },
             'Администратор': {

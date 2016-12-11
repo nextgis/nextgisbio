@@ -8,6 +8,7 @@ import tempfile
 import zipfile
 import shutil
 
+from datetime import datetime
 import osgeo.ogr as ogr
 import osgeo.osr as osr
 import transaction
@@ -60,13 +61,14 @@ def points_text(request):
             cards = dbsession.query(Cards, Taxon).join(Taxon).all()
         else:
             # Получим список видов-потомков выбранных таксонов и связанных с ними карточек
-            subquery = TAXON_ID_QUERY % (", ".join([ str(num) for num in taxon_id]), TAXON_TYPES[len(TAXON_TYPES)-1])
+            subquery = TAXON_ID_QUERY % (", ".join([str(num) for num in taxon_id]), TAXON_TYPES[len(TAXON_TYPES) - 1])
             qs = """
             SELECT cards.id,cards.species,cards.lat,cards.lon, taxon.name FROM cards  
             INNER JOIN taxon ON cards.species = taxon.id
-            %s WHERE """ % ('INNER JOIN red_books_species ON cards.species = red_books_species.specie_id' if red_book_id else '')\
+            %s WHERE """ % (
+            'INNER JOIN red_books_species ON cards.species = red_books_species.specie_id' if red_book_id else '') \
                  + ((' red_books_species.red_book_id = ' + str(red_book_id) + ' AND ') if red_book_id else '') \
-                 + ' cards.species IN (' +  subquery +');'
+                 + ' cards.species IN (' + subquery + ');'
             cards = dbsession.query(Cards, Taxon).from_statement(qs).all()
 
         points = []
@@ -74,10 +76,10 @@ def points_text(request):
             id, spec_id, lat, lon = card.id, card.species, card.lat, card.lon
             name = taxon.name
             if lat and lon:
-                if not can_i_edit: # настоящие координаты показывать нельзя
+                if not can_i_edit:  # настоящие координаты показывать нельзя
                     # сдвинем координаты перед показом примерно на 10 км в случайном направлении
-                    lat = lat + (random()-random())/7
-                    lon = lon + (random()-random())/4
+                    lat = lat + (random() - random()) / 7
+                    lon = lon + (random() - random()) / 4
 
                 points.append({'lat': lat, 'lon': lon, 'name': name, 'card_id': id, 'spec_id': spec_id})
     else:
@@ -115,7 +117,7 @@ def cards_download(request):
         fname = tempfile.mktemp()
         try:
             file = open(fname, 'w')
-            writer = csv.writer(file, delimiter = '\t')
+            writer = csv.writer(file, delimiter='\t')
 
             # Сохраним в файл
             for card in cards:
@@ -126,7 +128,7 @@ def cards_download(request):
             file = open(fname, 'r')
             data = file.read()
             resname = 'cards.csv'
-        finally: # в любом случае удаляем файл
+        finally:  # в любом случае удаляем файл
             os.remove(fname)
 
     elif format == 'shp':
@@ -136,7 +138,7 @@ def cards_download(request):
             sr = osr.SpatialReference()
             sr.ImportFromProj4("+init=epsg:4326")
 
-            ds = driver.CreateDataSource( workdir)
+            ds = driver.CreateDataSource(workdir)
             lyr = ds.CreateLayer('point_out', sr, ogr.wkbPoint)
 
             # Создадим поля в dbf, при этом 
@@ -146,19 +148,19 @@ def cards_download(request):
             for name in fieldnames:
                 field_defn = ogr.FieldDefn(name, ogr.OFTString)
                 field_defn.SetWidth(fieldsize)
-                if lyr.CreateField ( field_defn ) != 0:
+                if lyr.CreateField(field_defn) != 0:
                     print "Creating Name field failed.\n"
 
-            #Заполним данными
-            lon_idx, lat_idx = 36, 37 # номера полей lat,lon в cards
-            for row in cards[1:]: # пропустили загловки
+            # Заполним данными
+            lon_idx, lat_idx = 36, 37  # номера полей lat,lon в cards
+            for row in cards[1:]:  # пропустили загловки
                 row = [try_encode(v, 'cp1251') for v in row]
                 x = row[lon_idx]
                 y = row[lat_idx]
                 if x and y:
                     x = float(row[lon_idx])
                     y = float(row[lat_idx])
-                    feat = ogr.Feature( lyr.GetLayerDefn())
+                    feat = ogr.Feature(lyr.GetLayerDefn())
                     for i, name in enumerate(fieldnames):
                         if row[i]:
                             feat.SetField(name, row[i])
@@ -174,7 +176,8 @@ def cards_download(request):
             zipa = zipfile.ZipFile(zipfd, 'w')
             for dirname, dirnames, filenames in os.walk(workdir):
                 for filename in filenames:
-                    zipa.write(os.path.join(dirname, filename), os.path.join(dirname, filename).replace(workdir + os.sep, ''), zipfile.ZIP_DEFLATED)
+                    zipa.write(os.path.join(dirname, filename),
+                               os.path.join(dirname, filename).replace(workdir + os.sep, ''), zipfile.ZIP_DEFLATED)
 
             zipa.close()
             file = open(zipa.filename, 'r')
@@ -185,7 +188,7 @@ def cards_download(request):
             shutil.rmtree(workdir)
 
     return Response(content_type="application/octet-stream",
-            content_disposition="attachment; filename=%s" % (resname, ), body=data)
+                    content_disposition="attachment; filename=%s" % (resname,), body=data)
 
 
 # Выдать данные по конкретной карточке в формате json
@@ -248,6 +251,12 @@ def _update_card_attributes(card, card_from_client):
             v = None
         if hasattr(card, k):
             setattr(card, k, v)
+    if card_from_client['year'] and card_from_client['month'] and card_from_client['day']:
+        card.observed_date = datetime(
+            int(card_from_client['year']),
+            int(card_from_client['month']),
+            int(card_from_client['day'])
+        )
     return card
 
 

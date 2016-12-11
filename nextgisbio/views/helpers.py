@@ -22,7 +22,7 @@ def get_parsed_search_attr(request_params, attr_name='name'):
 
 
 def get_jtable_paging_params(request_params):
-    start, count = None, None
+    start, count = 0, 5
     if ('jtStartIndex' in request_params) and request_params['jtStartIndex'].isdigit() and \
             ('jtPageSize' in request_params) and request_params['jtPageSize'].isdigit():
         start = int(request_params['jtStartIndex'])

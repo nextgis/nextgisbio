@@ -106,6 +106,9 @@ def main(global_config, **settings):
     config.add_route('upload_image', '/images/upload/{type}/{id}', factory=RootFactory)
     config.add_route('remove_image', '/images/remove/{type}/{image_id}', factory=RootFactory)
 
+    config.add_route('cards_table', '/cards/table/', factory=RootFactory)
+    config.add_route('cards_jtable_browse', '/cards/manager/jtable/list', factory=RootFactory)
+
     config.add_route('persons_manager', '/persons/manager', factory=RootFactory)
     config.add_route('persons_jtable_browse', '/persons/manager/jtable/list', factory=RootFactory)
     config.add_route('persons_jtable_save', '/persons/manager/jtable/save', factory=RootFactory)
@@ -136,4 +139,3 @@ def main(global_config, **settings):
     config.scan()
     
     return config.make_wsgi_app()
-
