@@ -2,7 +2,7 @@
 
 import csv
 
-from sqlalchemy import Column, Integer, String, Float, Boolean
+from sqlalchemy import Column, Integer, String, Float, Boolean, DateTime
 from sqlalchemy import ForeignKey, Sequence
 
 from sqlalchemy.orm import relationship
@@ -64,6 +64,10 @@ class Cards(Base, JsonifyMixin):
     lon = Column(Float)
     lat = Column(Float)
     coord_type = Column(Integer, ForeignKey('coord_type.id'))
+
+    added_date = Column(DateTime)
+    edited_date = Column(DateTime)
+    observed_date = Column(DateTime)
 
     @staticmethod
     def as_join_list(taxon_list=None, header=True):

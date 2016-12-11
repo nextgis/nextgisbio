@@ -93,7 +93,6 @@ class Taxon(Base, JsonifyMixin):
         taxons = [{'id': t[0], 'taxon_type': t[1], 'name': t[2], 'author': t[3], 'source': t[4]} for t in taxons]
         return taxons
 
-
     @staticmethod
     def parent_taxons(taxon_id):
         '''
@@ -197,7 +196,6 @@ class Taxon(Base, JsonifyMixin):
         является ли данный таксон млекопитающим
         '''
         return self.__parent_in_list__(MAMMALIA)
-
 
     def is_aves(self):
         '''
