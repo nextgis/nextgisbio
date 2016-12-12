@@ -16,6 +16,9 @@ from .. import helpers
 
 @view_config(route_name='cards_table', renderer='cards/cards-table.mako')
 def cards_table(request):
+    if not security.authenticated_userid(request):
+        raise exc.HTTPForbidden()
+
     session = DBSession()
     persons = session.query(Person).order_by(Person.name).all()
     session.close()
@@ -30,7 +33,8 @@ def cards_table(request):
 
 @view_config(route_name='cards_jtable_browse', renderer='json')
 def cards_jtable_browse(request):
-    session = DBSession()
+    if not security.authenticated_userid(request):
+        raise exc.HTTPForbidden()
 
     rows_count = 0
     items = []
@@ -48,6 +52,7 @@ def cards_jtable_browse(request):
     filter_conditions = _get_filter_conditions(request, aliased_info)
     sorting = _get_sorting_param(request, aliased_info)
 
+    session = DBSession()
     try:
         items = session.query(Cards, Taxon, observer, inserter) \
             .join(Taxon, Cards.species == Taxon.id) \
