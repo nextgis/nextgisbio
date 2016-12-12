@@ -64,14 +64,14 @@ def cards_jtable_browse(request):
     session = DBSession()
     try:
         items = session.query(Person, func.count(Cards.id).label('cards_count')) \
-            .join(Cards, Person.id == Cards.observer) \
+            .join(Cards, Person.id == Cards.inserter) \
             .filter(and_(*filter_conditions)) \
             .group_by(Person.id) \
             .order_by(sorting) \
             .slice(start, start+count) \
             .all()
         rows_count = session.query(Person, func.count(Cards.id).label('cards_count')) \
-            .join(Cards, Person.id == Cards.observer) \
+            .join(Cards, Person.id == Cards.inserter) \
             .filter(and_(*filter_conditions)) \
             .group_by(Person.id) \
             .count()
