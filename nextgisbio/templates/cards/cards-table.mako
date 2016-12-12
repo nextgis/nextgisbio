@@ -17,7 +17,7 @@
                 <legend>Фильтр</legend>
                 <div class="filter-row">
                     <label for="taxon__name__text__like">Название вида</label>
-                    <input data-filter-item id="taxon__name__like" type="text"/>
+                    <input data-filter-item id="taxon__name__text__like" type="text"/>
                 </div>
                 <div class="filter-row">
                     <label for="cards__inserter__int__equal">Вносил</label>

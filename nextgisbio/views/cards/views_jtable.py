@@ -78,14 +78,17 @@ def cards_jtable_browse(request):
         card = row[0].as_json_dict('cards__')
         item_json = card.copy()
 
-        taxon = row[1].as_json_dict('taxon__')
-        item_json.update(taxon)
+        if row[1]:
+            taxon = row[1].as_json_dict('taxon__')
+            item_json.update(taxon)
 
-        observer = row[2].as_json_dict('observer__')
-        item_json.update(observer)
+        if row[2]:
+            observer = row[2].as_json_dict('observer__')
+            item_json.update(observer)
 
-        inserter = row[3].as_json_dict('inserter__')
-        item_json.update(inserter)
+        if row[3]:
+            inserter = row[3].as_json_dict('inserter__')
+            item_json.update(inserter)
 
         items_json.append(item_json)
 
