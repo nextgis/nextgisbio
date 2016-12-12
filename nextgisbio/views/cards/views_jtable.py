@@ -55,17 +55,17 @@ def cards_jtable_browse(request):
     session = DBSession()
     try:
         items = session.query(Cards, Taxon, observer, inserter) \
-            .join(Taxon, Cards.species == Taxon.id) \
-            .join(observer, Cards.observer == observer.id) \
-            .join(inserter, Cards.inserter == inserter.id) \
+            .outerjoin(Taxon, Cards.species == Taxon.id) \
+            .outerjoin(observer, Cards.observer == observer.id) \
+            .outerjoin(inserter, Cards.inserter == inserter.id) \
             .filter(and_(*filter_conditions)) \
             .order_by(sorting) \
             .slice(start, start+count) \
             .all()
         rows_count = session.query(Cards, Taxon, observer, inserter) \
-            .join(Taxon, Cards.species == Taxon.id) \
-            .join(observer, Cards.observer == observer.id) \
-            .join(inserter, Cards.inserter == inserter.id) \
+            .outerjoin(Taxon, Cards.species == Taxon.id) \
+            .outerjoin(observer, Cards.observer == observer.id) \
+            .outerjoin(inserter, Cards.inserter == inserter.id) \
             .filter(and_(*filter_conditions)) \
             .count()
     except DBAPIError:
