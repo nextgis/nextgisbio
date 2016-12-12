@@ -17,11 +17,11 @@ def main(global_config, **settings):
     """
     engine = engine_from_config(settings, 'sqlalchemy.')
     DBSession.configure(bind=engine)
-    
+
     my_session_factory = UnencryptedCookieSessionFactoryConfig('sosecret')
     authn_policy = AuthTktAuthenticationPolicy('sosecret', callback=groupfinder)
     authz_policy = ACLAuthorizationPolicy()
-    
+
     config = Configurator(
         settings=settings,
         root_factory=my_session_factory,
@@ -29,10 +29,10 @@ def main(global_config, **settings):
         authorization_policy=authz_policy
     )
     config.include('pyramid_mako')
-    
+
     config.add_static_view('static', 'nextgisbio:static', cache_max_age=3600)
     config.add_static_view('contrib', 'nextgisbio:contrib', cache_max_age=3600)
-    
+
     config.add_route('home', '/', factory=RootFactory)
     config.add_route('taxons_editor', '/taxons/editor', factory=RootFactory)
 
@@ -94,12 +94,12 @@ def main(global_config, **settings):
     config.add_route('square',              '/square/{id}',             factory=RootFactory)
     # Аннотации по ключевому участку
     config.add_route('karea_ann',           '/key_area/{id}/ann',       factory=RootFactory)
-    
+
     # Квадраты, где был найден определенный таксон:
     config.add_route('areal_text',          '/areal_text/',             factory=RootFactory)
     # Квадраты, где был найден определенный таксон:
     config.add_route('areal_download',      '/areal/download/',         factory=RootFactory)
-    
+
     # Выдать данные из таблицы связей квадраты-КУ в формате csv
     config.add_route('s_ka_association_download',  'association_download',       factory=RootFactory)
 
@@ -108,6 +108,8 @@ def main(global_config, **settings):
 
     config.add_route('cards_table', '/cards/table/', factory=RootFactory)
     config.add_route('cards_jtable_browse', '/cards/manager/jtable/list', factory=RootFactory)
+    config.add_route('cards_by_user', '/reports/cards_by_user/', factory=RootFactory)
+    config.add_route('cards_by_user_jtable_browse', '/reports/cards_by_user/jtable/list', factory=RootFactory)
 
     config.add_route('persons_manager', '/persons/manager', factory=RootFactory)
     config.add_route('persons_jtable_browse', '/persons/manager/jtable/list', factory=RootFactory)
@@ -132,10 +134,10 @@ def main(global_config, **settings):
 
     # Выдать данные по конкретной записи из таблицы в формате json:
     config.add_route('table_view',          '/{table}/{id}',            factory=RootFactory)
-    
+
     # Выдать данные из таблицы в формате csv
     config.add_route('table_download',        '{table}_download',       factory=RootFactory)
 
     config.scan()
-    
+
     return config.make_wsgi_app()
