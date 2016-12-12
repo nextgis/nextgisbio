@@ -18,7 +18,7 @@ define([
             this.searchBtn = dom.byId('search');
 
             $(this.domNode).jtable({
-                title: 'Таблица карточек по пользователям',
+                title: 'Таблица внесения карточек',
                 paging: true,
                 sorting: true,
                 defaultSorting: '__cards_count DESC',

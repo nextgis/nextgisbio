@@ -33,7 +33,7 @@ def cards_by_user(request):
     session.close()
 
     return {
-        'title': u'Карточки по пользователям',
+        'title': u'Отчет о внесении карточек',
         'years': [min_year] if max_year == min_year else range(min_year.year, max_year.year),
         'is_auth': security.authenticated_userid(request),
         'is_admin': security.has_permission('admin', request.context, request)
