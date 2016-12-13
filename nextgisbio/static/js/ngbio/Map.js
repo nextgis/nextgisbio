@@ -14,9 +14,10 @@ define([
     'dgrid/extensions/ColumnHider',
     'ngbio/Dialog',
     'ngbio/Filter',
+    './map/CommonControlsPanel',
     'dojo/domReady!'
 ], function (declare, win, lang, domConstruct, ready, topic, query, domAttr, on, xhr, Memory, OnDemandGrid,
-             ColumnHider, Dialog, Filter) {
+             ColumnHider, Dialog, Filter, CommonControlsPanel) {
     var map = declare('ngbio/Map', [], {
         constructor: function () {
             var taxon_nodes = [],
@@ -76,7 +77,10 @@ define([
                 extent = new OpenLayers.Bounds(6353768, 7927909, 9587360, 9811317),
                 cent_coords = {"lat": 8869000, "lon": 7970000, "zoom": 5},
                 osm = new OpenLayers.Layer.OSM("OpenSteetMap"),
-                gsat = new OpenLayers.Layer.Google("Google-HYBRID", {type: google.maps.MapTypeId.HYBRID, numZoomLevels: 20}),
+                gsat = new OpenLayers.Layer.Google("Google-HYBRID", {
+                    type: google.maps.MapTypeId.HYBRID,
+                    numZoomLevels: 20
+                }),
                 oopt = new OpenLayers.Layer.Vector("ООПТ", {
                     projection: epsg3857,
                     strategies: [new OpenLayers.Strategy.Fixed()],
@@ -263,7 +267,7 @@ define([
                             xhr.get(application_root + '/key_area/' + keyAreaId + '/ann', {
                                 handleAs: 'json'
                             }).then(function (data) {
-                                var store = new Memory({ data: data.data });
+                                var store = new Memory({data: data.data});
 
                                 var grid = new declare([OnDemandGrid, ColumnHider])({
                                     columns: {
@@ -430,7 +434,7 @@ define([
                 cardsLayer.destroyFeatures();
                 cardsLayer.refresh({
                     force: true,
-                    url: application_root + '/points_text/?nodes=' + taxon_nodes  + '&' + Filter.getAsQueryString()
+                    url: application_root + '/points_text/?nodes=' + taxon_nodes + '&' + Filter.getAsQueryString()
                 });
 
                 arealLayer.destroyFeatures();
@@ -508,6 +512,8 @@ define([
             div.style.top = "1px";
             div.innerHTML = '<a href="http://nextgis.ru" target="_blank"><img src="' + application_root + '/static/img/nextgis.png" alt="NextGIS: открытые геотехнологии" width="100" height="33" /></a>';
             map.viewPortDiv.appendChild(div);
+
+            new CommonControlsPanel(map, cardsLayer);
 
             this._map = map;
             return this._map;
