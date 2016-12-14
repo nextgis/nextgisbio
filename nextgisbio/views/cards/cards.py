@@ -230,6 +230,7 @@ def save_card(request):
         with transaction.manager:
             dbsession = DBSession()
             card = dbsession.query(Cards).filter_by(id=card_id).one()
+            card.edited_date = datetime.now()
             _update_card_attributes(card, card_from_client)
     except:
         success = False
@@ -241,7 +242,10 @@ def new_card(request):
     with transaction.manager:
         dbsession = DBSession()
         card = Cards()
-        dbsession.add(_update_card_attributes(card, dict(request.POST)))
+        _update_card_attributes(card, dict(request.POST))
+        card.added_date = datetime.now()
+        card.edited_date = card.added_date
+        dbsession.add(card)
     return {}
 
 
