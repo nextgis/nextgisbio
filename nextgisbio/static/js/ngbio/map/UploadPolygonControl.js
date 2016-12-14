@@ -2,19 +2,33 @@ define([
     'dojo/_base/declare',
     'dojo/_base/array',
     'dojo/_base/lang',
-    './UploadFileDialog/UploadFileDialog'
-], function (declare, array, lang, UploadFileDialog) {
+    'dojo/Deferred',
+    'dojox/widget/Standby',
+    './UploadFileDialog/UploadFileDialog',
+    'dojo/text!./UploadPolygonControlPopup.mustache',
+    'mustache/mustache'
+], function (declare, array, lang, Deferred, Standby, UploadFileDialog, popupTemplate, mustache) {
     OpenLayers.Control.UploadPolygon = OpenLayers.Class(OpenLayers.Control, {
         type: OpenLayers.Control.TYPE_BUTTON,
         layer: null,
         callbacks: null,
         multi: false,
 
-        featureAdded: function () {
+        polygonLayer: null,
+        standby: null,
+
+        activate: function () {
+            this.polygonLayer = new OpenLayers.Layer.Vector("ngbio.polygon.cards_count");
+            this.map.addLayer(this.polygonLayer);
+
+            this.standby = new Standby({target: "appLayout"});
+            document.body.appendChild(this.standby.domNode);
+            this.standby.startup();
+
+            return (OpenLayers.Control.prototype.activate.apply(this, arguments));
         },
 
         initialize: function (layerData, options) {
-            this.polygonLayer = layerData.polygonLayer;
             this.cardsLayer = layerData.cardsLayer;
             OpenLayers.Control.prototype.initialize.apply(this, [options]);
         },
@@ -60,43 +74,82 @@ define([
 
         _popup: null,
         _buildPopup: function () {
-            var cardsCountInfo = this._getCardsCountInPolygonInfo();
+            this.standby.show();
 
-            this._popup = new OpenLayers.Popup('UploadPolygonPopup',
-                cardsCountInfo.polygonGeometry.getBounds().getCenterLonLat(),
-                new OpenLayers.Size(100, 50),
-                '<p>Карточек внутри полигона: <b>' + cardsCountInfo.cards + '</b></p>',
-                true);
-
-            this.polygonLayer.map.addPopup(this._popup);
+            this._getCardsCountInPolygonInfo().then(lang.hitch(this, function (cardsCountInfo) {
+                this._popup = new OpenLayers.Popup('UploadPolygonPopup',
+                    cardsCountInfo.polygonGeometry.getBounds().getCenterLonLat(),
+                    new OpenLayers.Size(100, 50),
+                    mustache.render(popupTemplate, cardsCountInfo),
+                    true,
+                    lang.hitch(this, function () {
+                        this.polygonLayer.removeAllFeatures();
+                        this._popup.destroy();
+                        this._popup = null;
+                    })
+                );
+                this.polygonLayer.map.addPopup(this._popup);
+                $('#calculateCards').click(lang.hitch(this, function () {
+                    this.standby.show();
+                    this._getCardsCountInPolygonInfo().then(lang.hitch(this, function (cardsCountInfo) {
+                        $('#UploadPolygonPopup span.cardsCount').html(cardsCountInfo.cards);
+                        this.standby.hide();
+                    }));
+                }));
+                this.standby.hide();
+            }));
         },
 
         _getCardsCountInPolygonInfo: function () {
-            var cardsFeaturesInPolygon = 0,
+            var deferred = new Deferred(),
+                cardsFeaturesInPolygon = 0,
                 polygon = this.polygonLayer.features.length > 0 ? this.polygonLayer.features[0] : null,
                 polygonGeometry;
 
             if (!polygon) return 0;
             polygonGeometry = polygon.geometry;
+            polygonGeometry._countPoints = polygonGeometry.components[0].components.length;
 
-            array.forEach(this.cardsLayer.features, function (cardFeature) {
-                if (cardFeature.cluster) {
-                    array.forEach(cardFeature.cluster, function (feature) {
-                        if (polygonGeometry.intersects(feature.geometry)) {
+            setTimeout(lang.hitch(this, function () {
+                array.forEach(this.cardsLayer.features, function (cardFeature) {
+                    if (cardFeature.cluster) {
+                        array.forEach(cardFeature.cluster, function (feature) {
+                            if (this.inside(feature.geometry, polygonGeometry)) {
+                                cardsFeaturesInPolygon++;
+                            }
+                        }, this);
+                    } else {
+                        if (this.inside(cardFeature.geometry, polygonGeometry)) {
                             cardsFeaturesInPolygon++;
                         }
-                    });
-                } else {
-                    if (polygonGeometry.intersects(cardFeature.geometry)) {
-                        cardsFeaturesInPolygon++;
                     }
-                }
-            });
+                }, this);
+                deferred.resolve({
+                    cards: cardsFeaturesInPolygon,
+                    polygonGeometry: polygonGeometry
+                });
+            }), 1000);
 
-            return {
-                cards: cardsFeaturesInPolygon,
-                polygonGeometry: polygonGeometry
-            };
+            return deferred.promise;
+        },
+
+        inside: function (point, polygonGeometry) {
+            var polygonCountPoints = polygonGeometry._countPoints,
+                polygonPoints = polygonGeometry.components[0].components,
+                x = point.x,
+                y = point.y,
+                inside = false;
+
+            for (var i = 0, j = polygonCountPoints - 1; i < polygonCountPoints; j = i++) {
+                var xi = polygonPoints[i].x, yi = polygonPoints[i].y;
+                var xj = polygonPoints[j].x, yj = polygonPoints[j].y;
+
+                var intersect = ((yi > y) != (yj > y))
+                    && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+                if (intersect) inside = !inside;
+            }
+
+            return inside;
         },
 
         CLASS_NAME: "OpenLayers.Control.UploadPolygon"

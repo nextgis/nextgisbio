@@ -17,19 +17,13 @@ define([
         },
 
         _init: function () {
-            this._polygonLayer = new OpenLayers.Layer.Vector("ngbio.polygon.cards_count");
-            this._map.addLayer(this._polygonLayer);
 
-            // var draw = new OpenLayers.Control.DrawFeature(this._polygonLayer, OpenLayers.Handler.Polygon);
-            // this._map.addControl(draw);
-            // draw.activate();
 
             var uploadPolygonControl = new OpenLayers.Control.UploadPolygon({
-                polygonLayer: this._polygonLayer,
                 cardsLayer: this._cardsLayer
             });
             this._map.addControl(uploadPolygonControl);
-            uploadPolygonControl.activate();
+            // uploadPolygonControl.activate();
 
             var panel = new OpenLayers.Control.Panel({
                 defaultControl: uploadPolygonControl,
