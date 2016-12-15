@@ -14,10 +14,11 @@ define([
     'dgrid/extensions/ColumnHider',
     'ngbio/Dialog',
     'ngbio/Filter',
+    'ngbio/WmsLayers',
     './map/CommonControlsPanel',
     'dojo/domReady!'
 ], function (declare, win, lang, domConstruct, ready, topic, query, domAttr, on, xhr, Memory, OnDemandGrid,
-             ColumnHider, Dialog, Filter, CommonControlsPanel) {
+             ColumnHider, Dialog, Filter, WmsLayers, CommonControlsPanel) {
     var map = declare('ngbio/Map', [], {
         constructor: function () {
             var taxon_nodes = [],
@@ -131,12 +132,15 @@ define([
                 visibility: false
             });
 
+            var wms = WmsLayers;
+
             var options = {
                 projection: epsg3857,
                 maxExtent: extent,
-//            restrictedExtent: extent,
-                layers: [osm, gsat, oopt, squareLayer, arealLayer, cardsLayer]
-//                layers: [osm, oopt, squareLayer, arealLayer, cardsLayer]
+                layers: [osm, gsat, wms.tracksLayer, wms.ooptLayer, squareLayer, arealLayer, cardsLayer]
+                // restrictedExtent: extent,
+                // layers: [osm, gsat, oopt, squareLayer, arealLayer, tracksLayer, ooptLayer, cardsLayer]
+                // layers: [osm, oopt, squareLayer, arealLayer, cardsLayer]
             };
 
             var map = new OpenLayers.Map('map', options);
