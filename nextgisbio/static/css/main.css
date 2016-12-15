@@ -344,3 +344,7 @@ div.export-form {
 #UploadPolygonPopup span.cardsCount {
     font-weight: bold;
 }
+
+#formTemporary {
+    display: none;
+}

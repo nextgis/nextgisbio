@@ -111,6 +111,8 @@ def main(global_config, **settings):
     config.add_route('cards_by_user', '/reports/cards_by_user/', factory=RootFactory)
     config.add_route('cards_by_user_jtable_browse', '/reports/cards_by_user/jtable/list', factory=RootFactory)
 
+    config.add_route('export_cards_table', '/export/cards/', factory=RootFactory)
+
     config.add_route('persons_manager', '/persons/manager', factory=RootFactory)
     config.add_route('persons_jtable_browse', '/persons/manager/jtable/list', factory=RootFactory)
     config.add_route('persons_jtable_save', '/persons/manager/jtable/save', factory=RootFactory)

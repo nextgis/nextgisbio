@@ -62,6 +62,7 @@ define([
             this._filterElements = $(this.filterForm).find('[data-filter-item]');
 
             this._buildDatePickers();
+            this._bindExportControls();
 
             on(this.searchBtn, 'click', lang.hitch(this, function (e) {
                 e.preventDefault();
@@ -75,8 +76,25 @@ define([
             });
         },
 
-        _filterElements: null,
-        filterTable: function () {
+        _bindExportControls: function () {
+            var $formTemporary = $('#formTemporary');
+
+            $('#formExport input').each(lang.hitch(this, function (i, input) {
+                var $input = $(input),
+                    fileType = $input.attr('data-file-type');
+
+                $input.click(lang.hitch(this, function () {
+                    var filter = this._getFilter();
+                    $.each(filter, function (k, v) {
+                        $formTemporary.append('<input type="hidden" name="' + k + '" value="' + v + '" />');
+                    });
+                    $formTemporary.attr('action', application_root + '/export/cards/?format=' + fileType);
+                    $formTemporary.submit();
+                }));
+            }))
+        },
+
+        _getFilter: function () {
             var filter = {};
             $.each(this._filterElements, function (i, filterElement) {
                 var $filterElement = $(filterElement);
@@ -85,7 +103,12 @@ define([
                     filter[$filterElement.attr('id')] = value;
                 }
             });
-            $(this.domNode).jtable('load', filter);
+            return filter;
+        },
+
+        _filterElements: null,
+        filterTable: function () {
+            $(this.domNode).jtable('load', this._getFilter());
         }
     });
 });

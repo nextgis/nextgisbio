@@ -59,9 +59,11 @@ def cards_jtable_browse(request):
             .outerjoin(observer, Cards.observer == observer.id) \
             .outerjoin(inserter, Cards.inserter == inserter.id) \
             .filter(and_(*filter_conditions)) \
-            .order_by(sorting) \
-            .slice(start, start+count) \
-            .all()
+            .order_by(sorting)
+        if (start is not None) and (count is not None):
+            items = items.slice(start, start+count)
+        items = items.all()
+
         rows_count = session.query(Cards, Taxon, observer, inserter) \
             .outerjoin(Taxon, Cards.species == Taxon.id) \
             .outerjoin(observer, Cards.observer == observer.id) \
