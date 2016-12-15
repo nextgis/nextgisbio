@@ -19,6 +19,7 @@ define([
 
         activate: function () {
             this.polygonLayer = new OpenLayers.Layer.Vector("ngbio.polygon.cards_count");
+            this.polygonLayer.displayInLayerSwitcher = false;
             this.map.addLayer(this.polygonLayer);
 
             this.standby = new Standby({target: "appLayout"});
