@@ -244,12 +244,28 @@ div.search-row {
     margin: 5px 0;
 }
 
-#formFilter {
-    width: 50%;
-    min-width: 380px;
+/*Cards table page*/
+
+div.forms {
+    display: flex;
 }
 
-#formFilter fieldset {
+div.forms div.col {
+    padding: 1em;
+}
+
+div.filter-form {
+    display: inline-block;
+    width: 380px;
+}
+
+div.export-form {
+    display: inline-block;
+    width: 150px;
+}
+
+#formFilter fieldset,
+#formExport fieldset {
     box-sizing: border-box;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -263,11 +279,17 @@ div.search-row {
     padding: 5px;
 }
 
+#formExport input {
+    display: block;
+}
+
 #formFilter div.filter-row {
     margin-top: 3px;
 }
 
-#formFilter input.dojo-button {
+#formFilter input.dojo-button,
+#formExport input.dojo-button {
+    margin: 4px 0;
     cursor: pointer;
     border: 1px solid #759dc0;
     padding: 2px 4px 4px 4px;
@@ -292,7 +314,6 @@ div.search-row {
     -moz-transition-duration: 0.2s;
     transition-duration: 0.2s;
 }
-
 
 #formFilter label {
     display: inline-block;
