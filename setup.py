@@ -20,7 +20,8 @@ requires = [
     'pygdal',
     'shapely',
     'Pillow',
-    'sphinx'
+    'sphinx',
+    'pypandoc'
     ]
 
 setup(name='nextgisbio',

@@ -137,7 +137,7 @@ define([
             var options = {
                 projection: epsg3857,
                 maxExtent: extent,
-                layers: [osm, gsat, wms.tracksLayer, wms.ooptLayer, squareLayer, arealLayer, cardsLayer]
+                layers: [osm, gsat, wms.ooptLayer, wms.tracksLayer, squareLayer, arealLayer, cardsLayer]
                 // restrictedExtent: extent,
                 // layers: [osm, gsat, oopt, squareLayer, arealLayer, tracksLayer, ooptLayer, cardsLayer]
                 // layers: [osm, oopt, squareLayer, arealLayer, cardsLayer]
