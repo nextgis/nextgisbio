@@ -22,6 +22,10 @@
           media="screen">
 
     <%block name="css"></%block>
+
+    %if 'yandex_metrika' in request.registry.settings:
+        ${request.registry.settings['yandex_metrika']}
+    %endif
 </head>
 <body class="claro loading">
 <div id="loader">

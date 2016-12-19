@@ -12,6 +12,10 @@
 
     <link rel="icon" type="image/ico" href="${request.static_url('nextgisbio:static/favicon.ico')}"/>
 
+    %if 'yandex_metrika' in request.registry.settings:
+        ${request.registry.settings['yandex_metrika']  | n}
+    %endif
+
     <link rel="stylesheet"
           href="${request.static_url('nextgisbio:static/js/lib/dojo-release-1.9.1/dijit/themes/claro/claro.css')}"
           media="screen">
