@@ -9,6 +9,10 @@
     <meta charset="utf-8">
     <title>${title}</title>
 
+    %if 'yandex_metrika' in request.registry.settings:
+        ${request.registry.settings['yandex_metrika'] | n}
+    %endif
+
     <link rel="icon" type="image/ico" href="${request.static_url('nextgisbio:static/favicon.ico')}"/>
 
     <link rel="stylesheet"
@@ -23,9 +27,7 @@
 
     <%block name="css"></%block>
 
-    %if 'yandex_metrika' in request.registry.settings:
-        ${request.registry.settings['yandex_metrika']}
-    %endif
+
 </head>
 <body class="claro loading">
 <div id="loader">
