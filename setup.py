@@ -21,7 +21,8 @@ requires = [
     'shapely',
     'Pillow',
     'sphinx',
-    'pypandoc'
+    'pypandoc',
+    'python-docx'
     ]
 
 setup(name='nextgisbio',
