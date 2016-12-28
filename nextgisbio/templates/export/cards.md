@@ -1,5 +1,4 @@
 % for card in result['Records']:
-
     
 \begin{center}
 \LARGE
@@ -44,6 +43,6 @@ ${card['taxon__russian_name']} \break
 
 <!--**Вносил:** ${ card['cards__inserter'] if card['cards__inserter'] else u'информации нет' } -->
 
-\pagebreak
+\newpage
 
 % endfor

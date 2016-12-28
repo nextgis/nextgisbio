@@ -72,7 +72,7 @@
 
     <div data-dojo-type="ngbio/cards/CardsTable" id="cardsTable"></div>
 
-    <form id="formTemporary" method="post" target="TheWindow"></form>
+    <form id="formTemporary" method="post"></form>
 </%block>
 
 <%block name="js">

@@ -12,6 +12,9 @@ from pyramid.response import FileResponse
 from pyramid.view import view_config
 from nextgisbio.models import DBSession, Cards, Taxon
 from nextgisbio.views.cards.views_jtable import cards_jtable_browse
+from docx import Document
+from docx.shared import Inches
+from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 
 
 @view_config(route_name='export_cards_table')
@@ -31,25 +34,31 @@ def cards_table(request):
         'result': result
     }
 
-    html = render_to_response('export/cards-export.mako', params, request=request)
-
-    # with open('nextgisbio/templates/export/cards.tex', 'r') as tex_file:
-    #     tex_tmpl = tex_file.read()
-
     file_object = NamedTemporaryFile(suffix='.' + output_format)
+    content_type = ''
+    content_disposition = ''
 
-    extra_args = (
-        '--smart',
-        '--standalone',
-        '--latex-engine=xelatex',
-        # '-c', '/home/karavanjo/projects/nextgis/bio/nextgisbio/nextgisbio/static/css/main.css',
-        '-V', 'mainfont:Linux Libertine O',
-        '-V', 'geometry:top=2cm, bottom=2cm, left=2cm, right=2cm'
-    )
+    if output_format == 'pdf':
+        html = render_to_response('export/cards-export.mako', params, request=request)
+        extra_args = (
+            '--smart',
+            '--standalone',
+            '--latex-engine=xelatex',
+            '-V', 'mainfont:Linux Libertine O',
+            '-V', 'geometry:top=2cm, bottom=2cm, left=2cm, right=2cm'
+        )
+        pypandoc.convert(html.body, output_format, format='markdown', outputfile=file_object.name, extra_args=extra_args)
+        content_type = 'application/pdf'
+        content_disposition = 'attachment; filename="{}"'.format('cards.pdf')
 
-    pypandoc.convert(html.body, output_format, format='markdown', outputfile=file_object.name, extra_args=extra_args)
+    if output_format == 'docx':
+        _make_docx(result, file_object)
+        content_type = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        content_disposition = 'attachment; filename="{}"'.format('cards.docx')
 
-    return FileResponse(os.path.abspath(file_object.name))
+    file_response = FileResponse(os.path.abspath(file_object.name), content_type=content_type)
+    file_response.content_disposition = content_disposition
+    return file_response
 
 
 def _get_formats():
@@ -59,3 +68,55 @@ def _get_formats():
         'rtf': True,
         'odt': True
     }
+
+
+def _make_docx(result, file_object):
+    document = Document()
+    for card in result['Records']:
+        p = document.add_paragraph(u'ИНФОРМАЦИОННАЯ КАРТОЧКА')
+        p.alignment = 1
+
+        p = document.add_paragraph(u'встреч растений и грибов, занесенных в Красную книгу')
+        p.alignment = 1
+
+        p = document.add_paragraph(u'Ханты-Мансийского автономного округа')
+        p.alignment = 1
+
+        p = document.add_paragraph(card['taxon__name'])
+        p.alignment = 1
+
+        p = document.add_paragraph(card['taxon__russian_name'])
+        p.alignment = 1
+
+        p = document.add_paragraph(u'№ ' + str(card['cards__id']))
+        p.alignment = 1
+
+        _add_paragraph(document, u'Место находки: ', card['cards__location'] if card['cards__location'] else u'не описано')
+        _add_paragraph(document, u'Долгота: ', str(card['cards__lon']))
+        _add_paragraph(document, u'Широта: ', str(card['cards__lat']))
+        _add_paragraph(document, u'Местообитание: ', card['cards__habitat'] if card['cards__habitat'] else u'информации нет')
+        _add_paragraph(document, u'Антропогенная нагрузка: ', card['cards__anthr_press'] if card['cards__anthr_press'] else u'информации нет')
+        _add_paragraph(document, u'Лимитирующие факторы: ', card['cards__limit_fact'] if card['cards__limit_fact'] else u'информации нет')
+        _add_paragraph(document, u'Меры защиты: ', card['cards__protection'] if card['cards__protection'] else u'информации нет')
+        _add_paragraph(document, u'Фаза жизненного цикла: ', str(card['cards__pheno']) if card['cards__pheno'] else u'информации нет')
+        _add_paragraph(document, u'Количество: ', str(card['cards__quantity']) if card['cards__quantity'] else u'информации нет')
+        _add_paragraph(document, u'Площадь популяции: ', card['cards__area'] if card['cards__area'] else u'информации нет')
+        _add_paragraph(document, u'Примечания: ', card['cards__notes'] if card['cards__notes'] else u'примечаний нет')
+        _add_paragraph(document, u'Музейные образцы: ', card['cards__museum'] if card['cards__museum'] else u'информации нет')
+        _add_paragraph(document, u'Источник информации: ', card['cards__publications'] if card['cards__publications'] else u'информации нет')
+        _add_paragraph(document, u'Наблюдал: ', card['observer__name'] if card['observer__name'] else u'информации нет')
+
+        document.add_page_break()
+
+    document.save(file_object.name)
+
+
+def _add_paragraph(document, key=None, value=None, alignment=0):
+    p = document.add_paragraph(u'')
+    p.alignment = alignment
+
+    if key:
+        p.add_run(key).bold = True
+
+    if value:
+        p.add_run(value)
