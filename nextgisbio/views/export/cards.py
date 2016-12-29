@@ -16,6 +16,7 @@ from nextgisbio.views.cards.views_jtable import cards_jtable_browse
 from docx import Document
 from docx.shared import Inches
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
+from nextgisbio.utils.DictionaryMissingValues import DictionaryMissingValues
 
 
 @view_config(route_name='export_cards_table')
@@ -124,7 +125,8 @@ def _make_docx(result, file_object):
         p = document.add_paragraph(u'№ ' + str(card['cards__id']))
         p.alignment = 1
 
-        _add_paragraph(document, u'Место находки: ', card['cards__location'] if card['cards__location'] else u'не описано')
+        card_for_rendering = DictionaryMissingValues(card)
+        _add_paragraph(document, u'Место находки: ', card_for_rendering.get_value('cards__location', u'не описано'))
         _add_paragraph(document, u'Долгота: ', str(card['cards__lon']))
         _add_paragraph(document, u'Широта: ', str(card['cards__lat']))
         _add_paragraph(document, u'Местообитание: ', card['cards__habitat'] if card['cards__habitat'] else u'информации нет')
@@ -137,7 +139,7 @@ def _make_docx(result, file_object):
         _add_paragraph(document, u'Примечания: ', card['cards__notes'] if card['cards__notes'] else u'примечаний нет')
         _add_paragraph(document, u'Музейные образцы: ', card['cards__museum'] if card['cards__museum'] else u'информации нет')
         _add_paragraph(document, u'Источник информации: ', card['cards__publications'] if card['cards__publications'] else u'информации нет')
-        _add_paragraph(document, u'Наблюдал: ', card['observer__name'] if card['observer__name'] else u'информации нет')
+        _add_paragraph(document, u'Наблюдал: ', card_for_rendering.get_value('observer__name', u'информации нет'))
 
         document.add_page_break()
 

@@ -1,3 +1,7 @@
+<% 
+    from nextgisbio.utils.DictionaryMissingValues import DictionaryMissingValues
+%>
+
 % for card in result['Records']:
     
 \begin{center}
@@ -37,7 +41,8 @@ ${card['taxon__russian_name']} \break
 
 **Источник информации:** ${ card['cards__publications'] if card['cards__publications'] else u'информации нет' } 
 
-**Наблюдал:** ${ card['observer__name'] if card['observer__name'] else u'информации нет' } 
+<% card_for_rendering = DictionaryMissingValues(card) %>
+**Наблюдал:** ${ card_for_rendering.get_value('observer__name', u'информации нет') } 
 
 <!--**Определил:** ${ card['cards__identifier'] if card['cards__identifier'] else u'информации нет' } -->
 
