@@ -18,8 +18,8 @@ ${card['taxon__russian_name']} \break
 
 **Место находки:** ${ card['cards__location'] if card['cards__location'] else u'не описано' }
 
-**Долгота:** ${card['cards__lon']}  
-**Широта:** ${card['cards__lat']}
+**Долгота:** ${card['cards__lon'] if card['cards__lon'] else u'информации нет' }
+**Широта:** ${card['cards__lat'] if card['cards__lat'] else u'информации нет' }
 
 **Местообитание:** ${ card['cards__habitat'] if card['cards__habitat'] else u'информации нет' }
 

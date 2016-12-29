@@ -127,8 +127,8 @@ def _make_docx(result, file_object):
 
         card_for_rendering = DictionaryMissingValues(card)
         _add_paragraph(document, u'Место находки: ', card_for_rendering.get_value('cards__location', u'не описано'))
-        _add_paragraph(document, u'Долгота: ', str(card['cards__lon']))
-        _add_paragraph(document, u'Широта: ', str(card['cards__lat']))
+        _add_paragraph(document, u'Долгота: ', str(card['cards__lon']) if card['cards__lon'] else u'информации нет')
+        _add_paragraph(document, u'Широта: ', str(card['cards__lat']) if card['cards__lat'] else u'информации нет')
         _add_paragraph(document, u'Местообитание: ', card['cards__habitat'] if card['cards__habitat'] else u'информации нет')
         _add_paragraph(document, u'Антропогенная нагрузка: ', card['cards__anthr_press'] if card['cards__anthr_press'] else u'информации нет')
         _add_paragraph(document, u'Лимитирующие факторы: ', card['cards__limit_fact'] if card['cards__limit_fact'] else u'информации нет')
