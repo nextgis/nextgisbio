@@ -242,19 +242,65 @@ class Cards(Base, JsonifyMixin):
                 dbsession.add(card)
 
     @staticmethod
+    def get_all_fields_names():
+        return ['id', 'species', 'inserter', 'observer',
+                'identifier', 'taxa_scheme', 'museum',
+                'anthr_press', 'vitality', 'abundance',
+                'footprint', 'pheno', 'inforesources',
+                'original_name', 'photo', 'year', 'month',
+                'day', 'time', 'habitat', 'substrat', 'limit_fact',
+                'protection', 'area', 'quantity', 'unknown_age',
+                'unknown_sex', 'males', 'females', 'ad', 'sad',
+                'juv', 'pull', 'egs', 'publications', 'notes',
+                'location', 'lon', 'lat', 'coord_type']
+
+    def to_row(self):
+        return [self.id,
+                self.species,
+                self.inserter,
+                self.observer,
+                self.identifier,
+                self.taxa_scheme,
+                self.museum,
+                self.anthr_press,
+                self.vitality,
+                self.abundance,
+                self.footprint,
+                self.pheno,
+                self.inforesources,
+                self.original_name,
+                None,
+                self.year,
+                self.month,
+                self.day,
+                self.time,
+                self.habitat,
+                self.substrat,
+                self.limit_fact,
+                self.protection,
+                self.area,
+                self.quantity,
+                self.unknown_age,
+                self.unknown_sex,
+                self.males,
+                self.females,
+                self.ad,
+                self.sad,
+                self.juv,
+                self.pull,
+                self.egs,
+                self.publications,
+                self.notes,
+                self.location,
+                self.lon,
+                self.lat,
+                self.coord_type]
+
+    @staticmethod
     def export_to_file(filename):
         from nextgisbio.utils import csv_utf
 
-        fieldnames = ['id', 'species', 'inserter', 'observer',
-                      'identifier', 'taxa_scheme', 'museum',
-                      'anthr_press', 'vitality', 'abundance',
-                      'footprint', 'pheno', 'inforesources',
-                      'original_name', 'photo', 'year', 'month',
-                      'day', 'time', 'habitat', 'substrat', 'limit_fact',
-                      'protection', 'area', 'quantity', 'unknown_age',
-                      'unknown_sex', 'males', 'females', 'ad', 'sad',
-                      'juv', 'pull', 'egs', 'publications', 'notes',
-                      'location', 'lon', 'lat', 'coord_type']
+        fieldnames = Cards.get_all_fields_names()
 
         with open(filename, 'wb') as file:
             writer = csv_utf.UnicodeWriter(file)
@@ -262,46 +308,6 @@ class Cards(Base, JsonifyMixin):
 
             dbsession = DBSession()
 
-            cards = [[card.id,
-                      card.species,
-                      card.inserter,
-                      card.observer,
-                      card.identifier,
-                      card.taxa_scheme,
-                      card.museum,
-                      card.anthr_press,
-                      card.vitality,
-                      card.abundance,
-                      card.footprint,
-                      card.pheno,
-                      card.inforesources,
-                      card.original_name,
-                      None,
-                      card.year,
-                      card.month,
-                      card.day,
-                      card.time,
-                      card.habitat,
-                      card.substrat,
-                      card.limit_fact,
-                      card.protection,
-                      card.area,
-                      card.quantity,
-                      card.unknown_age,
-                      card.unknown_sex,
-                      card.males,
-                      card.females,
-                      card.ad,
-                      card.sad,
-                      card.juv,
-                      card.pull,
-                      card.egs,
-                      card.publications,
-                      card.notes,
-                      card.location,
-                      card.lon,
-                      card.lat,
-                      card.coord_type] for card in
-                     dbsession.query(Cards).order_by(Cards.id).all()]
+            cards = [card.to_row() for card in dbsession.query(Cards).order_by(Cards.id).all()]
             dbsession.close()
             writer.writerows(cards)
