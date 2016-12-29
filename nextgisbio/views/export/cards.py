@@ -3,7 +3,8 @@
 import os
 from datetime import datetime
 from tempfile import NamedTemporaryFile
-
+import csv
+from nextgisbio.utils import csv_utf
 import pypandoc
 import pyramid.httpexceptions as exc
 from pyramid import security
@@ -38,6 +39,11 @@ def cards_table(request):
         content_type = 'application/pdf'
         content_disposition = 'attachment; filename="{}"'.format('cards.pdf')
 
+    if output_format == 'csv':
+        _make_csv(result, file_object)
+        content_type = 'text/csv'
+        content_disposition = 'attachment; filename="{}"'.format('cards.csv')
+
     if output_format == 'docx':
         _make_docx(result, file_object)
         content_type = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
@@ -53,7 +59,8 @@ def _get_formats():
         'pdf': True,
         'docx': True,
         'rtf': True,
-        'odt': True
+        'odt': True,
+        'csv': True
     }
 
 
@@ -71,6 +78,29 @@ def _make_pdf(result, file_object, request):
         '-V', 'geometry:top=2cm, bottom=2cm, left=2cm, right=2cm'
     )
     pypandoc.convert(html.body, 'pdf', format='markdown', outputfile=file_object.name, extra_args=extra_args)
+
+
+def _make_csv(result, file_object):
+    if len(result['Records']) == 0:
+        return True
+
+    with open(file_object.name, 'wb') as csv_file:
+        writer = csv_utf.UnicodeWriter(csv_file, dialect=csv.Dialect.delimiter, delimiter=';')
+
+        keys_sorted = sorted(result['Records'][0])
+        writer.writerow(keys_sorted)
+
+        cards_rows = []
+        for card in result['Records']:
+            card_row = []
+            for key in keys_sorted:
+                card_value = card[key]
+                if isinstance(card_value, unicode):
+                    card_value = card_value.replace(';', ' ')
+                card_row.append(card_value)
+            cards_rows.append(card_row)
+
+        writer.writerows(cards_rows)
 
 
 def _make_docx(result, file_object):

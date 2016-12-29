@@ -7,10 +7,10 @@ class UnicodeWriter:
     which is encoded in the given encoding.
     '''
 
-    def __init__(self, f, dialect=csv.excel_tab, encoding='utf-8', **kwds):
+    def __init__(self, f, dialect=csv.excel_tab, encoding='utf-8', delimiter='\t', **kwds):
         # Redirect output to a queue
         self.queue = cStringIO.StringIO()
-        self.writer = csv.writer(self.queue, dialect=dialect, **kwds)
+        self.writer = csv.writer(self.queue, dialect=dialect, delimiter=delimiter, **kwds)
         self.stream = f
         self.encoder = codecs.getincrementalencoder(encoding)()
 

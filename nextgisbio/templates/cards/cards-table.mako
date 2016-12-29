@@ -64,6 +64,8 @@
                                value="Экспорт в .pdf"/>
                         <input data-file-type="docx" type="button" class="dojo-button" name="Экспорт в .docx"
                                value="Экспорт в .docx"/>
+                        <input data-file-type="csv" type="button" class="dojo-button" name="Экспорт в .csv"
+                               value="Экспорт в .csv"/>
                     </fieldset>
 
                 </form>
