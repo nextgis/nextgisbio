@@ -29,25 +29,12 @@ def cards_table(request):
     if output_format not in _get_formats():
         raise exc.HTTPException('Format "' + output_format + '" not supported')
 
-    params = {
-        'date': datetime.now().strftime('%Y-%m-%d'),
-        'result': result
-    }
-
     file_object = NamedTemporaryFile(suffix='.' + output_format)
     content_type = ''
     content_disposition = ''
 
     if output_format == 'pdf':
-        html = render_to_response('export/cards-export.mako', params, request=request)
-        extra_args = (
-            '--smart',
-            '--standalone',
-            '--latex-engine=xelatex',
-            '-V', 'mainfont:Linux Libertine O',
-            '-V', 'geometry:top=2cm, bottom=2cm, left=2cm, right=2cm'
-        )
-        pypandoc.convert(html.body, output_format, format='markdown', outputfile=file_object.name, extra_args=extra_args)
+        _make_pdf(result, file_object, request)
         content_type = 'application/pdf'
         content_disposition = 'attachment; filename="{}"'.format('cards.pdf')
 
@@ -68,6 +55,22 @@ def _get_formats():
         'rtf': True,
         'odt': True
     }
+
+
+def _make_pdf(result, file_object, request):
+    params = {
+        'date': datetime.now().strftime('%Y-%m-%d'),
+        'result': result
+    }
+    html = render_to_response('export/cards-export.mako', params, request=request)
+    extra_args = (
+        '--smart',
+        '--standalone',
+        '--latex-engine=xelatex',
+        '-V', 'mainfont:Linux Libertine O',
+        '-V', 'geometry:top=2cm, bottom=2cm, left=2cm, right=2cm'
+    )
+    pypandoc.convert(html.body, 'pdf', format='markdown', outputfile=file_object.name, extra_args=extra_args)
 
 
 def _make_docx(result, file_object):
