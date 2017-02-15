@@ -145,23 +145,49 @@ define([
 
                 if (domForm.toObject(form.domNode).id && theDialog.formSettings.action === 'card') {
                     new Button({
+                        label: 'PDF',
+                        style: 'margin: 10px 0 5px 5px;',
+                        onClick: lang.hitch(this, function () {
+                            this._export_card_to_file(form, theDialog, 'pdf');
+                        })
+                    }).placeAt(this._form.containerNode);
+                    new Button({
+                        label: 'DOCX',
+                        style: 'margin: 10px 0 5px 5px;',
+                        onClick: lang.hitch(this, function () {
+                            this._export_card_to_file(form, theDialog, 'docx');
+                        })
+                    }).placeAt(this._form.containerNode);
+                    new Button({
                         label: 'CSV',
                         style: 'margin: 10px 0 5px 5px;',
-                        onClick: function () {
-                            var json_form = domForm.toObject(form.domNode),
-                                action = application_root + '/export/cards/?format=csv',
-                                dialog = theDialog._getDialog();
-
-                            $(dialog.domNode).append('<form class="temporaryForm"></form>');
-                            var temporaryForm = $(dialog.domNode).find('form.temporaryForm')[0];
-                            $(temporaryForm).attr('action', application_root + '/export/cards/?format=csv');
-                            $(temporaryForm).attr('method', 'POST');
-                            $(temporaryForm).append('<input type="hidden" name="cards__id__int__equal" value="' + json_form.id + '" />');
-                            $(temporaryForm).submit();
-                        }
+                        onClick: lang.hitch(this, function () {
+                            this._export_card_to_file(form, theDialog, 'csv');
+                        })
                     }).placeAt(this._form.containerNode);
                 }
             }
+        },
+
+        _export_card_to_file: function (form, theDialog, format) {
+            var json_form = domForm.toObject(form.domNode),
+                action = application_root + '/export/cards/?format=csv',
+                dialog = theDialog._getDialog(),
+                temporaryForm,
+                $temporaryForm;
+
+            temporaryForm = $(dialog.domNode).find('form.temporaryForm')[0];
+            if (!temporaryForm) {
+                $(dialog.domNode).append('<form class="temporaryForm"></form>');
+                temporaryForm = $(dialog.domNode).find('form.temporaryForm')[0];
+            }
+
+            $temporaryForm = $(temporaryForm);
+
+            $temporaryForm.attr('action', application_root + '/export/cards/?format=' + format);
+            $temporaryForm.attr('method', 'POST');
+            $temporaryForm.append('<input type="hidden" name="cards__id__int__equal" value="' + json_form.id + '" />');
+            $temporaryForm.submit();
         },
 
 
