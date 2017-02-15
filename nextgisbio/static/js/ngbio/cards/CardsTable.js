@@ -45,7 +45,6 @@ define([
                     cards__added_date: {
                         title: 'Дата внесения',
                         width: '16%',
-                        type: 'password',
                         type: 'date',
                         displayFormat: 'dd.mm.yy'
                     },
