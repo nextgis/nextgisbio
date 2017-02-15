@@ -123,6 +123,7 @@ define([
                         }
                     }
                 }).placeAt(this._form.containerNode);
+
                 new Button({
                     label: 'Удалить',
                     style: 'margin: 10px 0 5px 5px;',
@@ -141,6 +142,25 @@ define([
                         });
                     }
                 }).placeAt(this._form.containerNode);
+
+                if (domForm.toObject(form.domNode).id && theDialog.formSettings.action === 'card') {
+                    new Button({
+                        label: 'CSV',
+                        style: 'margin: 10px 0 5px 5px;',
+                        onClick: function () {
+                            var json_form = domForm.toObject(form.domNode),
+                                action = application_root + '/export/cards/?format=csv',
+                                dialog = theDialog._getDialog();
+
+                            $(dialog.domNode).append('<form class="temporaryForm"></form>');
+                            var temporaryForm = $(dialog.domNode).find('form.temporaryForm')[0];
+                            $(temporaryForm).attr('action', application_root + '/export/cards/?format=csv');
+                            $(temporaryForm).attr('method', 'POST');
+                            $(temporaryForm).append('<input type="hidden" name="cards__id__int__equal" value="' + json_form.id + '" />');
+                            $(temporaryForm).submit();
+                        }
+                    }).placeAt(this._form.containerNode);
+                }
             }
         },
 
