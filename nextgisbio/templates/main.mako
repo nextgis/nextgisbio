@@ -12,7 +12,7 @@
 
     <link rel="icon" type="image/ico" href="${request.static_url('nextgisbio:static/favicon.ico')}"/>
 
-    %if 'yandex_metrika' in request.registry.settings:
+    %if ('localhost' not in request.host_url) and ('yandex_metrika' in request.registry.settings):
         ${request.registry.settings['yandex_metrika']  | n}
     %endif
 
