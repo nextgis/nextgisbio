@@ -46,7 +46,7 @@ def save_anlist(request):
     return {'success': success}
 
 
-@view_config(route_name='annotation', request_method='PUT',  renderer='json', permission='edit')
+@view_config(route_name='new_anlist', request_method='PUT',  renderer='json', permission='edit')
 def new_anlist(request):
     new_data = dict(request.POST)
     success = True
