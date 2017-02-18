@@ -8,6 +8,7 @@ define([
     'dojo/dom-class',
     'dojo/dom-construct',
     'dojo/dom-form',
+    'dojo/topic',
     'dojo/query',
     'dojo/request/xhr',
     'dijit/_WidgetBase',
@@ -19,7 +20,9 @@ define([
     'dijit/form/Button',
     'dojo/NodeList-traverse',
     'dojo/NodeList-dom'
-], function (declare, array, lang, win, dom, domStyle, domClass, domConstruct, domForm, query, xhr, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, FloatingPane, Form, TableContainer, Button) {
+], function (declare, array, lang, win, dom, domStyle, domClass, domConstruct, domForm, topic, query, xhr,
+             _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, FloatingPane,
+             Form, TableContainer, Button) {
 
     var id_counter = 0;
 
@@ -136,6 +139,9 @@ define([
                             handleAs: 'json'
                         }).then(function (data) {
                             alert('Объект успешно удален!');
+                            if (action.indexOf('annotation') !== -1) {
+                                topic.publish('/annotation/list/update');
+                            }
                             dialog.close();
                         }, function (error) {
                             alert('Извините, произошла ошибка, попробуйте еще раз.');

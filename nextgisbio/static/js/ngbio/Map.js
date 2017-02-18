@@ -8,6 +8,7 @@ define([
     'dojo/query',
     'dojo/dom-attr',
     'dojo/on',
+    'dojo/aspect',
     'dojo/request/xhr',
     'dojo/store/Memory',
     'dgrid/OnDemandGrid',
@@ -17,7 +18,7 @@ define([
     'ngbio/WmsLayers',
     './map/CommonControlsPanel',
     'dojo/domReady!'
-], function (declare, win, lang, domConstruct, ready, topic, query, domAttr, on, xhr, Memory, OnDemandGrid,
+], function (declare, win, lang, domConstruct, ready, topic, query, domAttr, on, aspect, xhr, Memory, OnDemandGrid,
              ColumnHider, Dialog, Filter, WmsLayers, CommonControlsPanel) {
     var map = declare('ngbio/Map', [], {
         constructor: function () {
@@ -288,6 +289,20 @@ define([
                                     'class': 'keyAreaDialog'
                                 });
                                 dialog.show();
+
+                                var closeHandle = topic.subscribe('/annotation/list/update', function () {
+                                    xhr.get(application_root + '/key_area/' + keyAreaId + '/ann', {
+                                        handleAs: 'json'
+                                    }).then(function (data) {
+                                        store = new Memory({data: data.data});
+                                        grid.store = store;
+                                        grid.refresh();
+                                    });
+                                });
+
+                                aspect.after(dialog._getDialog(), 'close', lang.hitch(this, function () {
+                                    closeHandle.remove();
+                                }));
 
                                 grid.startup();
 
