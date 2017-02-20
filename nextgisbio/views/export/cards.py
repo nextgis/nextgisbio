@@ -157,4 +157,6 @@ def _add_paragraph(document, key=None, value=None, alignment=0):
         p.add_run(key).bold = True
 
     if value:
+        if not isinstance(value, unicode):
+            value = str(value)
         p.add_run(value)
