@@ -95,7 +95,10 @@ def _make_csv(result, file_object):
         for card in result['Records']:
             card_row = []
             for key in keys_sorted:
-                card_value = card[key]
+                if key in card:
+                    card_value = card[key]
+                else:
+                    card_value = ''
                 if isinstance(card_value, unicode):
                     card_value = card_value.replace(';', ' ')
                 card_row.append(card_value)
