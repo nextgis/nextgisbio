@@ -33,10 +33,6 @@ from operator import itemgetter
 
 from csv_parser import parse_data
 
-conf_parser = {
-    'csv': True
-}
-
 data_structure = [
     {
         'main': {
@@ -52,6 +48,54 @@ data_structure = [
             'db_table': Person,
             'db_table_id': Person.id,
             'db_table_name': Person.name
+        }
+    },
+    {
+        'main': {
+            'table': 'cards.csv',
+            'field': 'observer',
+            'db_table': Cards,
+            'db_table_id': Cards.observer
+        },
+        'relation': {
+            'table': 'person.csv',
+            'id_field': 'id',
+            'name_field': 'name',
+            'db_table': Person,
+            'db_table_id': Person.id,
+            'db_table_name': Person.name
+        }
+    },
+    {
+        'main': {
+            'table': 'cards.csv',
+            'field': 'footprint',
+            'db_table': Cards,
+            'db_table_id': Cards.footprint
+        },
+        'relation': {
+            'table': 'footprint.csv',
+            'id_field': 'id',
+            'name_field': 'footprint',
+            'db_table': Footprint,
+            'db_table_id': Footprint.id,
+            'db_table_name': Footprint.footprint
+        }
+    },
+    {
+        'main': {
+            'table': 'cards.csv',
+            'field': 'pheno',
+            'db_table': Cards,
+            'db_table_id': Cards.pheno
+        },
+        'relation': {
+            'table': 'pheno.csv',
+            'id_field': 'id',
+            'name_field': 'pheno',
+            'db_table': Pheno,
+            'db_table_id': Pheno.id,
+            'db_table_name': Pheno.pheno
         }
     },
     {
@@ -73,7 +117,7 @@ data_structure = [
 ]
 
 
-def analyze(csv_data):
+def analyze(csv_data, conf_parser):
     for data_structure_item in data_structure:
         if 'csv' in conf_parser:
             csv_handle(csv_data, data_structure_item)
@@ -149,17 +193,23 @@ def db_handle(csv_data, data_structure_item):
             relation_db_aggregated[relation_db_id]['count'] += 1
         else:
             relation_db_aggregated[relation_db_id] = {
+                'id': relation_db_id,
                 'name': db_item[2],
                 'count': 1
             }
+    relation_db_aggregated_items = sorted(relation_db_aggregated.values(),
+                                          key=lambda(v): v['count'],
+                                          reverse=True)
 
     print '\n -------------------'
-    print data_structure_item['main']['table'] + ' -> ' + data_structure_item['relation']['table']
+    print 'DB - ' + data_structure_item['main']['table'] + ' -> ' + data_structure_item['relation']['table']
     print 'by field "' + main_field + '"'
     print '-------------------'
 
-    for k in relation_db_aggregated:
-        print u'{0} - {1} = {2}'.format(k, relation_db_aggregated[k]['name'], relation_db_aggregated[k]['count'])
+    for relation_db_aggregated_item in relation_db_aggregated_items:
+        print u'{0} - {1} = {2}'.format(relation_db_aggregated_item['id'],
+                                        relation_db_aggregated_item['name'],
+                                        relation_db_aggregated_item['count'])
 
 
 def usage(argv):
@@ -183,7 +233,7 @@ def main(argv=sys.argv):
     rel_path_source_data = "./csv/"
     source_data_dir = os.path.join(script_dir, rel_path_source_data)
     csv_data = parse_data(source_data_dir)
-    analyze(csv_data)
+    analyze(csv_data, conf_parser)
 
 
 if __name__ == "__main__":

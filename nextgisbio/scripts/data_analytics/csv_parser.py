@@ -52,6 +52,6 @@ def parse_data(data_dir_name):
         from operator import itemgetter
         data[csv_file]['records'] = sorted(data[csv_file]['records'], key=itemgetter(0))
 
-        print '%s parsed' % csv_file
+        # print '%s parsed' % csv_file
 
     return data
