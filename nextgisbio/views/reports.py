@@ -5,6 +5,7 @@ from pyramid.httpexceptions import HTTPFound
 from pyramid.url import route_url
 from pyramid.view import view_config
 from pyramid import security
+import time
 
 import re
 
@@ -16,15 +17,22 @@ from sqlalchemy.exc import DBAPIError
 from nextgisbio.models import DBSession
 from nextgisbio.models.red_books import RedBook, RedBookSpecies
 from nextgisbio.models.taxons import Taxon
-
+from nextgisbio.views import _get_red_books
 from nextgisbio.utils import dojo
 
 
 @view_config(route_name='protected_species_list', renderer='reports/protected_species_list.mako')
 def protected_species_list(request):
+    if 'red_book' in request.GET:
+        red_book_selected_id = int(request.GET['red_book'])
+    else:
+        red_book_selected_id = -1
     return {
         'is_auth': security.authenticated_userid(request),
-        'is_admin': security.has_permission('admin', request.context, request)
+        'is_admin': security.has_permission('admin', request.context, request),
+        'random_int': int(time.time() * 1000),
+        'red_books': _get_red_books(),
+        'red_book_selected_id': red_book_selected_id
     }
 
 
