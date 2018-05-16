@@ -1,10 +1,15 @@
 import os
-
+from subprocess import check_output, CalledProcessError
 from setuptools import setup, find_packages
 
 here = os.path.abspath(os.path.dirname(__file__))
 README = open(os.path.join(here, 'README.md')).read()
 CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
+
+try:
+    gv = check_output(['gdal-config', '--version']).strip()
+except CalledProcessError:
+    gv = None
 
 requires = [
     'pyramid',
@@ -17,7 +22,7 @@ requires = [
     'waitress',
     'psycopg2',
     'GeoAlchemy',
-    'pygdal',
+    'pygdal' + (('>=' + gv + '.0,<=' + gv + '.9999') if gv else ''),
     'shapely',
     'Pillow',
     'sphinx',
@@ -50,6 +55,7 @@ setup(name='nextgisbio',
       [console_scripts]
       initialize_ngbio_db = nextgisbio.scripts.initializedb:main
       dump_ngbio_db = nextgisbio.scripts.dump:main
+      verify_data_by_csv = nextgisbio.scripts.verify_data_by_csv:main
       """,
       )
 
