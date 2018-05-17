@@ -190,17 +190,22 @@
 
     <%block name='inlineRequireAmd'>
         <script>
-            require(['ngbio/Forms', 'ngbio/Menu', 'ngbio/TaxonSearcher', 'ngbio/TaxonHomeTree',
-                        'dojox/data/QueryReadStore', 'dojo/dom', 'dojo/parser', 'dojo/store/JsonRest',
+            require(['ngbio/Forms', 'ngbio/Menu', 'ngbio/TaxonSearcher', 'ngbio/TaxonHomeTree', 'dojo/on',
+                        'dojo/query', 'dijit/registry', 'dojox/data/QueryReadStore', 'dojo/dom', 'dojo/parser', 'dojo/store/JsonRest',
                         'dijit/layout/BorderContainer', 'dijit/layout/ContentPane',
                         'dijit/Dialog', 'dijit/form/TextBox', 'dijit/form/Button',
                         'dijit/form/ValidationTextBox', 'dojo/topic', 'dojo/domReady!',
                         'ngbio/Loader', 'ngbio/Map', 'ngbio/Dialog', 'ngbio/DialogManager',
                         'ngbio/WindowManager',  'dojo/domReady!'],
-                    function (Forms, Menu, TaxonSearcher, TaxonHomeTree) {
+                    function (Forms, Menu, TaxonSearcher, TaxonHomeTree, on, query, registry) {
                         new Menu(Forms.menuMap, 'menu');
                         new TaxonSearcher();
                         new TaxonHomeTree('#taxonJsTree');
+
+                        on(query('#leftCol a.filter'), 'click', function () {
+                            var filterDialog = registry.byId('filterDialog');
+                            filterDialog.show();
+                        });
                     });
         </script>
     </%block>
