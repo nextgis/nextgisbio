@@ -82,56 +82,53 @@ def _get_sorting_param(request):
 
 @view_config(route_name='persons_jtable_save', renderer='json')
 def table_item_save(request):
-    session = DBSession()
-    session.expire_on_commit = False
-
-    if ('person_id' in request.POST) and request.POST['person_id'].isdigit():
-        person_id = int(request.POST['person_id'])
-        person = session.query(Person) \
-            .options(joinedload('user')) \
-            .filter(Person.id == person_id) \
-            .all()[0]
-        user = person.user
-    else:
-        person = Person()
-        user = User()
-        session.add(user)
-        person.user = user
-
-    for attr in request.POST:
-        table_name, field = attr.split('_')
-        if field == 'id':
-            continue
-        if table_name == 'person':
-            setattr(person, field, request.POST[attr])
-        if table_name == 'user':
-            setattr(user, field, request.POST[attr])
-
-    if 'user_active' in request.POST and request.POST['user_active']:
-        user.active = True
-    else:
-        user.active = False
-
-    if 'user_password' in request.POST and request.POST['user_password']:
-        user.password = User.password_hash(request.POST['user_password'])
-
-    session.add(person)
-
     try:
-        transaction.commit()
+        session = DBSession()
+        if ('person_id' in request.POST) and request.POST['person_id'].isdigit():
+            person_id = int(request.POST['person_id'])
+            person = session.query(Person) \
+                .options(joinedload('user')) \
+                .filter(Person.id == person_id) \
+                .all()[0]
+            user = person.user
+        else:
+            person = Person()
+            user = User()
+            session.add(user)
+            person.user = user
+
+        for attr in request.POST:
+            table_name, field = attr.split('_')
+            if field == 'id':
+                continue
+            if table_name == 'person':
+                setattr(person, field, request.POST[attr])
+            if table_name == 'user':
+                setattr(user, field, request.POST[attr])
+
+        if 'user_active' in request.POST and request.POST['user_active']:
+            user.active = True
+        else:
+            user.active = False
+
+        if 'user_password' in request.POST and request.POST['user_password']:
+            user.password = User.password_hash(request.POST['user_password'])
+
+        session.add(person)
+        session.flush()
+
+        session.refresh(user)
+        session.refresh(person)
+
+        person_json = person.as_json_dict('person_')
+        user_json = user.as_json_dict('user_')
+        item_json = person_json.copy()
+        item_json.update(user_json)
     except IntegrityError:
-        transaction.abort()
         return {
             'Result': 'Error',
             'Message': u'Такой логин уже присутствует в системе'
         }
-
-    person_json = person.as_json_dict('person_')
-    user_json = user.as_json_dict('user_')
-    item_json = person_json.copy()
-    item_json.update(user_json)
-
-    session.close()
 
     return {
         'Result': 'OK',
