@@ -1,10 +1,11 @@
 # encoding: utf-8
 
 import transaction
+from pyramid.exceptions import HTTPBadRequest
 from pyramid.view import view_config
 from sqlalchemy import or_, asc, desc
+from sqlalchemy.exc import DBAPIError
 from sqlalchemy.orm import joinedload
-from sqlalchemy.exc import DBAPIError, IntegrityError
 
 from nextgisbio.models import (
     DBSession, User, Person, table_by_name
@@ -82,19 +83,34 @@ def _get_sorting_param(request):
 
 @view_config(route_name='persons_jtable_save', renderer='json')
 def table_item_save(request):
-    try:
-        session = DBSession()
-        if ('person_id' in request.POST) and request.POST['person_id'].isdigit():
-            person_id = int(request.POST['person_id'])
-            person = session.query(Person) \
+    person_id = None
+    if ('person_id' in request.POST) and request.POST['person_id'].isdigit():
+        person_id = int(request.POST['person_id'])
+
+    user_login = request.POST['user_login'] if 'user_login' in request.POST else None
+    if not user_login:
+        raise HTTPBadRequest('"user_login" is required parameter')
+
+    if not person_id:
+        users = DBSession.query(User).filter(User.login == user_login).all()
+        if len(users) > 0:
+            return {
+                'Result': 'Error',
+                'Message': u'Такой логин уже присутствует в системе'
+            }
+
+    with transaction.manager:
+        if person_id:
+            person = DBSession.query(Person) \
                 .options(joinedload('user')) \
                 .filter(Person.id == person_id) \
                 .all()[0]
             user = person.user
         else:
             person = Person()
+            DBSession.add(person)
             user = User()
-            session.add(user)
+            DBSession.add(user)
             person.user = user
 
         for attr in request.POST:
@@ -114,21 +130,15 @@ def table_item_save(request):
         if 'user_password' in request.POST and request.POST['user_password']:
             user.password = User.password_hash(request.POST['user_password'])
 
-        session.add(person)
-        session.flush()
+        DBSession.flush()
 
-        session.refresh(user)
-        session.refresh(person)
+        DBSession.refresh(user)
+        DBSession.refresh(person)
 
         person_json = person.as_json_dict('person_')
         user_json = user.as_json_dict('user_')
         item_json = person_json.copy()
         item_json.update(user_json)
-    except IntegrityError:
-        return {
-            'Result': 'Error',
-            'Message': u'Такой логин уже присутствует в системе'
-        }
 
     return {
         'Result': 'OK',
