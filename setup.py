@@ -18,7 +18,7 @@ requires = [
     'transaction',
     'pyramid_tm',
     'pyramid_debugtoolbar',
-    'zope.sqlalchemy',
+    'zope.sqlalchemy==0.7.6',
     'waitress',
     'psycopg2',
     'GeoAlchemy',
