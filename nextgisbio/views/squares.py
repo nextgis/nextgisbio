@@ -38,7 +38,7 @@ def _get_squares_by_taxonlist(taxons, geomtype='geojson'):
     assert geomtype in ['geojson', 'wkt']
     dbsession = DBSession()
     
-    if '#' in taxons:
+    if 'root' in taxons:
         if geomtype == 'geojson':
             all = dbsession.query(Squares.id, sqlalchemy.func.st_asgeojson(Squares.geom.RAW)).all()
         else:
